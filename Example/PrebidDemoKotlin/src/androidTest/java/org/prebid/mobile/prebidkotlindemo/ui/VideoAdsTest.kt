@@ -51,6 +51,7 @@ class VideoAdsTest(
             AdFormat.VIDEO_BANNER -> checkVideoBannerAd()
             AdFormat.VIDEO_REWARDED -> checkVideoRewardedAd(testCase)
             AdFormat.VIDEO_INTERSTITIAL -> checkVideoInterstitialAd()
+            else -> {}
         }
     }
 

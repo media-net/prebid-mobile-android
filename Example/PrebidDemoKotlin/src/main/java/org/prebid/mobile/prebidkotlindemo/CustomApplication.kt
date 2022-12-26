@@ -18,6 +18,7 @@ package org.prebid.mobile.prebidkotlindemo
 
 import android.app.Application
 import android.util.Log
+import com.medianet.android.adsdk.MediaNetAdSDK
 //import com.applovin.sdk.AppLovinSdk
 //import com.google.android.gms.ads.MobileAds
 //import com.google.android.gms.ads.RequestConfiguration
@@ -36,42 +37,9 @@ class CustomApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        initPrebidSDK()
-//        initAdMob()
-//        initApplovinMax()
+        MediaNetAdSDK.initPrebidSDK(this)
         TargetingParams.setSubjectToGDPR(true)
         Settings.init(this)
     }
-
-    private fun initPrebidSDK() {
-        PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
-        PrebidMobile.initializeSdk(applicationContext, object : SdkInitializationListener {
-            override fun onSdkInit() {
-                Log.d(TAG, "SDK initialized successfully!")
-            }
-
-            override fun onSdkFailedToInit(error: InitError?) {
-                Log.e(TAG, "SDK initialization error: " + error?.error)
-            }
-        })
-        PrebidMobile.setShareGeoLocation(true)
-    }
-
-//    private fun initAdMob() {
-//        MobileAds.initialize(this) {
-//            Log.d("MobileAds", "Initialization complete.")
-//        }
-//        val configuration = RequestConfiguration.Builder().setTestDeviceIds(
-//            listOf("38250D98D8E3A07A2C03CD3552013B29")
-//        ).build()
-//        MobileAds.setRequestConfiguration(configuration)
-//    }
-
-//    private fun initApplovinMax() {
-////        AppLovinSdk.getInstance(this).mediationProvider = "max"
-////        AppLovinSdk.getInstance(this).initializeSdk { }
-////        AppLovinSdk.getInstance(this).settings.setVerboseLogging(false)
-//    }
 
 }
