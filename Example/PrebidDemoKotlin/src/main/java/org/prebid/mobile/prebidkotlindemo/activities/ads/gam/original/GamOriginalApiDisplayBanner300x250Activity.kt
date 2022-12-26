@@ -18,6 +18,7 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 import android.os.Bundle
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.BannerAdUnit
@@ -97,6 +98,30 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
 
                     override fun failure(error: PbFindSizeError) {}
                 })
+            }
+
+            override fun onAdClicked() {
+                super.onAdClicked()
+            }
+
+            override fun onAdClosed() {
+
+            }
+
+            override fun onAdFailedToLoad(p0: LoadAdError) {
+                super.onAdFailedToLoad(p0)
+            }
+
+            override fun onAdOpened() {
+                super.onAdOpened()
+            }
+
+            override fun onAdImpression() {
+                super.onAdImpression()
+            }
+
+            override fun onAdSwipeGestureClicked() {
+                super.onAdSwipeGestureClicked()
             }
         }
     }

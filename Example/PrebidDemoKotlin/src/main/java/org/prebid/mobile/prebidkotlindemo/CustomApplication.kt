@@ -18,9 +18,9 @@ package org.prebid.mobile.prebidkotlindemo
 
 import android.app.Application
 import android.util.Log
-import com.applovin.sdk.AppLovinSdk
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
+//import com.applovin.sdk.AppLovinSdk
+//import com.google.android.gms.ads.MobileAds
+//import com.google.android.gms.ads.RequestConfiguration
 import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.TargetingParams
@@ -37,8 +37,8 @@ class CustomApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initPrebidSDK()
-        initAdMob()
-        initApplovinMax()
+//        initAdMob()
+//        initApplovinMax()
         TargetingParams.setSubjectToGDPR(true)
         Settings.init(this)
     }
@@ -58,20 +58,20 @@ class CustomApplication : Application() {
         PrebidMobile.setShareGeoLocation(true)
     }
 
-    private fun initAdMob() {
-        MobileAds.initialize(this) {
-            Log.d("MobileAds", "Initialization complete.")
-        }
-        val configuration = RequestConfiguration.Builder().setTestDeviceIds(
-            listOf("38250D98D8E3A07A2C03CD3552013B29")
-        ).build()
-        MobileAds.setRequestConfiguration(configuration)
-    }
+//    private fun initAdMob() {
+//        MobileAds.initialize(this) {
+//            Log.d("MobileAds", "Initialization complete.")
+//        }
+//        val configuration = RequestConfiguration.Builder().setTestDeviceIds(
+//            listOf("38250D98D8E3A07A2C03CD3552013B29")
+//        ).build()
+//        MobileAds.setRequestConfiguration(configuration)
+//    }
 
-    private fun initApplovinMax() {
-        AppLovinSdk.getInstance(this).mediationProvider = "max"
-        AppLovinSdk.getInstance(this).initializeSdk { }
-        AppLovinSdk.getInstance(this).settings.setVerboseLogging(false)
-    }
+//    private fun initApplovinMax() {
+////        AppLovinSdk.getInstance(this).mediationProvider = "max"
+////        AppLovinSdk.getInstance(this).initializeSdk { }
+////        AppLovinSdk.getInstance(this).settings.setVerboseLogging(false)
+//    }
 
 }
