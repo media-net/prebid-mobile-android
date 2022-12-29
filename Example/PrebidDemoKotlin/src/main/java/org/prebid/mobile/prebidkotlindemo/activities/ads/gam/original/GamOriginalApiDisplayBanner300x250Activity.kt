@@ -21,10 +21,11 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import org.prebid.mobile.BannerAdUnit
-import org.prebid.mobile.BannerBaseAdUnit
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.Signals
+import com.medianet.android.adsdk.BannerAd
+import com.medianet.android.adsdk.Error
+import com.medianet.android.adsdk.MBannerAdUnit
+import com.medianet.android.adsdk.OnBidCompletionListener
+import org.prebid.mobile.*
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
@@ -40,14 +41,14 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
         const val HEIGHT = 250
     }
 
-    private var adUnit: BannerAdUnit? = null
+    private var adUnit: BannerAd? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+        //PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }
@@ -55,8 +56,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
     private fun createAd() {
 
         // 1. Create BannerAdUnit
-        adUnit = BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT)
-        adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
+        adUnit = BannerAd(CONFIG_ID, WIDTH, HEIGHT).addAdditionalSize(AdSize.BANNER).setRefreshInterval(799)
 
         // 2. Configure banner parameters
         val parameters = BannerBaseAdUnit.Parameters()
@@ -73,11 +73,16 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
 
         // 4. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
-        adUnit?.fetchDemand(request) {
+        adUnit?.fetchDemand(request, object : OnBidCompletionListener {
+            override fun onSuccess() {
+                // 5. Load GAM Ad
+                adView.loadAd(request)
+            }
 
-            // 5. Load GAM Ad
-            adView.loadAd(request)
-        }
+            override fun onError(error: Error) {
+            }
+
+        })
     }
 
     override fun onDestroy() {

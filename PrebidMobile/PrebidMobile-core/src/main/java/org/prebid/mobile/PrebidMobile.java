@@ -319,7 +319,8 @@ public class PrebidMobile {
      *
      * @param googleAdsVersion - MobileAds.getVersion().toString()
      */
-    public static void checkGoogleMobileAdsCompatibility(@NonNull String googleAdsVersion) {
+    public static Boolean checkGoogleMobileAdsCompatibility(@NonNull String googleAdsVersion) {
+        boolean compatible = true;
         int[] prebidVersion = parseVersion(PrebidMobile.TESTED_GOOGLE_SDK_VERSION);
         int[] publisherVersion = parseVersion(googleAdsVersion);
 
@@ -327,10 +328,12 @@ public class PrebidMobile {
         boolean publisherVersionBigger = false;
         for (int i = 0; i < 3; i++) {
             if (prebidVersion[i] > publisherVersion[i]) {
+                compatible = false;
                 prebidVersionBigger = true;
                 break;
             } else if (publisherVersion[i] > prebidVersion[i]) {
                 publisherVersionBigger = true;
+                compatible = false;
                 break;
             }
         }
@@ -340,6 +343,8 @@ public class PrebidMobile {
         } else if (publisherVersionBigger) {
             LogUtil.error("The current version of Prebid SDK is not validated with your version of GMA SDK " + googleAdsVersion + " (Prebid SDK tested on " + PrebidMobile.TESTED_GOOGLE_SDK_VERSION + "). Please update the Prebid SDK or post a ticket on the github.");
         }
+
+        return compatible;
     }
 
 

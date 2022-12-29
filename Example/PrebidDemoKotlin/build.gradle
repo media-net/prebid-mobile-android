@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-    implementation project(':PrebidMobile')
+    //implementation project(':PrebidMobile')
     implementation project(':PrebidMobile-gamEventHandlers')
     implementation project(':MediaNetAdSDK')
 //    implementation project(':PrebidMobile-admobAdapters')
@@ -52,7 +52,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // Advertisement
-    implementation 'com.google.android.gms:play-services-ads:+'
+   // implementation 'com.google.android.gms:play-services-ads:+'
 //    implementation "com.applovin:applovin-sdk:11.5.3"
 //    implementation "com.google.android.gms:play-services-ads-identifier:18.0.1" // For Applovin Max
 

@@ -166,5 +166,4 @@ public class LogUtil {
             return result.toString();
         }
     }
-
 }

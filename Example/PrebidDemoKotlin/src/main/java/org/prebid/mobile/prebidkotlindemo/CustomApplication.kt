@@ -19,6 +19,7 @@ package org.prebid.mobile.prebidkotlindemo
 import android.app.Application
 import android.util.Log
 import com.medianet.android.adsdk.MediaNetAdSDK
+import com.medianet.android.adsdk.MediaNetAdSDK.TEMP_ACCOUNT_ID
 //import com.applovin.sdk.AppLovinSdk
 //import com.google.android.gms.ads.MobileAds
 //import com.google.android.gms.ads.RequestConfiguration
@@ -37,7 +38,7 @@ class CustomApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        MediaNetAdSDK.initPrebidSDK(this)
+        MediaNetAdSDK.initPrebidSDK(this, accountId = TEMP_ACCOUNT_ID)
         TargetingParams.setSubjectToGDPR(true)
         Settings.init(this)
     }
