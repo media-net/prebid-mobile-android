@@ -20,7 +20,8 @@ import android.util.Log;
 import androidx.annotation.Size;
 
 public class LogUtil {
-    private static final String BASE_TAG = "PrebidMobile";
+
+    private static String BASE_TAG = "PrebidMobile";
 
     public static final int NONE = -1;
     public static final int VERBOSE = android.util.Log.VERBOSE; // 2
@@ -153,11 +154,10 @@ public class LogUtil {
     private static String getTagWithBase(String tag) {
         StringBuilder result = new StringBuilder();
 
-        String prefix = "Prebid";
-        if (tag.startsWith(prefix)) {
+        if (tag.startsWith(BASE_TAG)) {
             result.append(tag);
         } else {
-            result.append(prefix).append(tag);
+            result.append(BASE_TAG).append(tag);
         }
 
         if (result.length() > 23) {
@@ -165,5 +165,9 @@ public class LogUtil {
         } else {
             return result.toString();
         }
+    }
+
+    public static void setBaseTag(String tag) {
+        BASE_TAG = tag;
     }
 }

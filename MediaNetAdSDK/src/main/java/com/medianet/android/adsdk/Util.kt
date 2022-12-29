@@ -1,5 +1,6 @@
 package com.medianet.android.adsdk
 
+import org.prebid.mobile.PrebidMobile.LogLevel
 import org.prebid.mobile.ResultCode
 
 object Util {
@@ -18,6 +19,17 @@ object Util {
             ResultCode.PREBID_SERVER_ERROR -> Error.PREBID_SERVER_ERROR
             ResultCode.INVALID_NATIVE_REQUEST -> Error.INVALID_NATIVE_REQUEST
             else -> Error.MISCELLANIOUS_ERROR
+        }
+    }
+
+    fun mapLogLevelToPrebidLogLevel(level: MLogLevel): LogLevel {
+        return when (level) {
+            MLogLevel.DEBUG -> LogLevel.DEBUG
+            MLogLevel.DEBUG -> LogLevel.DEBUG
+            MLogLevel.ERROR -> LogLevel.ERROR
+            MLogLevel.WARN -> LogLevel.WARN
+            MLogLevel.NONE -> LogLevel.NONE
+            else -> LogLevel.DEBUG
         }
     }
 }
