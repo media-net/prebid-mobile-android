@@ -57,6 +57,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
 
         // 1. Create BannerAdUnit
         adUnit = BannerAd(CONFIG_ID, WIDTH, HEIGHT).addAdditionalSize(AdSize.BANNER).setRefreshInterval(799)
+        adUnit?.adType
 
         // 2. Configure banner parameters
         val parameters = BannerBaseAdUnit.Parameters()

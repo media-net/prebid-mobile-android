@@ -21,7 +21,7 @@ import org.prebid.mobile.api.data.AdFormat;
 
 import java.util.HashSet;
 
-public abstract class BannerAdUnit extends BannerBaseAdUnit {
+public class BannerAdUnit extends BannerBaseAdUnit {
 
     public BannerAdUnit(@NonNull String configId, int width, int height) {
         super(configId, AdFormat.BANNER);
