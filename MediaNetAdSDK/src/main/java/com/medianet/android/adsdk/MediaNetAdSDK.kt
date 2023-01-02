@@ -16,6 +16,7 @@ object MediaNetAdSDK {
 
     private var logLevel: MLogLevel = MLogLevel.DEBUG
     // TODO - For some action we can check if test mode is on or not
+    // This can be used to get the full dummy response (auction response and bid response), Can be used for testing
     private var isTestMode: Boolean = false
 
 
@@ -69,7 +70,7 @@ object MediaNetAdSDK {
         isTestMode = false
         PrebidMobile.setPbsDebug(false)
     }
-    fun isDebugMode(): Boolean {
+    fun isTestMode(): Boolean {
         //return isTestMode
         return PrebidMobile.getPbsDebug()
     }

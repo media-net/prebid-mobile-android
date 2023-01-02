@@ -1,0 +1,23 @@
+package com.medianet.android.adsdk
+
+import androidx.annotation.NonNull
+import org.prebid.mobile.InterstitialAdUnit
+
+
+/**
+ * Author: Tushar
+ *
+ *
+ */
+class InterstitialAd {
+
+    private val mInterstitialAd: InterstitialAdUnit
+
+    constructor(@NonNull configId: String) {
+        mInterstitialAd = InterstitialAdUnit(configId)
+    }
+
+    constructor(@NonNull configId: String, minWidthPerc: Int, minHeightPerc: Int) {
+        mInterstitialAd = InterstitialAdUnit(configId, minWidthPerc, minHeightPerc)
+    }
+}
