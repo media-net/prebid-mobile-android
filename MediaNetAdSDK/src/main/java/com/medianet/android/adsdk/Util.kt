@@ -1,5 +1,8 @@
 package com.medianet.android.adsdk
 
+import org.prebid.mobile.ContentObject
+import org.prebid.mobile.ContentObject.ProducerObject
+import org.prebid.mobile.DataObject
 import org.prebid.mobile.PrebidMobile.LogLevel
 import org.prebid.mobile.ResultCode
 
@@ -31,5 +34,48 @@ object Util {
             MLogLevel.NONE -> LogLevel.NONE
             else -> LogLevel.DEBUG
         }
+    }
+
+    fun mapMDataObjectToContentObject(mDataObject: MContentObject): ContentObject {
+        val contentObject = ContentObject()
+        mDataObject.apply {
+            contentObject.id = id
+            contentObject.episode = episode
+            contentObject.title = title
+            contentObject.series = series
+            contentObject.season = season
+            contentObject.artist = artist
+            contentObject.genre = genre
+            contentObject.album = album
+            contentObject.isrc = isrc
+            contentObject.url = url
+            contentObject.categories = categories
+            contentObject.productionQuality = productionQuality
+            contentObject.context = context
+            contentObject.contentRating = contentRating
+            contentObject.userRating = userRating
+            contentObject.qaMediaRating = qaMediaRating
+            contentObject.keywords = getCommaSeparatedKeyWords()
+            contentObject.liveStream = liveStream
+            contentObject.sourceRelationship = sourceRelationship
+            contentObject.length = length
+            contentObject.language = language
+            contentObject.producer = mapMProducerObjectToProducerObject(producerObject)
+            //TODO - when we will create DataObject
+            //contentObject.dataList = dataObjects
+            return contentObject
+        }
+    }
+
+    fun mapMProducerObjectToProducerObject(mProducerObject: MProducerObject?): ProducerObject? {
+        if (mProducerObject == null) return null
+        val producerObject = ProducerObject()
+        mProducerObject?.apply {
+            producerObject.id = id
+            producerObject.name = name
+            producerObject.setCategories(categories)
+            producerObject.domain = domain
+        }
+        return producerObject
     }
 }
