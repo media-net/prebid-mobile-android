@@ -15,15 +15,11 @@
  */
 package org.prebid.mobile.prebidkotlindemo.activities.ads.inapp
 
-import android.os.Bundle
-import org.prebid.mobile.AdSize
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class InAppDisplayBannerMraidExpandActivity : BaseAdActivity() {
 
-    companion object {
+    /*companion object {
         const val CONFIG_ID = "imp-prebid-mraid-expand-1-part"
         const val STORED_RESPONSE = "response-prebid-mraid-expand-1-part"
         const val WIDTH = 320
@@ -58,6 +54,6 @@ class InAppDisplayBannerMraidExpandActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
         adView?.destroy()
-    }
+    }*/
 
 }

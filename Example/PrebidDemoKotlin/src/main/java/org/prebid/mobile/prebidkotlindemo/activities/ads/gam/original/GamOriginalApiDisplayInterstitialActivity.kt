@@ -18,12 +18,8 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
-import org.prebid.mobile.AdUnit
-import org.prebid.mobile.InterstitialAdUnit
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
@@ -34,19 +30,19 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-display-interstitial-320-480"
     }
 
-    private var adUnit: AdUnit? = null
+    //private var adUnit: AdUnit? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+        //PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
-        createAd()
+        //createAd()
     }
 
-    private fun createAd() {
+    /*private fun createAd() {
         // 1. Create InterstitialAdUnit
         adUnit = InterstitialAdUnit(CONFIG_ID, 80, 60)
 
@@ -61,7 +57,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
                 request,
                 createListener())
         }
-    }
+    }*/
 
     private fun createListener(): AdManagerInterstitialAdLoadCallback {
         return object : AdManagerInterstitialAdLoadCallback() {
@@ -83,6 +79,6 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        adUnit?.stopAutoRefresh()
+        //adUnit?.stopAutoRefresh()
     }
 }

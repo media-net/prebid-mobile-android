@@ -1,10 +1,8 @@
 package com.medianet.android.adsdk
 
-import org.prebid.mobile.ResultCode
-
 sealed class Result
 
-sealed class Error(val errorCode: Int, val errorMessage: String): Result() {
+sealed class Error(var errorCode: Int, var errorMessage: String): Result() {
 
     /**
      * The ad request failed due to empty account id
@@ -62,6 +60,10 @@ sealed class Error(val errorCode: Int, val errorMessage: String): Result() {
     object INVALID_NATIVE_REQUEST : Error(141, "Missing assets requirement for native ad unit")
 
     object MISCELLANIOUS_ERROR : Error(199, "Something went wrong")
+
+    object SDK_INIT_ERROR : Error(142, "SDK initialisation failed")
+
+    object GAM_LOAD_AD_ERROR : Error(143, "Error in loading Ad")
 }
 
 

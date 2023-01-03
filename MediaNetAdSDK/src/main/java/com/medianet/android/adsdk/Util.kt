@@ -1,5 +1,6 @@
 package com.medianet.android.adsdk
 
+import com.google.android.gms.ads.LoadAdError
 import org.prebid.mobile.ContentObject
 import org.prebid.mobile.ContentObject.ProducerObject
 import org.prebid.mobile.DataObject
@@ -105,5 +106,13 @@ object Util {
             segmentObject.value = value
         }
         return segmentObject
+    }
+
+    fun mapGamLoadAdErrorToError(gamError: LoadAdError): Error {
+        return  Error.GAM_LOAD_AD_ERROR.apply {
+            errorCode = gamError.code
+            errorMessage = gamError.message
+        }
+
     }
 }

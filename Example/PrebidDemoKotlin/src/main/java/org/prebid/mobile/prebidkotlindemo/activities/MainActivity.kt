@@ -28,7 +28,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.MobileAds
-import org.prebid.mobile.PrebidMobile
+import com.medianet.android.adsdk.MediaNetAdSDK
 import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.databinding.ActivityMainBinding
 import org.prebid.mobile.prebidkotlindemo.testcases.*
@@ -51,12 +51,12 @@ class MainActivity : AppCompatActivity() {
         initSearch()
         initList()
 
-        PrebidMobile.checkGoogleMobileAdsCompatibility(MobileAds.getVersion().toString())
+        MediaNetAdSDK.isCompatibleWithGoogleMobileAds(MobileAds.getVersion().toString())
     }
 
     override fun onRestart() {
         super.onRestart()
-        PrebidMobile.setStoredAuctionResponse(null)
+        MediaNetAdSDK.setStoredAuctionResponse(null)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

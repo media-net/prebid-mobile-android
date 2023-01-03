@@ -15,16 +15,11 @@
  */
 package org.prebid.mobile.prebidkotlindemo.activities.ads.inapp
 
-import android.os.Bundle
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.api.exceptions.AdException
-import org.prebid.mobile.api.rendering.RewardedAdUnit
-import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class InAppVideoRewardedActivity : BaseAdActivity() {
 
-    companion object {
+    /*companion object {
         const val CONFIG_ID = "imp-prebid-video-rewarded-320-480"
         const val STORED_RESPONSE = "response-prebid-video-rewarded-320-480"
     }
@@ -61,6 +56,6 @@ class InAppVideoRewardedActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
         adUnit?.destroy()
-    }
+    }*/
 
 }

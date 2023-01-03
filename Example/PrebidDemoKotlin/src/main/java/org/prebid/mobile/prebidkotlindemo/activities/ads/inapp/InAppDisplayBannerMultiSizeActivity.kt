@@ -15,49 +15,45 @@
  */
 package org.prebid.mobile.prebidkotlindemo.activities.ads.inapp
 
-import android.os.Bundle
-import org.prebid.mobile.AdSize
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class InAppDisplayBannerMultiSizeActivity : BaseAdActivity() {
 
-    companion object {
-        const val CONFIG_ID = "imp-prebid-banner-multisize"
-        const val STORED_RESPONSE = "response-prebid-banner-multisize"
-        const val WIDTH = 728
-        const val HEIGHT = 90
-    }
+    /* companion object {
+         const val CONFIG_ID = "imp-prebid-banner-multisize"
+         const val STORED_RESPONSE = "response-prebid-banner-multisize"
+         const val WIDTH = 728
+         const val HEIGHT = 90
+     }
 
-    private var adView: BannerView? = null
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
-
-        createAd()
-    }
-
-    private fun createAd() {
-        adView = BannerView(
-            this,
-            CONFIG_ID,
-            AdSize(WIDTH, HEIGHT)
-        )
-
-        adWrapperView.addView(adView)
-        adView?.setAutoRefreshDelay(refreshTimeSeconds)
-        adView?.loadAd()
-    }
+     private var adView: BannerView? = null
 
 
-    override fun onDestroy() {
-        super.onDestroy()
-        adView?.destroy()
-    }
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+
+         // The ID of Mocked Bid Response on PBS. Only for test cases.
+         PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+
+         createAd()
+     }
+
+     private fun createAd() {
+         adView = BannerView(
+             this,
+             CONFIG_ID,
+             AdSize(WIDTH, HEIGHT)
+         )
+
+         adWrapperView.addView(adView)
+         adView?.setAutoRefreshDelay(refreshTimeSeconds)
+         adView?.loadAd()
+     }
+
+
+     override fun onDestroy() {
+         super.onDestroy()
+         adView?.destroy()
+     }*/
 
 }

@@ -17,7 +17,6 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 
 import android.net.Uri
 import android.os.Bundle
-import android.view.ViewGroup
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
@@ -28,9 +27,6 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import org.prebid.mobile.*
-import org.prebid.mobile.Signals.PlaybackMethod
-import org.prebid.mobile.Signals.Protocols
 import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
@@ -44,7 +40,7 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
         const val HEIGHT = 480
     }
 
-    private var adUnit: VideoAdUnit? = null
+    //private var adUnit: VideoAdUnit? = null
     private var player: SimpleExoPlayer? = null
     private var adsUri: Uri? = null
     private var adsLoader: ImaAdsLoader? = null
@@ -55,7 +51,7 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+       /* PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         // This example uses Rubicon Server TODO: Rewrite to AWS Server
         PrebidMobile.setPrebidServerAccountId("1001")
@@ -63,10 +59,10 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
             Host.createCustomHost("https://prebid-server.rubiconproject.com/openrtb2/auction")
         )
 
-        createAd()
+        createAd()*/
     }
 
-    private fun createAd() {
+    /*private fun createAd() {
         // 1. Create VideoAdUnit
         adUnit = VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT)
 
@@ -95,9 +91,9 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
             // 6. Init player
             initializePlayer()
         }
-    }
+    }*/
 
-    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
+    /*private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
         return VideoBaseAdUnit.Parameters().apply {
             placement = Signals.Placement.InStream
 
@@ -116,7 +112,7 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
                 Signals.Protocols.VAST_2_0
             )
         }
-    }
+    }*/
 
     private fun initializePlayer() {
 
@@ -147,7 +143,7 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        adUnit?.stopAutoRefresh()
+       /* adUnit?.stopAutoRefresh()
         adsLoader?.setPlayer(null)
         adsLoader?.release()
         player?.release()
@@ -158,7 +154,7 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
             Host.createCustomHost(
                 "https://prebid-server-test-j.prebid.org/openrtb2/auction"
             )
-        )
+        )*/
     }
 
 }

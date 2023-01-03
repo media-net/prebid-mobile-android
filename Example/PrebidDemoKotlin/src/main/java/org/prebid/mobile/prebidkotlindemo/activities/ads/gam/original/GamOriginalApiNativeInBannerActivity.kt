@@ -15,19 +15,19 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-banner-native-styles"
     }
 
-    private var nativeAdUnit: NativeAdUnit? = null
+    //private var nativeAdUnit: NativeAdUnit? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+       // PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
-        createAd()
+        //createAd()
     }
 
-    private fun createAd() {
+   /* private fun createAd() {
         // 1. Create Ad unit
         nativeAdUnit = NativeAdUnit(CONFIG_ID)
         nativeAdUnit?.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
@@ -103,6 +103,6 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
         super.onDestroy()
 
         nativeAdUnit?.stopAutoRefresh()
-    }
+    }*/
 
 }

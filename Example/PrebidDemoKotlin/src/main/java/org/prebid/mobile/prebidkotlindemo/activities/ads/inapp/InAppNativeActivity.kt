@@ -15,23 +15,11 @@
  */
 package org.prebid.mobile.prebidkotlindemo.activities.ads.inapp
 
-import android.content.Intent
-import android.net.Uri
-import android.os.Bundle
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import org.prebid.mobile.*
-import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
-import org.prebid.mobile.prebidkotlindemo.utils.ImageUtils
-import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 
 class InAppNativeActivity : BaseAdActivity() {
 
-    companion object {
+    /*companion object {
         const val CONFIG_ID = "imp-prebid-banner-native-styles"
         const val STORED_RESPONSE = "response-prebid-banner-native-styles"
     }
@@ -144,6 +132,6 @@ class InAppNativeActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
         nativeAdUnit?.destroy()
-    }
+    }*/
 
 }

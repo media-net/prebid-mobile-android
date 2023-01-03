@@ -8,11 +8,7 @@ import org.prebid.mobile.BannerAdUnit
 import org.prebid.mobile.ResultCode
 
 
-/**
- *
- *
- */
-class BannerAd(@NonNull val configId: String, val adSize: AdSize = AdSize.BANNER): Ad() {
+class BannerAd(@NonNull configId: String, val adSize: AdSize = AdSize.BANNER): Ad() {
 
     constructor(@NonNull configId: String, width: Int, height: Int) : this(configId, AdSize(width, height))
 

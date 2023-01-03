@@ -16,10 +16,6 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
-import org.prebid.mobile.AdSize
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.api.rendering.BannerView
-import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
@@ -32,19 +28,19 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
         const val HEIGHT = 50
     }
 
-    private var adView: BannerView? = null
+    //private var adView: BannerView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+        /*PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
-        createAd()
+        createAd()*/
     }
 
-    private fun createAd() {
+   /* private fun createAd() {
         val eventHandler = GamBannerEventHandler(this, AD_UNIT_ID, AdSize(WIDTH, HEIGHT))
         adView = BannerView(this, CONFIG_ID, eventHandler)
         adWrapperView.addView(adView)
@@ -56,6 +52,6 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
         adView?.destroy()
-    }
+    }*/
 
 }

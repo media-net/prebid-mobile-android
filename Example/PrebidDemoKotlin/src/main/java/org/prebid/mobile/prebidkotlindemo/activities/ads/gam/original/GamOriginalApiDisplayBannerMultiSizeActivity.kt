@@ -16,14 +16,6 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 
 import android.os.Bundle
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.admanager.AdManagerAdRequest
-import com.google.android.gms.ads.admanager.AdManagerAdView
-import org.prebid.mobile.BannerAdUnit
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.addendum.AdViewUtils
-import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiDisplayBannerMultiSizeActivity : BaseAdActivity() {
@@ -36,19 +28,19 @@ class GamOriginalApiDisplayBannerMultiSizeActivity : BaseAdActivity() {
         const val HEIGHT = 50
     }
 
-    private var adUnit: BannerAdUnit? = null
+    //private var adUnit: BannerAdUnit? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+        //PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
-        createAd()
+        //createAd()
     }
 
-    private fun createAd() {
+    /*private fun createAd() {
         val adView = AdManagerAdView(this)
         adView.adUnitId = AD_UNIT_ID
         adView.setAdSizes(AdSize(WIDTH, HEIGHT))
@@ -77,12 +69,12 @@ class GamOriginalApiDisplayBannerMultiSizeActivity : BaseAdActivity() {
         adUnit?.fetchDemand(request) {
             adView.loadAd(request)
         }
-    }
+    }*/
 
 
     override fun onDestroy() {
         super.onDestroy()
-        adUnit?.stopAutoRefresh()
+        //adUnit?.stopAutoRefresh()
     }
 
 }

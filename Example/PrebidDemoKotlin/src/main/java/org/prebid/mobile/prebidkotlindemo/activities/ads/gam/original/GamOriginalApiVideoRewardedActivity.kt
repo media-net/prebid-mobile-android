@@ -1,15 +1,6 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 
 import android.os.Bundle
-import android.util.Log
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.admanager.AdManagerAdRequest
-import com.google.android.gms.ads.rewarded.RewardedAd
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.RewardedVideoAdUnit
-import org.prebid.mobile.Signals
-import org.prebid.mobile.VideoBaseAdUnit
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiVideoRewardedActivity : BaseAdActivity() {
@@ -20,19 +11,19 @@ class GamOriginalApiVideoRewardedActivity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-video-rewarded-320-480-original-api"
     }
 
-    private var adUnit: RewardedVideoAdUnit? = null
+    //private var adUnit: RewardedVideoAdUnit? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
+       /* // The ID of Mocked Bid Response on PBS. Only for test cases.
         PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
-        createAd()
+        createAd()*/
     }
 
-    private fun createAd() {
+    /*private fun createAd() {
         // 1. Create RewardedVideoAdUnit
         adUnit = RewardedVideoAdUnit(CONFIG_ID)
 
@@ -81,6 +72,6 @@ class GamOriginalApiVideoRewardedActivity : BaseAdActivity() {
         super.onDestroy()
 
         adUnit?.stopAutoRefresh()
-    }
+    }*/
 
 }

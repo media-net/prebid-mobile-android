@@ -1,21 +1,27 @@
 package com.medianet.android.adsdk
 
+import android.util.Log
 import androidx.annotation.IntRange
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
+import com.google.android.gms.ads.admanager.AdManagerAdView
+import com.google.android.gms.ads.admanager.AppEventListener
 import org.prebid.mobile.AdUnit
+import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.ResultCode
+import org.prebid.mobile.addendum.AdViewUtils
+import org.prebid.mobile.addendum.PbFindSizeError
 
 abstract class Ad {
 
     abstract val adUnit: AdUnit
     abstract val adType: AdType
 
-    //TODO - prebid does not expose it, should we expose it?
     fun getConfigId() = adUnit.configuration.configId
 
-    //TODO - prebid does not expose it, should we expose it?
-    fun getAutoRefreshIntervalInSeconds(): Int = adUnit.configuration.autoRefreshDelay
     fun setAutoRefreshIntervalInSeconds(
         @IntRange(
             from = (PrebidMobile.AUTO_REFRESH_DELAY_MIN / 1000).toLong(),
@@ -40,9 +46,6 @@ abstract class Ad {
     fun setPrebidAdSlot(slot: String) = apply { adUnit.pbAdSlot =  slot }
 
 
-
-
-
     fun fetchDemand(listener: OnBidCompletionListener) {
         adUnit.fetchDemand { resultCode, unmodifiableMap ->
             when(resultCode) {
@@ -52,10 +55,66 @@ abstract class Ad {
         }
     }
 
-    fun fetchDemand(request: AdManagerAdRequest, listener: OnBidCompletionListener) {
-        adUnit.fetchDemand(request) { code ->
+    fun fetchDemand(
+        adView: AdManagerAdView,
+        adRequest: AdManagerAdRequest,
+        listener: GamEventListener
+    ) {
+
+        adView.setAppEventListener { key, value ->
+            if (key == Constants.KEY_AD_RENDERED) {
+                // Mark our ad win
+            }
+            listener.onEvent(key, value)
+        }
+
+        adView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                // Update ad view
+                AdViewUtils.findPrebidCreativeSize(adView, object : AdViewUtils.PbFindSizeListener {
+                    override fun success(width: Int, height: Int) {
+                        adView.setAdSizes(AdSize(width, height))
+                    }
+
+                    override fun failure(error: PbFindSizeError) {
+                        Log.e("Nikhil", "error in adjusting ad view")
+                    }
+                })
+                listener.onAdLoaded()
+            }
+
+            override fun onAdClicked() {
+                listener.onAdClicked()
+            }
+
+            override fun onAdClosed() {
+                listener.onAdClosed()
+            }
+
+            override fun onAdFailedToLoad(p0: LoadAdError) {
+                listener.onAdFailedToLoad(Util.mapGamLoadAdErrorToError(p0))
+            }
+
+            override fun onAdOpened() {
+                listener.onAdOpened()
+            }
+
+            override fun onAdImpression() {
+                listener.onAdImpression()
+            }
+
+            /*override fun onAdSwipeGestureClicked() {
+                super.onAdSwipeGestureClicked()
+            }*/
+        }
+
+        adUnit.fetchDemand(adRequest) { code ->
             when(code) {
-                ResultCode.SUCCESS -> listener.onSuccess()
+                ResultCode.SUCCESS -> {
+                    listener.onSuccess()
+                    adView.loadAd(adRequest)
+                }
+
                 else -> Util.mapResultCodeToError(code)
             }
         }

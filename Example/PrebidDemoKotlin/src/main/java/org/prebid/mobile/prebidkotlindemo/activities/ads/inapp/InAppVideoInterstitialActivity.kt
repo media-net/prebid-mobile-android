@@ -15,18 +15,11 @@
  */
 package org.prebid.mobile.prebidkotlindemo.activities.ads.inapp
 
-import android.os.Bundle
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.api.data.AdUnitFormat
-import org.prebid.mobile.api.exceptions.AdException
-import org.prebid.mobile.api.rendering.InterstitialAdUnit
-import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
-import java.util.*
 
 class InAppVideoInterstitialActivity : BaseAdActivity() {
 
-    companion object {
+    /*companion object {
         const val CONFIG_ID = "imp-prebid-video-interstitial-320-480"
         const val STORED_RESPONSE = "response-prebid-video-interstitial-320-480"
     }
@@ -63,5 +56,5 @@ class InAppVideoInterstitialActivity : BaseAdActivity() {
         super.onDestroy()
         adUnit?.destroy()
     }
-
+*/
 }

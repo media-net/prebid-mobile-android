@@ -16,27 +16,10 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener
 import com.google.android.gms.ads.nativead.NativeAd
-import com.google.android.gms.ads.nativead.NativeCustomFormatAd
-import org.prebid.mobile.*
-import org.prebid.mobile.addendum.AdViewUtils
-import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
-import org.prebid.mobile.prebidkotlindemo.utils.ImageUtils
 
 class GamRenderingApiNativeActivity : BaseAdActivity() {
 
@@ -49,7 +32,7 @@ class GamRenderingApiNativeActivity : BaseAdActivity() {
 
     private var adView: AdManagerAdView? = null
     private var unifiedNativeAd: NativeAd? = null
-    private var adUnit: NativeAdUnit? = null
+    //private var adUnit: NativeAdUnit? = null
     private var adLoader: AdLoader? = null
 
 
@@ -57,12 +40,12 @@ class GamRenderingApiNativeActivity : BaseAdActivity() {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+        /*PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
-        createAd()
+        createAd()*/
     }
 
-    private fun createAd() {
+   /* private fun createAd() {
         adUnit = configureNativeAdUnit()
         val adRequest = AdManagerAdRequest.Builder().build()
         adLoader = createAdLoader(adWrapperView)
@@ -183,6 +166,6 @@ class GamRenderingApiNativeActivity : BaseAdActivity() {
         adView?.destroy()
         unifiedNativeAd?.destroy()
         adUnit?.stopAutoRefresh()
-    }
+    }*/
 
 }

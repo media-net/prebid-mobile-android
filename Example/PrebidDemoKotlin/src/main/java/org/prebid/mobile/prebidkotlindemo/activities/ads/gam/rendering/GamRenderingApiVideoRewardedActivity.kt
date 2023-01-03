@@ -16,11 +16,6 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.api.exceptions.AdException
-import org.prebid.mobile.api.rendering.RewardedAdUnit
-import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
-import org.prebid.mobile.eventhandlers.GamRewardedEventHandler
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamRenderingApiVideoRewardedActivity : BaseAdActivity() {
@@ -31,39 +26,39 @@ class GamRenderingApiVideoRewardedActivity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-video-rewarded-320-480"
     }
 
-    private var adUnit: RewardedAdUnit? = null
+   // private var adUnit: RewardedAdUnit? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+        /*PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
-        createAd()
+        createAd()*/
     }
 
-    private fun createAd() {
-        val eventHandler = GamRewardedEventHandler(this, AD_UNIT_ID)
-        adUnit = RewardedAdUnit(this, CONFIG_ID, eventHandler)
-        adUnit?.setRewardedAdUnitListener(object : RewardedAdUnitListener {
-            override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {
-                adUnit?.show()
-            }
+    /* private fun createAd() {
+         val eventHandler = GamRewardedEventHandler(this, AD_UNIT_ID)
+         adUnit = RewardedAdUnit(this, CONFIG_ID, eventHandler)
+         adUnit?.setRewardedAdUnitListener(object : RewardedAdUnitListener {
+             override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {
+                 adUnit?.show()
+             }
 
-            override fun onAdDisplayed(rewardedAdUnit: RewardedAdUnit?) {}
-            override fun onAdFailed(rewardedAdUnit: RewardedAdUnit?, exception: AdException?) {}
-            override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {}
-            override fun onAdClosed(rewardedAdUnit: RewardedAdUnit?) {}
-            override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?) {}
-        })
-        adUnit?.loadAd()
-    }
+             override fun onAdDisplayed(rewardedAdUnit: RewardedAdUnit?) {}
+             override fun onAdFailed(rewardedAdUnit: RewardedAdUnit?, exception: AdException?) {}
+             override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {}
+             override fun onAdClosed(rewardedAdUnit: RewardedAdUnit?) {}
+             override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?) {}
+         })
+         adUnit?.loadAd()
+     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
-        adUnit?.destroy()
-    }
+     override fun onDestroy() {
+         super.onDestroy()
+         adUnit?.destroy()
+     }*/
 
 }

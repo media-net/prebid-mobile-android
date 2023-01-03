@@ -15,19 +15,11 @@
  */
 package org.prebid.mobile.prebidkotlindemo.activities.ads.inapp
 
-import android.os.Bundle
-import android.util.Log
-import org.prebid.mobile.AdSize
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.api.data.VideoPlacementType
-import org.prebid.mobile.api.exceptions.AdException
-import org.prebid.mobile.api.rendering.BannerView
-import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class InAppVideoBannerActivity : BaseAdActivity() {
 
-    companion object {
+    /*companion object {
         const val CONFIG_ID = "imp-prebid-video-outstream"
         const val STORED_RESPONSE = "response-prebid-video-outstream"
         const val WIDTH = 300
@@ -73,6 +65,6 @@ class InAppVideoBannerActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
         bannerView?.destroy()
-    }
+    }*/
 
 }

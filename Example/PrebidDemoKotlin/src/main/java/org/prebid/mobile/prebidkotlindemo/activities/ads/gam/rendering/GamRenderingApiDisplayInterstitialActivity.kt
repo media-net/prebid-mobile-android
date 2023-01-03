@@ -16,11 +16,6 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.api.exceptions.AdException
-import org.prebid.mobile.api.rendering.InterstitialAdUnit
-import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
-import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
@@ -31,19 +26,19 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-display-interstitial-320-480"
     }
 
-    private var adUnit: InterstitialAdUnit? = null
+    //private var adUnit: InterstitialAdUnit? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+       /* PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
-        createAd()
+        createAd()*/
     }
 
-    private fun createAd() {
+   /* private fun createAd() {
         val eventHandler = GamInterstitialEventHandler(this, AD_UNIT_ID)
         adUnit = InterstitialAdUnit(this, CONFIG_ID, eventHandler)
         adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
@@ -63,6 +58,6 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
     override fun onDestroy() {
         super.onDestroy()
         adUnit?.destroy()
-    }
+    }*/
 
 }

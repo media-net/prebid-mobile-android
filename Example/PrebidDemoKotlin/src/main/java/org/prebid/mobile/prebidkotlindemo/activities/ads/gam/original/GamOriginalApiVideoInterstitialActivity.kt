@@ -17,18 +17,18 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-video-interstitial-320-480-original-api"
     }
 
-    private var adUnit: VideoInterstitialAdUnit? = null
+    //private var adUnit: VideoInterstitialAdUnit? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+       /* PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
-        createAd()
+        createAd()*/
     }
 
-    private fun createAd() {
+    /*private fun createAd() {
 
         // 1. Create VideoInterstitialAdUnit
         adUnit = VideoInterstitialAdUnit(CONFIG_ID)
@@ -92,5 +92,5 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
 
         adUnit?.stopAutoRefresh()
     }
-
+*/
 }
