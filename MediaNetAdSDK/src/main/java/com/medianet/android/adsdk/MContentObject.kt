@@ -115,17 +115,16 @@ class MContentObject {
     /**
      * Additional content data.
      */
-    //TODO this is actually array list of DataObjects will change it later when we create DataObjects
-    var dataObjects: ArrayList<String> = emptyList<String>() as ArrayList<String>
+    var mDataObjects: ArrayList<MDataObject> = ArrayList()
 
     /**
      * This object defines the producer of the content in which the ad will be shown.
      */
     var producerObject: MProducerObject? = null
 
-    fun addData(data: String) = dataObjects?.add(data)
-    fun addDataList(dataList: List<String>) = dataObjects.addAll(dataList)
-    fun clearDataList() = dataObjects.clear()
+    fun addData(data: MDataObject) = mDataObjects.add(data)
+    fun addDataList(dataList: List<MDataObject>) = mDataObjects.addAll(dataList)
+    fun clearDataList() = mDataObjects.clear()
 
     fun getCommaSeparatedKeyWords(): String = keywords.joinToString(separator = ",")
 }

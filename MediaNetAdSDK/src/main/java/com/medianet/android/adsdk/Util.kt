@@ -3,6 +3,7 @@ package com.medianet.android.adsdk
 import org.prebid.mobile.ContentObject
 import org.prebid.mobile.ContentObject.ProducerObject
 import org.prebid.mobile.DataObject
+import org.prebid.mobile.DataObject.SegmentObject
 import org.prebid.mobile.PrebidMobile.LogLevel
 import org.prebid.mobile.ResultCode
 
@@ -36,9 +37,10 @@ object Util {
         }
     }
 
-    fun mapMDataObjectToContentObject(mDataObject: MContentObject): ContentObject {
+    fun mapMContentObjectToContentObject(mContentObject: MContentObject): ContentObject {
         val contentObject = ContentObject()
-        mDataObject.apply {
+        val dataObjectList = arrayListOf<DataObject>()
+        mContentObject.apply {
             contentObject.id = id
             contentObject.episode = episode
             contentObject.title = title
@@ -61,21 +63,47 @@ object Util {
             contentObject.length = length
             contentObject.language = language
             contentObject.producer = mapMProducerObjectToProducerObject(producerObject)
-            //TODO - when we will create DataObject
-            //contentObject.dataList = dataObjects
-            return contentObject
+            for (data in mDataObjects) {
+                dataObjectList.add(mapMDataObjectToDataObject(data))
+            }
+            contentObject.dataList = dataObjectList
         }
+        return contentObject
     }
 
-    fun mapMProducerObjectToProducerObject(mProducerObject: MProducerObject?): ProducerObject? {
+    private fun mapMProducerObjectToProducerObject(mProducerObject: MProducerObject?): ProducerObject? {
         if (mProducerObject == null) return null
         val producerObject = ProducerObject()
-        mProducerObject?.apply {
+        mProducerObject.apply {
             producerObject.id = id
             producerObject.name = name
             producerObject.setCategories(categories)
             producerObject.domain = domain
         }
         return producerObject
+    }
+
+    fun mapMDataObjectToDataObject(mDataObject: MDataObject): DataObject {
+        val dataObject = DataObject()
+        val segmentsList = arrayListOf<SegmentObject>()
+        mDataObject.apply {
+            dataObject.id = id
+            dataObject.name = name
+            for (segment in segments) {
+                segmentsList.add(mapMSegmentObjectToSegmentObject(segment))
+            }
+            dataObject.segments = segmentsList
+        }
+        return dataObject
+    }
+
+    private fun mapMSegmentObjectToSegmentObject(mSegmentObject: MSegmentObject): SegmentObject {
+        val segmentObject = SegmentObject()
+        mSegmentObject.apply {
+            segmentObject.id = id
+            segmentObject.name = name
+            segmentObject.value = value
+        }
+        return segmentObject
     }
 }
