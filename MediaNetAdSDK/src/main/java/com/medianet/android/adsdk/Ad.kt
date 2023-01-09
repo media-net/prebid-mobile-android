@@ -7,9 +7,7 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import com.google.android.gms.ads.admanager.AppEventListener
 import org.prebid.mobile.AdUnit
-import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.ResultCode
 import org.prebid.mobile.addendum.AdViewUtils
@@ -52,6 +50,16 @@ abstract class Ad {
                 ResultCode.SUCCESS -> listener.onSuccess(unmodifiableMap)
                 else -> Util.mapResultCodeToError(resultCode)
             }
+        }
+    }
+
+    fun fetchDemand(adRequest: AdManagerAdRequest, listener: OnBidCompletionListener) {
+        adUnit.fetchDemand(adRequest) {
+        resultCode ->
+                when(resultCode) {
+                    ResultCode.SUCCESS -> listener.onSuccess(null)
+                    else -> Util.mapResultCodeToError(resultCode)
+                }
         }
     }
 

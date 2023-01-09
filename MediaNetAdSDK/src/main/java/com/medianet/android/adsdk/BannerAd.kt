@@ -2,10 +2,8 @@ package com.medianet.android.adsdk
 
 import androidx.annotation.NonNull
 import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.BannerAdUnit
-import org.prebid.mobile.ResultCode
 
 
 class BannerAd(@NonNull configId: String, val adSize: AdSize = AdSize.BANNER): Ad() {

@@ -18,8 +18,14 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
+import com.medianet.android.adsdk.Ad
+import com.medianet.android.adsdk.Error
+import com.medianet.android.adsdk.InterstitialAd
+import com.medianet.android.adsdk.MediaNetAdSDK
+import com.medianet.android.adsdk.OnBidCompletionListener
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
@@ -30,34 +36,38 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-display-interstitial-320-480"
     }
 
-    //private var adUnit: AdUnit? = null
+    private var adUnit: Ad? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        //PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
 
-        //createAd()
+        createAd()
     }
 
-    /*private fun createAd() {
+    private fun createAd() {
         // 1. Create InterstitialAdUnit
-        adUnit = InterstitialAdUnit(CONFIG_ID, 80, 60)
+        adUnit = InterstitialAd(CONFIG_ID, 80, 60)
 
         // 2. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
-        adUnit?.fetchDemand(request) {
+        adUnit?.fetchDemand(request, listener = object : OnBidCompletionListener{
+            override fun onSuccess(keywordMap: Map<String, String>?) {
+                AdManagerInterstitialAd.load(
+                    this@GamOriginalApiDisplayInterstitialActivity,
+                    AD_UNIT_ID,
+                    request,
+                    createListener())
+            }
+            override fun onError(error: Error) {
+                TODO("Not yet implemented")
+            }
+        })
 
-            // 3. Load a GAM interstitial ad
-            AdManagerInterstitialAd.load(
-                this,
-                AD_UNIT_ID,
-                request,
-                createListener())
-        }
-    }*/
+    }
 
     private fun createListener(): AdManagerInterstitialAdLoadCallback {
         return object : AdManagerInterstitialAdLoadCallback() {
