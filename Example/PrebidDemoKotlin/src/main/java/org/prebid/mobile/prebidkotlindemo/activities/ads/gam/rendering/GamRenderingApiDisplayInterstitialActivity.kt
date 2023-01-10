@@ -17,10 +17,10 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
 import android.util.Log
-import com.medianet.android.adsdk.MAdException
 import com.medianet.android.adsdk.rendering.interstitial.InterstitialAd
 import com.medianet.android.adsdk.MediaNetAdSDK
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
+import com.medianet.android.adsdk.Error
 
 class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
 
@@ -62,8 +62,8 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
                 Log.d("Tushar", "onAdDisplayed")
             }
 
-            override fun onAdFailed(adException: MAdException) {
-                Log.d("Tushar", "onAdFailed ${adException.message}")
+            override fun onAdFailed(error: Error) {
+                Log.d("Tushar", "onAdFailed code ${error.errorCode} message ${error.errorMessage}")
             }
 
         })
