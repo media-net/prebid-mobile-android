@@ -16,8 +16,11 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.gms.ads.AdSize
+import com.medianet.android.adsdk.Error
 import com.medianet.android.adsdk.MediaNetAdSDK
+import com.medianet.android.adsdk.rendering.AdEventListener
 import com.medianet.android.adsdk.rendering.banner.BannerAd
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
@@ -46,6 +49,28 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
     private fun createAd() {
         val bannerAd = BannerAd(this, CONFIG_ID, AD_UNIT_ID, AdSize.BANNER)
             .setAutoRefreshInterval(refreshTimeSeconds)
+            .setBannerAdListener(object : AdEventListener {
+                override fun onAdClicked() {
+                    Log.d("Tushar", "onAdClicked")
+                }
+
+                override fun onAdClosed() {
+                    Log.d("Tushar", "onAdClosed")
+                }
+
+                override fun onAdDisplayed() {
+                    Log.d("Tushar", "onAdDisplayed")
+                }
+
+                override fun onAdFailed(error: Error) {
+                    Log.d("Tushar", "onAdFailed code ${error.errorCode} message ${error.errorMessage}")
+                }
+
+                override fun onAdLoaded() {
+                    Log.d("Tushar", "onAdLoaded")
+                }
+
+            })
         adWrapperView.addView(bannerAd.getView())
         bannerAd.loadAd()
     }
