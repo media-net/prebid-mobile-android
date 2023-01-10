@@ -16,6 +16,9 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
+import com.google.android.gms.ads.AdSize
+import com.medianet.android.adsdk.MediaNetAdSDK
+import com.medianet.android.adsdk.rendering.banner.BannerAd
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
@@ -28,30 +31,29 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
         const val HEIGHT = 50
     }
 
-    //private var adView: BannerView? = null
+    private var bannerAd: BannerAd? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        /*PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
 
-        createAd()*/
+        createAd()
     }
 
-   /* private fun createAd() {
-        val eventHandler = GamBannerEventHandler(this, AD_UNIT_ID, AdSize(WIDTH, HEIGHT))
-        adView = BannerView(this, CONFIG_ID, eventHandler)
-        adWrapperView.addView(adView)
-        adView?.setAutoRefreshDelay(refreshTimeSeconds)
-        adView?.loadAd()
+    private fun createAd() {
+        val bannerAd = BannerAd(this, CONFIG_ID, AD_UNIT_ID, AdSize.BANNER)
+            .setAutoRefreshInterval(refreshTimeSeconds)
+        adWrapperView.addView(bannerAd.getView())
+        bannerAd.loadAd()
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        adView?.destroy()
-    }*/
+        bannerAd?.destroy()
+    }
 
 }

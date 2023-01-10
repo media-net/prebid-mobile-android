@@ -1,5 +1,6 @@
 package com.medianet.android.adsdk
 
+import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import org.prebid.mobile.ContentObject
 import org.prebid.mobile.ContentObject.ProducerObject
@@ -140,5 +141,10 @@ object Util {
             AdException.THIRD_PARTY -> Error.THIRD_PARTY
             else -> Error.MISCELLANIOUS_ERROR
         }
+    }
+
+    //To convert AdSize
+    fun getPrebidAdSizeFromGAMAdSize(adSize: AdSize): org.prebid.mobile.AdSize {
+        return org.prebid.mobile.AdSize(adSize.width, adSize.height)
     }
 }
