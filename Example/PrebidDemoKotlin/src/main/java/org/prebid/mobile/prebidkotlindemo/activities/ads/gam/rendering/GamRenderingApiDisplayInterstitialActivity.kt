@@ -16,6 +16,10 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
+import android.util.Log
+import com.medianet.android.adsdk.MAdException
+import com.medianet.android.adsdk.rendering.interstitial.InterstitialAd
+import com.medianet.android.adsdk.MediaNetAdSDK
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
@@ -26,38 +30,48 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-display-interstitial-320-480"
     }
 
-    //private var adUnit: InterstitialAdUnit? = null
+    private var adUnit: InterstitialAd? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-       /* PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
 
-        createAd()*/
+        createAd()
     }
 
-   /* private fun createAd() {
-        val eventHandler = GamInterstitialEventHandler(this, AD_UNIT_ID)
-        adUnit = InterstitialAdUnit(this, CONFIG_ID, eventHandler)
-        adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
-            override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
+   private fun createAd() {
+        adUnit = InterstitialAd(this, AD_UNIT_ID, CONFIG_ID)
+        adUnit?.setInterstitialAdListener(object: InterstitialAd.InterstitialAdListener {
+            override fun onAdLoaded() {
+                Log.d("Tushar", "onAdLoaded")
                 adUnit?.show()
             }
 
-            override fun onAdDisplayed(interstitialAdUnit: InterstitialAdUnit?) {}
-            override fun onAdFailed(interstitialAdUnit: InterstitialAdUnit?, exception: AdException?) {}
-            override fun onAdClicked(interstitialAdUnit: InterstitialAdUnit?) {}
-            override fun onAdClosed(interstitialAdUnit: InterstitialAdUnit?) {}
+            override fun onAdClicked() {
+                Log.d("Tushar", "onAdClicked")
+            }
+
+            override fun onAdClosed() {
+                Log.d("Tushar", "onAdClosed")
+            }
+
+            override fun onAdDisplayed() {
+                Log.d("Tushar", "onAdDisplayed")
+            }
+
+            override fun onAdFailed(adException: MAdException) {
+                Log.d("Tushar", "onAdFailed ${adException.message}")
+            }
+
         })
         adUnit?.loadAd()
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         adUnit?.destroy()
-    }*/
-
+    }
 }
