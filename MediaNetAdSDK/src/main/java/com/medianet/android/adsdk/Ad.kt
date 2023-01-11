@@ -2,6 +2,8 @@ package com.medianet.android.adsdk
 
 import android.util.Log
 import androidx.annotation.IntRange
+import com.app.analytics.AnalyticsSDK
+import com.app.analytics.events.Event
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
@@ -69,6 +71,7 @@ abstract class Ad {
         listener: GamEventListener
     ) {
 
+        AnalyticsSDK.pushEvent(Event(name = "fetching_prebid", type = LoggingEvents.PROJECT.type))
         adView.setAppEventListener { key, value ->
             if (key == Constants.KEY_AD_RENDERED) {
                 // Mark our ad win
@@ -88,6 +91,7 @@ abstract class Ad {
                         Log.e("Nikhil", "error in adjusting ad view")
                     }
                 })
+                AnalyticsSDK.pushEvent(Event(name = "ad_loaded", type = LoggingEvents.SLOT_OPPORTUNITY.type))
                 listener.onAdLoaded()
             }
 
@@ -120,10 +124,14 @@ abstract class Ad {
             when(code) {
                 ResultCode.SUCCESS -> {
                     listener.onSuccess()
+                    AnalyticsSDK.pushEvent(Event(name = "prebid_auction_success", type = LoggingEvents.PROJECT.type))
                     adView.loadAd(adRequest)
                 }
 
-                else -> Util.mapResultCodeToError(code)
+                else ->  {
+                    Util.mapResultCodeToError(code)
+                    AnalyticsSDK.pushEvent(Event(name = "prebid_auction_failure", type = LoggingEvents.PROJECT.type))
+                }
             }
         }
     }

@@ -8,4 +8,5 @@ interface AnalyticsProvider {
     suspend fun pushEvent(event: Event): Boolean
     suspend fun pushEvents(events: List<Event>): Boolean
     fun setDefaultParams(params: Map<String, Any>)
+    fun clean()
 }

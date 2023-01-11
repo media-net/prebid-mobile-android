@@ -29,6 +29,4 @@ project(':PrebidDemoKotlin').projectDir = new File('Example/PrebidDemoKotlin')
 include ':MediaNetAdSDK'
 include ':network'
 include ':logger'
-include ':common'
 include ':analytics'
-include ':common'
