@@ -64,6 +64,16 @@ sealed class Error(var errorCode: Int, var errorMessage: String): Result() {
     object SDK_INIT_ERROR : Error(142, "SDK initialisation failed")
 
     object GAM_LOAD_AD_ERROR : Error(143, "Error in loading Ad")
+
+    object INVALID_REQUEST : Error(144, "Invalid request")
+
+    object INTERNAL_ERROR : Error(145, "SDK internal error")
+
+    object INIT_ERROR : Error(146, "Initialization failed")
+
+    object SERVER_ERROR : Error(147, "Server error")
+
+    object THIRD_PARTY : Error(148, "Third Party SDK")
 }
 
 
