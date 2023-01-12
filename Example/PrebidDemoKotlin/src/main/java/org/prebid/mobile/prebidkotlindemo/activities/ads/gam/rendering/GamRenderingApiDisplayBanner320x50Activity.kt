@@ -47,7 +47,7 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val bannerAd = BannerAd(this, CONFIG_ID, AD_UNIT_ID, AdSize.BANNER)
+        val bannerAd = BannerAd(this, AD_UNIT_ID, AdSize.BANNER)
             .setAutoRefreshInterval(refreshTimeSeconds)
             .setBannerAdListener(object : AdEventListener {
                 override fun onAdClicked() {

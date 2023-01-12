@@ -51,7 +51,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
     private fun createAd() {
 
         // 1. Create BannerAdUnit
-        adUnit = BannerAd(CONFIG_ID, WIDTH, HEIGHT)
+        adUnit = BannerAd(AD_UNIT_ID, WIDTH, HEIGHT)
             .setAutoRefreshIntervalInSeconds(refreshTimeSeconds)
 
         // 2. Configure banner parameters (for video ads)

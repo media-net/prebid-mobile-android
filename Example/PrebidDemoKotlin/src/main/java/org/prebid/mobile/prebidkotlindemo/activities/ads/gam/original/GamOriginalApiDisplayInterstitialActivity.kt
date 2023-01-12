@@ -50,7 +50,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
 
     private fun createAd() {
         // 1. Create InterstitialAdUnit
-        adUnit = InterstitialAd(CONFIG_ID, 80, 60)
+        adUnit = InterstitialAd(AD_UNIT_ID, 80, 60)
 
         // 2. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()

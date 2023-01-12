@@ -13,12 +13,13 @@ import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
 import java.util.*
 
-class InterstitialAd(context: Context, adUnitId: String, configId: String, adUnitFormats: EnumSet<AdType>) {
+class InterstitialAd(context: Context, adUnitId: String, adUnitFormats: EnumSet<AdType>) {
 
-    constructor(context: Context, adUnitId: String, configId: String): this(context, adUnitId, configId, EnumSet.of(AdType.DISPLAY))
+    constructor(context: Context, adUnitId: String): this(context, adUnitId, EnumSet.of(AdType.DISPLAY))
 
     private val gamInterstitialEventHandler = GamInterstitialEventHandler(context as Activity?, adUnitId)
-    private val mInterstitialAdUnit = InterstitialAdUnit(context, configId, mapInterstitialAdFormat(adUnitFormats), gamInterstitialEventHandler)
+    // TODO Pass adUnitId to InterstitialAdUnit once it is configured
+    private val mInterstitialAdUnit = InterstitialAdUnit(context, "imp-prebid-display-interstitial-320-480", mapInterstitialAdFormat(adUnitFormats), gamInterstitialEventHandler)
     private var interstitialAdListener: AdEventListener? = null
 
     fun setInterstitialAdListener(listener: AdEventListener) {

@@ -44,7 +44,7 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
     }
 
    private fun createAd() {
-        adUnit = InterstitialAd(this, AD_UNIT_ID, CONFIG_ID)
+        adUnit = InterstitialAd(this, AD_UNIT_ID)
         adUnit?.setInterstitialAdListener(object: AdEventListener {
             override fun onAdLoaded() {
                 Log.d("Tushar", "onAdLoaded")
