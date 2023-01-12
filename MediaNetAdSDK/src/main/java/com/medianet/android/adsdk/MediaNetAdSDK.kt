@@ -50,7 +50,6 @@ object MediaNetAdSDK {
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
         publisherSdkInitListener = sdkInitListener
         PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
-        TargetingParams.setSubjectToGDPR(true)
     }
 
 
@@ -102,5 +101,11 @@ object MediaNetAdSDK {
 
     fun setSubjectToGDPR(enable: Boolean) = apply { TargetingParams.setSubjectToGDPR(enable) }
 
+    fun isSubjectToGDPR(): Boolean? {
+        return TargetingParams.isSubjectToGDPR()
+    }
 
+    fun setGDPRConsentString(consentString: String?) = apply {
+        TargetingParams.setGDPRConsentString(consentString)
+    }
 }
