@@ -3,7 +3,7 @@ package com.medianet.android.adsdk
 import android.util.Log
 import androidx.annotation.IntRange
 import com.app.analytics.AnalyticsSDK
-import com.app.analytics.events.Event
+import com.app.analytics.Event
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError

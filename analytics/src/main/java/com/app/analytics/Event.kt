@@ -1,4 +1,4 @@
-package com.app.analytics.events
+package com.app.analytics
 
 data class Event(
      val name: String,

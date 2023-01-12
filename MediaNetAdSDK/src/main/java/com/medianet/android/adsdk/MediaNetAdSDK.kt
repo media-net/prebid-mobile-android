@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.app.analytics.AnalyticsSDK
 import com.app.analytics.SamplingMap
-import com.app.analytics.events.Event
+import com.app.analytics.Event
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile

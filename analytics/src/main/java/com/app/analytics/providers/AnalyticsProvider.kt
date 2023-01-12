@@ -1,6 +1,6 @@
 package com.app.analytics.providers
 
-import com.app.analytics.events.Event
+import com.app.analytics.Event
 
 interface AnalyticsProvider {
     val defaultParams: MutableMap<String, Any>

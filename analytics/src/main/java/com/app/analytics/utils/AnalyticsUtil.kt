@@ -1,7 +1,7 @@
 package com.app.analytics.utils
 
 import android.net.Uri
-import com.app.analytics.events.Event
+import com.app.analytics.Event
 import com.app.analytics.providers.defaults.DefaultAnalyticsPixel
 import com.app.analytics.providers.cached.db.EventDBEntity
 

@@ -2,7 +2,7 @@ package com.app.analytics.providers.cached
 
 import android.content.Context
 import com.app.analytics.PushEventToServerService
-import com.app.analytics.events.Event
+import com.app.analytics.Event
 import com.app.analytics.providers.AnalyticsProvider
 import com.app.analytics.providers.cached.db.IAnalyticsEventRepository
 import com.app.analytics.utils.AnalyticsUtil
