@@ -21,6 +21,7 @@ import com.medianet.android.adsdk.rendering.interstitial.InterstitialAd
 import com.medianet.android.adsdk.MediaNetAdSDK
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 import com.medianet.android.adsdk.Error
+import com.medianet.android.adsdk.rendering.AdEventListener
 
 class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
 
@@ -44,7 +45,7 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
 
    private fun createAd() {
         adUnit = InterstitialAd(this, AD_UNIT_ID, CONFIG_ID)
-        adUnit?.setInterstitialAdListener(object: InterstitialAd.InterstitialAdListener {
+        adUnit?.setInterstitialAdListener(object: AdEventListener {
             override fun onAdLoaded() {
                 Log.d("Tushar", "onAdLoaded")
                 adUnit?.show()
