@@ -23,7 +23,8 @@ class ImmediateSyncStrategy(
 
     companion object {
         private val TAG = ImmediateSyncStrategy::class.java.simpleName
-        private const val SYNC_PAUSE_INTERVAL_MILLIS: Long = 15000
+        private const val SYNC_PAUSE_INTERVAL_MILLIS: Long = 15 * 60 * 1000L // 15 minutes.
+
     }
 
     private var topEventInDbLiveData: LiveData<EventDBEntity>? = null
