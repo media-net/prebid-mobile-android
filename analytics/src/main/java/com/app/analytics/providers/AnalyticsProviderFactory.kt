@@ -44,7 +44,7 @@ object AnalyticsProviderFactory {
     fun addCachedAnalytics(applicationContext: Context, baseUrl: String, syncIntervalInMinutes: Long) {
         val pushService = NetworkComponentFactory.getPushToServerService(baseUrl)
         val eventDbRepo = DbComponentFactory.getEventDbRepository(applicationContext)
-        val defaultProvider = CachedAnalyticsProvider(applicationContext, baseUrl,eventDbRepo, pushService, syncIntervalInMinutes)
+        val defaultProvider = CachedAnalyticsProvider(applicationContext, baseUrl, eventDbRepo, pushService, syncIntervalInMinutes)
         providers.add(defaultProvider)
     }
 

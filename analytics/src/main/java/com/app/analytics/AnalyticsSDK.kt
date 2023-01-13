@@ -1,10 +1,10 @@
 package com.app.analytics
 
 import android.content.Context
-import android.util.Log
 import com.app.analytics.events.Event
 import com.app.analytics.providers.AnalyticsProvider
 import com.app.analytics.providers.AnalyticsProviderFactory
+import com.app.analytics.utils.NetworkWatcher
 import com.app.logger.CustomLogger
 import kotlinx.coroutines.*
 
@@ -21,6 +21,7 @@ object AnalyticsSDK {
         if (isInitialised.not()) {
             config = configuration
             customProviders = providers
+            NetworkWatcher.init(context)
             addProviders(context, providers)
             isInitialised = true
             sendPendingEventIfAny()
@@ -172,5 +173,6 @@ object AnalyticsSDK {
         config = null
         pendingEvents.clear()
         AnalyticsProviderFactory.clear()
+        NetworkWatcher.stop()
     }
 }

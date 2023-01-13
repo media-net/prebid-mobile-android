@@ -1,4 +1,4 @@
-package com.app.analytics.providers.cached
+package com.app.analytics.providers.cached.sync_strategy
 
 import android.content.Context
 import androidx.work.*
