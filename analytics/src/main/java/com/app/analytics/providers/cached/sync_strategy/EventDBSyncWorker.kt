@@ -59,19 +59,19 @@ class EventDBSyncWorker (
     }
 
     override suspend fun doWork() = withContext(Dispatchers.IO) {
-
         val events = repository.getAll()
         val eventSyncedSuccessFully = mutableListOf<EventDBEntity>()
 
         // Sync events with network
         events?.forEach { event ->
             CustomLogger.debug(TAG, "sending event to server ${event.name}")
-            safeApiCall(
+            val result = safeApiCall(
                 apiCall = { syncService.pushAnalyticsEvent(event.pixel) },
-                successTransform = {
-                    eventSyncedSuccessFully.add(event)
-                }
+                successTransform = {}
             )
+            if (result.isSuccess) {
+                eventSyncedSuccessFully.add(event)
+            }
         }
 
         // delete synced events from DB
