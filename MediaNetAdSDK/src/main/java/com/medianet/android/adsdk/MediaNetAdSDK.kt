@@ -109,18 +109,18 @@ object MediaNetAdSDK {
 
     private fun initAnalytics(applicationContext: Context) {
         val samplingMap = SamplingMap()
-        samplingMap.put(LoggingEvents.PROJECT.type, 50) //TODO get this in config call
+        samplingMap.put(LoggingEvents.PROJECT.type, 100) //TODO get this in config call
         samplingMap.put(LoggingEvents.SLOT_OPPORTUNITY.type, 100) //TODO get this in config call
 
         val configuration = AnalyticsSDK.Configuration.Builder()
             .setDebugMode(false)
             .setAnalyticsUrl("https://logstash-gcpi.net") //TODO get this in config call
             .enableEventCaching(true)
-            .enableEventSampling(true, samplingMap)
+            .enableEventSampling(false, samplingMap)
             .build()
 
         AnalyticsSDK.init(applicationContext, configuration)
-        AnalyticsSDK.pushEvent(Event(name = "Config_call_success", type = LoggingEvents.PROJECT.type))
+        //AnalyticsSDK.pushEvent(Event(name = "Config_call_success", type = LoggingEvents.PROJECT.type))
     }
 
 
