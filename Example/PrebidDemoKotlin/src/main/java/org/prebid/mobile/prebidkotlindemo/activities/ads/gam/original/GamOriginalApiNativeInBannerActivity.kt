@@ -1,10 +1,14 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import org.prebid.mobile.*
+import com.medianet.android.adsdk.Error
+import com.medianet.android.adsdk.GamEventListener
+import com.medianet.android.adsdk.MediaNetAdSDK
+import com.medianet.android.adsdk.nativead.*
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
@@ -15,24 +19,24 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-banner-native-styles"
     }
 
-    //private var nativeAdUnit: NativeAdUnit? = null
+    private var nativeAdUnit: NativeAd? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-       // PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
 
-        //createAd()
+        createAd()
     }
 
-   /* private fun createAd() {
+    private fun createAd() {
         // 1. Create Ad unit
-        nativeAdUnit = NativeAdUnit(CONFIG_ID)
-        nativeAdUnit?.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
-        nativeAdUnit?.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED)
-        nativeAdUnit?.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL)
+        nativeAdUnit = NativeAd(AD_UNIT_ID)
+        nativeAdUnit?.setContextType(NativeAd.ContextType.SOCIAL_CENTRIC)
+        nativeAdUnit?.setPlacementType(NativeAd.PlacementType.CONTENT_FEED)
+        nativeAdUnit?.setContextSubType(NativeAd.ContextSubType.GENERAL_SOCIAL)
 
         // 2. Configure Native Assets and Trackers
         addNativeAssets(nativeAdUnit)
@@ -45,54 +49,78 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
 
         // 4. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
-        nativeAdUnit?.fetchDemand(request) {
+        nativeAdUnit?.fetchDemand(gamView, request, object : GamEventListener {
+            override fun onAdLoaded() {
+                Log.d("Tushar", "onAdLoaded")
+            }
 
-            // 5. Load a GAM Ad
-            gamView.loadAd(request)
-        }
+            override fun onAdClicked() {
+                Log.d("Tushar", "onAdClicked")
+            }
+
+            override fun onAdClosed() {
+                Log.d("Tushar", "onAdClosed")
+            }
+
+            override fun onAdFailedToLoad(error: Error) {
+                Log.d("Tushar", "Error code: ${error.errorCode}, message: ${error.errorMessage}")
+            }
+
+            override fun onAdOpened() {
+                Log.d("Tushar", "onAdOpened")
+            }
+
+            override fun onAdImpression() {
+                Log.d("Tushar", "onAdImpression")
+            }
+
+            override fun onSuccess(keywordMap: Map<String, String>?) {
+                gamView.loadAd(request)
+            }
+        })
     }
 
-    private fun addNativeAssets(adUnit: NativeAdUnit?)  {
+    private fun addNativeAssets(adUnit: NativeAd?)  {
         // ADD ASSETS
 
-        val title = NativeTitleAsset()
+        val title = TitleAsset()
         title.setLength(90)
-        title.isRequired = true
+        title.setRequired(true)
         adUnit?.addAsset(title)
 
-        val icon = NativeImageAsset(20, 20, 20, 20)
-        icon.imageType = NativeImageAsset.IMAGE_TYPE.ICON
-        icon.isRequired = true
+        val icon = ImageAsset(20, 20, 20, 20)
+        icon.setImageType(ImageAsset.ImageType.ICON)
+        icon.setRequired(true)
         adUnit?.addAsset(icon)
 
-        val image = NativeImageAsset(200, 200, 200, 200)
-        image.imageType = NativeImageAsset.IMAGE_TYPE.MAIN
-        image.isRequired = true
+        val image = ImageAsset(200, 200, 200, 200)
+        image.setImageType(ImageAsset.ImageType.MAIN)
+        image.setRequired(true)
         adUnit?.addAsset(image)
 
-        val data = NativeDataAsset()
-        data.len = 90
-        data.dataType = NativeDataAsset.DATA_TYPE.SPONSORED
-        data.isRequired = true
+        val data = DataAsset()
+        data.setLength(90)
+        data.setDataType(DataAsset.DataType.SPONSORED)
+        data.setRequired(true)
         adUnit?.addAsset(data)
 
-        val body = NativeDataAsset()
-        body.isRequired = true
-        body.dataType = NativeDataAsset.DATA_TYPE.DESC
+        val body = DataAsset()
+        body.setDataType(DataAsset.DataType.DESC)
+        body.setRequired(true)
         adUnit?.addAsset(body)
 
-        val cta = NativeDataAsset()
-        cta.isRequired = true
-        cta.dataType = NativeDataAsset.DATA_TYPE.CTATEXT
+        val cta = DataAsset()
+        cta.setDataType(DataAsset.DataType.CTA_TEXT)
+        cta.setRequired(true)
         adUnit?.addAsset(cta)
 
         // ADD EVENT TRACKERS
 
-        val methods = ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD>()
-        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE)
+        val methods = ArrayList<EventTracker.EventTrackingMethods>()
+        methods.add(EventTracker.EventTrackingMethods.IMAGE)
 
         try {
-            val tracker = NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods)
+            val tracker = EventTracker(EventTracker.EventType.IMPRESSION, methods)
             adUnit?.addEventTracker(tracker)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -101,8 +129,7 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-
         nativeAdUnit?.stopAutoRefresh()
-    }*/
+    }
 
 }
