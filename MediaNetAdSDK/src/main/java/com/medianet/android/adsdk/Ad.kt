@@ -91,7 +91,7 @@ abstract class Ad {
                         Log.e("Nikhil", "error in adjusting ad view")
                     }
                 })
-                AnalyticsSDK.pushEvent(Event(name = "ad_loaded", type = LoggingEvents.SLOT_OPPORTUNITY.type))
+                AnalyticsSDK.pushEvent(Event(name = "ad_loaded", type = LoggingEvents.OPPORTUNITY.type))
                 listener.onAdLoaded()
             }
 
