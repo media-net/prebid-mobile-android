@@ -10,9 +10,13 @@ import org.prebid.mobile.DataObject.SegmentObject
 import org.prebid.mobile.NativeAdUnit.CONTEXTSUBTYPE
 import org.prebid.mobile.NativeAdUnit.CONTEXT_TYPE
 import org.prebid.mobile.NativeAdUnit.PLACEMENTTYPE
+import org.prebid.mobile.NativeAsset
+import org.prebid.mobile.NativeDataAsset
 import org.prebid.mobile.NativeDataAsset.DATA_TYPE
+import org.prebid.mobile.NativeEventTracker
 import org.prebid.mobile.NativeEventTracker.EVENT_TRACKING_METHOD
 import org.prebid.mobile.NativeEventTracker.EVENT_TYPE
+import org.prebid.mobile.NativeImageAsset
 import org.prebid.mobile.NativeImageAsset.IMAGE_TYPE
 import org.prebid.mobile.NativeTitleAsset
 import org.prebid.mobile.PrebidMobile.LogLevel
@@ -199,7 +203,7 @@ object Util {
         }
     }
 
-    fun getPrebidImageType(imageType: ImageAsset.ImageType): IMAGE_TYPE {
+    private fun getPrebidImageType(imageType: ImageAsset.ImageType): IMAGE_TYPE {
         return when(imageType) {
             ImageAsset.ImageType.ICON -> IMAGE_TYPE.ICON
             ImageAsset.ImageType.MAIN -> IMAGE_TYPE.MAIN
@@ -208,7 +212,7 @@ object Util {
         }
     }
 
-    fun getPrebidDataType(dataType: DataAsset.DataType): DATA_TYPE {
+    private fun getPrebidDataType(dataType: DataAsset.DataType): DATA_TYPE {
         return when(dataType) {
             DataAsset.DataType.DESC -> DATA_TYPE.DESC
             DataAsset.DataType.DESC2 -> DATA_TYPE.DESC2
@@ -227,7 +231,7 @@ object Util {
         }
     }
 
-    fun getPrebidEventType(eventType: EventTracker.EventType): EVENT_TYPE {
+    private fun getPrebidEventType(eventType: EventTracker.EventType): EVENT_TYPE {
         return when(eventType) {
             EventTracker.EventType.CUSTOM -> EVENT_TYPE.CUSTOM
             EventTracker.EventType.IMPRESSION -> EVENT_TYPE.IMPRESSION
@@ -238,7 +242,7 @@ object Util {
         }
     }
 
-    fun getPrebidTrackingMethodTypeArray(methods: ArrayList<EventTracker.EventTrackingMethods>): ArrayList<EVENT_TRACKING_METHOD> {
+    private fun getPrebidTrackingMethodTypeArray(methods: ArrayList<EventTracker.EventTrackingMethods>): ArrayList<EVENT_TRACKING_METHOD> {
         val methodsArray = arrayListOf<EVENT_TRACKING_METHOD>()
         for (methodType in methods) {
             methodsArray.add(
@@ -250,5 +254,47 @@ object Util {
             })
         }
         return methodsArray
+    }
+
+    fun getPrebidAssetFromNativeAdAsset(asset: NativeAdAsset): NativeAsset? {
+        return when (asset) {
+            is TitleAsset -> {
+                val titleAsset = NativeTitleAsset()
+                titleAsset.setLength(asset.length)
+                titleAsset.isRequired = asset.isRequired
+                titleAsset.assetExt = asset.assetExt
+                titleAsset.titleExt = asset.titleExt
+                titleAsset
+            }
+
+            is ImageAsset -> {
+                val imageAsset = NativeImageAsset(asset.width, asset.height, asset.minWidth, asset.minHeight)
+                imageAsset.imageType = asset.type?.let { getPrebidImageType(it) }
+                imageAsset.isRequired = asset.isRequired
+                imageAsset.imageExt = asset.imageExt
+                imageAsset.assetExt = asset.assetExt
+                for (mime in asset.mimes) {
+                    imageAsset.addMime(mime)
+                }
+                imageAsset
+            }
+
+            is DataAsset -> {
+                val dataAsset = NativeDataAsset()
+                dataAsset.len = asset.length
+                dataAsset.isRequired = asset.isRequired
+                dataAsset.dataType = asset.type?.let { getPrebidDataType(it) }
+                dataAsset.dataExt = asset.dataExt
+                dataAsset.assetExt = asset.assetExt
+                dataAsset
+            }
+            else -> {
+                null
+            }
+        }
+    }
+
+    fun getPrebidEventTracker(eventTracker: EventTracker): NativeEventTracker {
+        return NativeEventTracker(getPrebidEventType(eventTracker.type), getPrebidTrackingMethodTypeArray(eventTracker.methods))
     }
 }

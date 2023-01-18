@@ -3,6 +3,8 @@ package com.medianet.android.adsdk.nativead
 import com.medianet.android.adsdk.Ad
 import com.medianet.android.adsdk.AdType
 import com.medianet.android.adsdk.Util
+import com.medianet.android.adsdk.Util.getPrebidAssetFromNativeAdAsset
+import com.medianet.android.adsdk.Util.getPrebidEventTracker
 import org.prebid.mobile.*
 
 class NativeAd(adUnitId: String): Ad() {
@@ -49,12 +51,12 @@ class NativeAd(adUnitId: String): Ad() {
         mNativeAdUnit.setExt(jsonObject)
     }
 
-    fun addEventTracker(tracker: EventTracker?) {
-        mNativeAdUnit.addEventTracker(tracker?.getPrebidEventTracker())
+    fun addEventTracker(tracker: EventTracker) {
+        mNativeAdUnit.addEventTracker(getPrebidEventTracker(tracker))
     }
 
-    fun addAsset(asset: NativeAdAsset?) {
-        mNativeAdUnit.addAsset(asset?.getPrebidAsset())
+    fun addAsset(asset: NativeAdAsset) {
+        mNativeAdUnit.addAsset(getPrebidAssetFromNativeAdAsset(asset))
     }
 
     enum class ContextType(private var id: Int) {

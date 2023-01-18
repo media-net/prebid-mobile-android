@@ -83,35 +83,28 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
     private fun addNativeAssets(adUnit: NativeAd?)  {
         // ADD ASSETS
 
-        val title = TitleAsset()
-        title.setLength(90)
-        title.setRequired(true)
+        val title = TitleAsset(90)
+        title.isRequired = true
         adUnit?.addAsset(title)
 
-        val icon = ImageAsset(20, 20, 20, 20)
-        icon.setImageType(ImageAsset.ImageType.ICON)
-        icon.setRequired(true)
+        val icon = ImageAsset(20, 20, 20, 20, ImageAsset.ImageType.ICON)
+        icon.isRequired = true
         adUnit?.addAsset(icon)
 
-        val image = ImageAsset(200, 200, 200, 200)
-        image.setImageType(ImageAsset.ImageType.MAIN)
-        image.setRequired(true)
+        val image = ImageAsset(200, 200, 200, 200, ImageAsset.ImageType.MAIN)
+        image.isRequired = true
         adUnit?.addAsset(image)
 
-        val data = DataAsset()
-        data.setLength(90)
-        data.setDataType(DataAsset.DataType.SPONSORED)
-        data.setRequired(true)
+        val data = DataAsset(DataAsset.DataType.SPONSORED, 90)
+        data.isRequired = true
         adUnit?.addAsset(data)
 
-        val body = DataAsset()
-        body.setDataType(DataAsset.DataType.DESC)
-        body.setRequired(true)
+        val body = DataAsset(DataAsset.DataType.DESC)
+        body.isRequired = true
         adUnit?.addAsset(body)
 
-        val cta = DataAsset()
-        cta.setDataType(DataAsset.DataType.CTA_TEXT)
-        cta.setRequired(true)
+        val cta = DataAsset(DataAsset.DataType.CTA_TEXT)
+        cta.isRequired = true
         adUnit?.addAsset(cta)
 
         // ADD EVENT TRACKERS

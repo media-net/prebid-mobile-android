@@ -1,9 +1,12 @@
 package com.medianet.android.adsdk.nativead
 
 import org.json.JSONObject
-import org.prebid.mobile.NativeAsset
 
 abstract class NativeAdAsset(private var type: AssetType?) {
+
+    var assetExt: Any? = null
+    var isRequired: Boolean = false
+
     enum class AssetType {
         TITLE,
         IMAGE,
@@ -15,6 +18,4 @@ abstract class NativeAdAsset(private var type: AssetType?) {
     }
 
     abstract fun getJsonObject(): JSONObject?
-
-    abstract fun getPrebidAsset(): NativeAsset
 }

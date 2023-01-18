@@ -1,13 +1,15 @@
 package com.medianet.android.adsdk.nativead
 
-import com.medianet.android.adsdk.Util
 import org.json.JSONObject
-import org.prebid.mobile.NativeAsset
-import org.prebid.mobile.NativeDataAsset
+import org.prebid.mobile.LogUtil
 
-class DataAsset: NativeAdAsset(AssetType.DATA) {
+data class DataAsset(
+    var type: DataType? = null,
+    var length: Int = 0,
+    var dataExt: Any? = null
+): NativeAdAsset(AssetType.DATA) {
 
-    enum class DataType(id: Int) {
+    enum class DataType(var id: Int) {
         SPONSORED(1),
         DESC(2),
         RATING(3),
@@ -23,33 +25,19 @@ class DataAsset: NativeAdAsset(AssetType.DATA) {
         CUSTOM(500)
     }
 
-    private var nativeDataAsset = NativeDataAsset()
-
-    fun setDataType(type: DataType) {
-        nativeDataAsset.dataType = Util.getPrebidDataType(type)
-    }
-
-    fun setLength(length: Int) {
-        nativeDataAsset.len = length
-    }
-
-    fun setRequired(required: Boolean) {
-        nativeDataAsset.isRequired = required
-    }
-
-    fun setAssetExt(assetExt: Any) {
-        nativeDataAsset.assetExt = assetExt
-    }
-
-    fun setDataExt(dataExt: Any) {
-        nativeDataAsset.dataExt = dataExt
-    }
-
     override fun getJsonObject(): JSONObject? {
-        return nativeDataAsset.jsonObject
-    }
-
-    override fun getPrebidAsset(): NativeAsset {
-        return nativeDataAsset
+        val result = JSONObject()
+        try {
+            result.putOpt("required", if (isRequired) 1 else 0)
+            result.putOpt("ext", assetExt)
+            val dataObject = JSONObject()
+            dataObject.putOpt("type", type?.id)
+            dataObject.putOpt("len", length)
+            dataObject.putOpt("ext", dataExt)
+            result.put("data", dataObject)
+        } catch (exception: Exception) {
+            LogUtil.error("NativeTitleAsset", "Can't create json object: " + exception.message)
+        }
+        return result
     }
 }

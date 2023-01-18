@@ -1,34 +1,25 @@
 package com.medianet.android.adsdk.nativead
 
 import org.json.JSONObject
-import org.prebid.mobile.NativeAsset
-import org.prebid.mobile.NativeTitleAsset
+import org.prebid.mobile.LogUtil
 
-class TitleAsset: NativeAdAsset(AssetType.TITLE) {
+data class TitleAsset (
+    var length: Int = 0,
+    var titleExt: Any? = null,
+): NativeAdAsset(AssetType.TITLE) {
 
-    private var nativeTitleAsset = NativeTitleAsset()
-
-    fun setLength(length: Int) {
-        nativeTitleAsset.setLength(length)
-    }
-
-    fun setRequired(required: Boolean) {
-        nativeTitleAsset.isRequired = required
-    }
-
-    fun setTitleExt(ext: Any?) {
-        nativeTitleAsset.titleExt = ext
-    }
-
-    fun setAssetExt(assetExt: Any?) {
-        nativeTitleAsset.assetExt = assetExt
-    }
-
-    override fun getJsonObject(): JSONObject? {
-        return nativeTitleAsset.jsonObject
-    }
-
-    override fun getPrebidAsset(): NativeAsset {
-        return nativeTitleAsset
+    override fun getJsonObject(): JSONObject {
+        val result = JSONObject()
+        try {
+            result.putOpt("required", if (isRequired) 1 else 0)
+            result.putOpt("ext", assetExt)
+            val titleObject = JSONObject()
+            titleObject.putOpt("len", length)
+            titleObject.putOpt("ext", titleExt)
+            result.put("title", titleObject)
+        } catch (exception: Exception) {
+            LogUtil.error("NativeTitleAsset", "Can't create json object: " + exception.message)
+        }
+        return result
     }
 }
