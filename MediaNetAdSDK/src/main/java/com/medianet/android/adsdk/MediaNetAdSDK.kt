@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.app.analytics.AnalyticsSDK
 import com.app.analytics.SamplingMap
-import com.app.analytics.events.Event
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
@@ -52,8 +51,6 @@ object MediaNetAdSDK {
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
         publisherSdkInitListener = sdkInitListener
         PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
-        TargetingParams.setSubjectToGDPR(true)
-
 
         //Initialising Aanalytics
         initAnalytics(applicationContext)
@@ -127,5 +124,13 @@ object MediaNetAdSDK {
     //TODO - when to call this
     fun clear() {
         AnalyticsSDK.clear()
+    }
+
+    fun isSubjectToGDPR(): Boolean? {
+        return TargetingParams.isSubjectToGDPR()
+    }
+
+    fun setGDPRConsentString(consentString: String?) = apply {
+        TargetingParams.setGDPRConsentString(consentString)
     }
 }
