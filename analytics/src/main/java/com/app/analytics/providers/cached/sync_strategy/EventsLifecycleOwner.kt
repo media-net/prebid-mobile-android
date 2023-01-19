@@ -1,4 +1,4 @@
-package com.app.analytics.providers.cached
+package com.app.analytics.providers.cached.sync_strategy
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver

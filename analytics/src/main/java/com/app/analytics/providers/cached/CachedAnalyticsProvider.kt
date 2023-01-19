@@ -5,6 +5,9 @@ import com.app.analytics.PushEventToServerService
 import com.app.analytics.Event
 import com.app.analytics.providers.AnalyticsProvider
 import com.app.analytics.providers.cached.db.IAnalyticsEventRepository
+import com.app.analytics.providers.cached.sync_strategy.EventSyncStrategy
+import com.app.analytics.providers.cached.sync_strategy.ImmediateSyncStrategy
+import com.app.analytics.providers.cached.sync_strategy.TimedSyncStrategy
 import com.app.analytics.utils.AnalyticsUtil
 import com.app.analytics.utils.AnalyticsUtil.toDbEntry
 import com.app.analytics.utils.Constant
@@ -32,7 +35,7 @@ class CachedAnalyticsProvider(
         syncStrategy = if (syncIntervalInMinutes > 15) {
             TimedSyncStrategy(context, eventRepository, pushService)
         } else  {
-            ImmediateSyncStrategy(eventRepository, pushService)
+            ImmediateSyncStrategy(context, eventRepository, pushService)
         }
         syncStrategy.initialise()
     }

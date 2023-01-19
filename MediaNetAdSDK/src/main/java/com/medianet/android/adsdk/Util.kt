@@ -1,5 +1,6 @@
 package com.medianet.android.adsdk
 
+import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import org.prebid.mobile.ContentObject
 import org.prebid.mobile.ContentObject.ProducerObject
@@ -7,6 +8,9 @@ import org.prebid.mobile.DataObject
 import org.prebid.mobile.DataObject.SegmentObject
 import org.prebid.mobile.PrebidMobile.LogLevel
 import org.prebid.mobile.ResultCode
+import org.prebid.mobile.api.data.AdUnitFormat
+import org.prebid.mobile.api.exceptions.AdException
+import java.util.*
 
 object Util {
 
@@ -29,7 +33,6 @@ object Util {
 
     fun mapLogLevelToPrebidLogLevel(level: MLogLevel): LogLevel {
         return when (level) {
-            MLogLevel.DEBUG -> LogLevel.DEBUG
             MLogLevel.DEBUG -> LogLevel.DEBUG
             MLogLevel.ERROR -> LogLevel.ERROR
             MLogLevel.WARN -> LogLevel.WARN
@@ -113,6 +116,35 @@ object Util {
             errorCode = gamError.code
             errorMessage = gamError.message
         }
+    }
 
+    //Rendering Interstitial Ad format
+    fun mapInterstitialAdFormat(enumSetOfAdFormat: EnumSet<AdType>): EnumSet<AdUnitFormat> {
+        val enumSetOfAdUnitFormat = EnumSet.noneOf(AdUnitFormat::class.java)
+        for (format in enumSetOfAdFormat) {
+            when (format) {
+                AdType.DISPLAY -> enumSetOfAdUnitFormat.add(AdUnitFormat.DISPLAY)
+                AdType.VIDEO -> enumSetOfAdUnitFormat.add(AdUnitFormat.VIDEO)
+                else -> enumSetOfAdUnitFormat.add(null)
+            }
+        }
+        return enumSetOfAdUnitFormat
+    }
+
+    //Ad Exception to Error class
+    fun mapAdExceptionToError(adException: AdException?): Error {
+        return when (adException?.message) {
+            AdException.INIT_ERROR -> Error.INIT_ERROR
+            AdException.INVALID_REQUEST -> Error.INVALID_REQUEST
+            AdException.INTERNAL_ERROR -> Error.INTERNAL_ERROR
+            AdException.SERVER_ERROR -> Error.SERVER_ERROR
+            AdException.THIRD_PARTY -> Error.THIRD_PARTY
+            else -> Error.MISCELLANIOUS_ERROR
+        }
+    }
+
+    //To convert AdSize
+    fun getPrebidAdSizeFromGAMAdSize(adSize: AdSize): org.prebid.mobile.AdSize {
+        return org.prebid.mobile.AdSize(adSize.width, adSize.height)
     }
 }

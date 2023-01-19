@@ -1,10 +1,10 @@
-package com.app.analytics.providers.cached
+package com.app.analytics.providers.cached.sync_strategy
 
 import android.content.Context
 import androidx.work.*
-import com.app.analytics.PushEventToServerService
+import com.app.analytics.DbComponentFactory
+import com.app.analytics.NetworkComponentFactory
 import com.app.analytics.providers.cached.db.EventDBEntity
-import com.app.analytics.providers.cached.db.IAnalyticsEventRepository
 import com.app.logger.CustomLogger
 import com.app.network.wrapper.safeApiCall
 import kotlinx.coroutines.Dispatchers
@@ -13,10 +13,11 @@ import java.util.concurrent.TimeUnit
 
 class EventDBSyncWorker (
     context: Context,
-    params: WorkerParameters,
-    private val repository: IAnalyticsEventRepository,
-    private val syncService: PushEventToServerService
+    params: WorkerParameters
 ) : CoroutineWorker(context, params) {
+
+    private val syncService = NetworkComponentFactory.getPushToServerService("")
+    private val repository = DbComponentFactory.getEventDbRepository(applicationContext)
 
     companion object {
         private const val WORKER_TAG = "ANALYTICS_SYNC_WORK"
@@ -58,19 +59,19 @@ class EventDBSyncWorker (
     }
 
     override suspend fun doWork() = withContext(Dispatchers.IO) {
-
         val events = repository.getAll()
         val eventSyncedSuccessFully = mutableListOf<EventDBEntity>()
 
         // Sync events with network
         events?.forEach { event ->
             CustomLogger.debug(TAG, "sending event to server ${event.name}")
-            safeApiCall(
+            val result = safeApiCall(
                 apiCall = { syncService.pushAnalyticsEvent(event.pixel) },
-                successTransform = {
-                    eventSyncedSuccessFully.add(event)
-                }
+                successTransform = {}
             )
+            if (result.isSuccess) {
+                eventSyncedSuccessFully.add(event)
+            }
         }
 
         // delete synced events from DB

@@ -16,7 +16,3 @@ sealed class Failure(override val errorModel: ErrorModel) : IFailure {
 
     data class Other(override val errorModel: ErrorModel) : Failure(errorModel)
 }
-
-fun getErrorModel(errorMessage: String): ErrorModel {
-    return ErrorModel(errorMessage = errorMessage)
-}
