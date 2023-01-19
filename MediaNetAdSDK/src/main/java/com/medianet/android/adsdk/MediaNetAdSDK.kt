@@ -5,6 +5,11 @@ import android.util.Log
 import com.app.analytics.AnalyticsSDK
 import com.app.analytics.SamplingMap
 import com.app.analytics.Event
+import com.app.analytics.providers.AnalyticsProviderFactory
+import com.app.network.RetryPolicy
+import com.app.network.wrapper.safeApiCall
+import com.medianet.android.adsdk.model.ConfigResponse
+import kotlinx.coroutines.*
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
@@ -17,14 +22,16 @@ object MediaNetAdSDK {
     const val TAG = "MediaNetAdSDK"
     const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d" //TODO - should store in preference ?
     private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction" //TODO - should store in preference ?
+    private const val CONFIG_BASE_URL = "http://ems-adserving-stage-1.traefik.internal.media.net/" //TODO - should store in preference ?
+    private const val CID = "8CU15Y85L" // Temp account Id for config call
+    private var sdkOnVacation: Boolean = false
+    val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private var logLevel: MLogLevel = MLogLevel.INFO
     // TODO - For some action we can check if test mode is on or not
     private var isTestMode: Boolean = false
 
-
     private var publisherSdkInitListener: MSdkInitListener? = null
-
     private var prebidSdkInitializationListener: SdkInitializationListener = object : SdkInitializationListener  {
         override fun onSdkInit() {
             Log.d(TAG, "SDK initialized successfully!")
@@ -41,20 +48,84 @@ object MediaNetAdSDK {
         }
 
     }
+    private var serverApiService: ServerApiService? = NetworkComponentFactory.getServerApiService(CONFIG_BASE_URL)
+    private var config: Configuration? = null
 
     fun initPrebidSDK(
         applicationContext : Context,
         accountId: String,
         sdkInitListener: MSdkInitListener? = null
     ) {
-        LogUtil.setBaseTag(TAG)
-        PrebidMobile.setPrebidServerAccountId(accountId)
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
-        publisherSdkInitListener = sdkInitListener
-        PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
+        coroutineScope.launch {
+            LogUtil.setBaseTag(TAG)
+            val configFromServer = getConfigFromServer(CID) //TODO - replace it with account ID provided by publisher
+            config = getSDKConfig(configFromServer)
 
-        //Initialising Aanalytics
-        initAnalytics(applicationContext)
+            //Disable SDK if kill switch is onn
+            if (config == null || config?.shouldKillSDK == true) {
+                sdkOnVacation = true
+                return@launch
+            }
+            config?.let {
+                updateSDKConfigDependencies(applicationContext, it)
+            }
+            publisherSdkInitListener = sdkInitListener
+            PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
+            //TODO - that need to be come from customer
+            TargetingParams.setSubjectToGDPR(true)
+        }
+    }
+
+    private fun getSDKConfig(data: ConfigResponse?): MediaNetAdSDK.Configuration? {
+        data?.let {
+            val crIdMap = mutableMapOf<String, String>()
+            it.crIds.map { item ->
+                crIdMap.put(item.dfpAdUnitId, item.crId)
+            }
+            return Configuration(
+                accountId = data.pub.cId,
+                auctionTimeOutMillis = it.timeout.auctionTimeout.toLong(),
+                projectEventPercentage = it.logPercentage.projectEvent.toInt(),
+                opportunityEventPercentage = it.logPercentage.opportunityEvent.toInt(),
+                shouldKillSDK = it.publisherConfig.killSwitch,
+                auctionUrl = it.urls.auctionLayerUrl,
+                projectEventUrl = it.urls.projectEventUrl,
+                opportunityEventUrl = it.urls.opportunityEventUrl,
+                dpfToCrIdMap = crIdMap
+            )
+        }
+        return null
+    }
+
+    private suspend fun updateSDKConfigDependencies(applicationContext: Context, config: Configuration) {
+        PrebidMobile.setPrebidServerAccountId(config.accountId)
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.auctionUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
+        PrebidMobile.setTimeoutMillis(config.auctionTimeOutMillis.toInt())
+        //Initialising Analytics
+        initAnalytics(applicationContext, config)
+    }
+
+    private suspend fun getConfigFromServer(accountId: String): ConfigResponse? {
+        val configParams = mapOf(
+            "cc" to "US",
+            "dn" to BuildConfig.LIBRARY_PACKAGE_NAME,
+            "ugd" to "mobile"
+        )
+        val configResult = safeApiCall(
+            apiCall = {
+                serverApiService?.getSdkConfig(accountId, configParams)
+            },
+            successTransform = {
+                it
+            },
+            retryPolicy = RetryPolicy(maxTries = 0)
+        )
+        return if (configResult.isSuccess) {
+            configResult.successValue()
+        } else {
+            Log.e(TAG, "config call fails: ${configResult.errorValue()?.errorModel?.errorMessage}")
+            null
+        }
     }
 
     // TODO - publisherAccountId is better name?
@@ -69,7 +140,6 @@ object MediaNetAdSDK {
     //TODO - should expose PrebidMobile.setCustomHeaders()
 
     //TODO - should expose PrebidMobile.getApplicationContext()
-
     fun enableTestMode() = apply {
         isTestMode = true
         PrebidMobile.setPbsDebug(true)
@@ -105,26 +175,32 @@ object MediaNetAdSDK {
 
     fun setSubjectToGDPR(enable: Boolean) = apply { TargetingParams.setSubjectToGDPR(enable) }
 
-    private fun initAnalytics(applicationContext: Context) {
+    private fun initAnalytics(applicationContext: Context, sdkConfig: Configuration) {
+        //TODO pass config to our AnalyticsEventFactory also
+
         val samplingMap = SamplingMap()
-        samplingMap.put(LoggingEvents.PROJECT.type, 100) //TODO get this in config call
-        samplingMap.put(LoggingEvents.SLOT_OPPORTUNITY.type, 100) //TODO get this in config call
+        samplingMap.put(LoggingEvents.PROJECT.type, sdkConfig.projectEventPercentage)
+        samplingMap.put(LoggingEvents.OPPORTUNITY.type, sdkConfig.opportunityEventPercentage)
 
         val configuration = AnalyticsSDK.Configuration.Builder()
-            .setDebugMode(false)
-            .setAnalyticsUrl("https://logstash-gcpi.net") //TODO get this in config call
-            .enableEventCaching(true)
+            .setAnalyticsUrl("") // There are multiple type of events with different base url so setting base url for SDK as empty, we will send url in event itself
             .enableEventSampling(false, samplingMap)
             .build()
 
-        AnalyticsSDK.init(applicationContext, configuration)
-        //AnalyticsSDK.pushEvent(Event(name = "Config_call_success", type = LoggingEvents.PROJECT.type))
+        //TODO we get interval minute from config, need to update code for this use case, currently we only sync immediately
+        val analyticsProvider = AnalyticsProviderFactory.getCachedProvider(applicationContext, "", 0)
+        AnalyticsSDK.init(applicationContext, configuration, providers = listOf(analyticsProvider))
     }
 
+    // This method is being used by every Ad class before any functioning
+    fun isSdkOnVacation() = sdkOnVacation
 
     //TODO - when to call this
     fun clear() {
         AnalyticsSDK.clear()
+        coroutineScope.coroutineContext.cancelChildren()
+        config = null
+        serverApiService = null
     }
 
     fun isSubjectToGDPR(): Boolean? {
@@ -134,4 +210,17 @@ object MediaNetAdSDK {
     fun setGDPRConsentString(consentString: String?) = apply {
         TargetingParams.setGDPRConsentString(consentString)
     }
+
+    data class Configuration(
+        val accountId: String,
+        val auctionTimeOutMillis: Long,
+        val dpfToCrIdMap: MutableMap<String, String>,
+        val eventsBufferInterval: Long = 0,
+        val projectEventPercentage: Int,
+        val opportunityEventPercentage: Int,
+        val shouldKillSDK: Boolean,
+        val auctionUrl: String,
+        val projectEventUrl: String,
+        val opportunityEventUrl: String
+    )
 }

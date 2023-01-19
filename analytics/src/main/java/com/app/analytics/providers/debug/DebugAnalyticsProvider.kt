@@ -2,6 +2,7 @@ package com.app.analytics.providers.debug
 
 import com.app.analytics.Event
 import com.app.analytics.providers.AnalyticsProvider
+import com.app.analytics.providers.defaults.DefaultAnalyticsPixel
 import com.app.analytics.utils.Constant
 import com.app.logger.CustomLogger
 
@@ -26,6 +27,18 @@ class DebugAnalyticsProvider : AnalyticsProvider {
     override suspend fun pushEvents(events: List<Event>): Boolean {
         events.forEach {
             pushEvent(it)
+        }
+        return true
+    }
+
+    override suspend fun pushPixel(pixel: DefaultAnalyticsPixel): Boolean {
+        CustomLogger.debug(TAG, "Sending pixel: $pixel")
+        return true
+    }
+
+    override suspend fun pushPixels(pixels: List<DefaultAnalyticsPixel>): Boolean {
+        pixels.forEach {
+            pushPixel(it)
         }
         return true
     }

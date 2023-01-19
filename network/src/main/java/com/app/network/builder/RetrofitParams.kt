@@ -5,7 +5,7 @@ import okhttp3.Interceptor
 
 class RetrofitParams {
     var networkInterceptor: Interceptor? = null
-    var apiInterceptors: List<Interceptor>? = null
+    var apiInterceptors: MutableList<Interceptor>? = null
     var retryOnConnectionFailure = false
     var cache: Cache? = null
     var readTimeout: Long = 0

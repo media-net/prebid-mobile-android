@@ -22,7 +22,7 @@ object AnalyticsSDK {
             config = configuration
             customProviders = providers
             NetworkWatcher.init(context)
-            addProviders(context, providers)
+            addProviders(providers)
             isInitialised = true
             sendPendingEventIfAny()
             CustomLogger.debug(TAG, "Analytics SDK initialised")
@@ -30,37 +30,15 @@ object AnalyticsSDK {
     }
 
 
-    private fun addProviders(context: Context, providers: List<AnalyticsProvider>) {
+    private fun addProviders(providers: List<AnalyticsProvider>) {
         config?.apply {
             AnalyticsProviderFactory.clear()
-            AnalyticsProviderFactory.addAllProvider(providers)
-            if (useCustomProvidersOnly) {
-                CustomLogger.debug(TAG, "useCustomProvidersOnly is true so only adding given providers")
-                return
-            }
-
-            if (config?.isDebugMode == true) {
+            if (config?.isTestMode == true) {
                 CustomLogger.debug(TAG, "Debug Mode is on so only adding DebugAnalyticsProvider")
                 AnalyticsProviderFactory.addDebugAnalytics()
                 return
-            } else {
-                if (analyticsUrl.isBlank()) {
-                    CustomLogger.error(TAG, "analyticsUrl is not empty so not adding default/cached providers")
-                    return
-                }
-                if (config?.cachingEnabled == true && (config?.syncIntervalInMinutes ?: 0) >= 0) {
-                    CustomLogger.debug(TAG, "Caching enabled so CachedAnalyticsProvider debug provider")
-                    AnalyticsProviderFactory.addCachedAnalytics(
-                        context.applicationContext,
-                        analyticsUrl,
-                        syncIntervalInMinutes
-                    )
-                } else {
-                    CustomLogger.debug(TAG, "Caching disabled so DefaultAnalyticsProvider debug provider")
-                    AnalyticsProviderFactory.addDefaultAnalytics(config?.analyticsUrl ?: "")
-                }
             }
-
+            AnalyticsProviderFactory.addAllProvider(providers)
         }
     }
 
@@ -115,54 +93,35 @@ object AnalyticsSDK {
 
     fun getConfig() = config
 
-    fun updateConfig(context: Context, config: Configuration) {
+    fun updateConfig(config: Configuration) {
         this.config = config
-        addProviders(context, customProviders)
+        addProviders(customProviders)
     }
 
 
     class Configuration private constructor(
-        val cachingEnabled: Boolean,
         val eventSamplingEnabled: Boolean,
-        val loggingEnabled: Boolean,
-        val isDebugMode: Boolean,
-        val syncIntervalInMinutes: Long ,
+        val isTestMode: Boolean,
         val analyticsUrl: String,
-        val useCustomProvidersOnly: Boolean = false,
         val samplingMap: Map<String, Int>
     ) {
         data class Builder(
-            private var cachingEnabled: Boolean = true,
             private var eventSamplingEnabled: Boolean = false,
-            private var loggingEnabled: Boolean = true,
-            private var isDebugMode: Boolean = false,
-            private var syncIntervalInMinutes: Long = -1,
+            private var isTestMode: Boolean = false,
             private var analyticsUrl: String = "",
-            private var useCustomProvidersOnly: Boolean = false,
             private var samplingMap: Map<String, Int> = mutableMapOf()
         ) {
-            fun enableEventCaching(enable: Boolean, syncIntervalInMinutes: Long = 0) = apply {
-                cachingEnabled = enable
-                this.syncIntervalInMinutes = syncIntervalInMinutes
-            }
             fun enableEventSampling(enable: Boolean, samplingMap: SamplingMap) = apply {
                 eventSamplingEnabled = enable
                 this.samplingMap = samplingMap.map
             }
-            fun enableLogging(enable: Boolean) = apply { loggingEnabled = enable }
-            fun setDebugMode(isDebug: Boolean) = apply { isDebugMode = isDebug }
-            fun setSyncInterval(minutes: Long) = apply { syncIntervalInMinutes = minutes }
+            fun setTestMode(isTest: Boolean) = apply { isTestMode = isTest }
             fun setAnalyticsUrl(baseUrl: String) = apply { analyticsUrl = baseUrl }
-            fun enableDefaultProviders(enable: Boolean) = apply { useCustomProvidersOnly = enable.not() }
 
             fun build(): Configuration = Configuration(
-                cachingEnabled = cachingEnabled,
                 eventSamplingEnabled = eventSamplingEnabled,
-                loggingEnabled = loggingEnabled,
-                isDebugMode = isDebugMode,
-                syncIntervalInMinutes = syncIntervalInMinutes,
+                isTestMode = isTestMode,
                 analyticsUrl = analyticsUrl,
-                useCustomProvidersOnly = useCustomProvidersOnly,
                 samplingMap = samplingMap
             )
         }
