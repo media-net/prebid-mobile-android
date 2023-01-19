@@ -47,7 +47,7 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
         gamView.setAdSizes(AdSize.FLUID)
         adWrapperView.addView(gamView)
 
-        // 4. Make a bid request to Prebid Server
+        // 4. Make a bid request to Server
         val request = AdManagerAdRequest.Builder().build()
         nativeAdUnit?.fetchDemand(gamView, request, object : GamEventListener {
             override fun onAdLoaded() {
