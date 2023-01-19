@@ -1,16 +1,16 @@
 package com.medianet.android.adsdk
 
-import androidx.annotation.NonNull
 import com.google.android.gms.ads.AdSize
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.BannerAdUnit
 
 
-class BannerAd(@NonNull configId: String, val adSize: AdSize = AdSize.BANNER): Ad() {
+class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad() {
 
-    constructor(@NonNull configId: String, width: Int, height: Int) : this(configId, AdSize(width, height))
+    constructor(adUnitId: String, width: Int, height: Int) : this(adUnitId, AdSize(width, height))
 
-    private val bannerAdUnit: BannerAdUnit = BannerAdUnit(configId, adSize.width, adSize.height)
+    // TODO Pass adUnitId to BannerAdUnit once it is configured
+    private val bannerAdUnit: BannerAdUnit = BannerAdUnit("imp-prebid-banner-300-250", adSize.width, adSize.height)
 
     override val adUnit: AdUnit = bannerAdUnit
     override val adType: AdType = AdType.BANNER

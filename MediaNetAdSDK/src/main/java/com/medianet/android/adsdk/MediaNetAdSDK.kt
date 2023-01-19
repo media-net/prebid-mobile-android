@@ -202,6 +202,14 @@ object MediaNetAdSDK {
         serverApiService = null
     }
 
+    fun isSubjectToGDPR(): Boolean? {
+        return TargetingParams.isSubjectToGDPR()
+    }
+
+    fun setGDPRConsentString(consentString: String?) = apply {
+        TargetingParams.setGDPRConsentString(consentString)
+    }
+
     data class Configuration(
         val accountId: String,
         val auctionTimeOutMillis: Long,
