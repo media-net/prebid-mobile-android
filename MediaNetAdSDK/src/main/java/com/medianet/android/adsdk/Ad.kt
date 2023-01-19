@@ -9,6 +9,7 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
+import com.medianet.android.adsdk.events.EventManager
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.ResultCode
@@ -45,7 +46,15 @@ abstract class Ad {
     fun getPrebidAdSlot() = adUnit.pbAdSlot
     fun setPrebidAdSlot(slot: String) = apply { adUnit.pbAdSlot =  slot }
 
+    //We assume that publisher will fire this method when ad loaded on his side
+    fun adLoaded() {
+        EventManager.sendAdLoadedEvent(
+            dfpDivId = adUnit.configuration.configId,
+            sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+        )
+    }
 
+    // TODO - need to expose this?
     fun fetchDemand(listener: OnBidCompletionListener) {
         adUnit.fetchDemand { resultCode, unmodifiableMap ->
             when(resultCode) {
@@ -56,11 +65,30 @@ abstract class Ad {
     }
 
     fun fetchDemand(adRequest: AdManagerAdRequest, listener: OnBidCompletionListener) {
+        EventManager.sendBidRequestEvent(
+            dfpDivId = adUnit.configuration.configId,
+            sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+        )
         adUnit.fetchDemand(adRequest) {
         resultCode ->
                 when(resultCode) {
-                    ResultCode.SUCCESS -> listener.onSuccess(null)
-                    else -> Util.mapResultCodeToError(resultCode)
+                    ResultCode.SUCCESS -> {
+                        EventManager.sendAdRequestToGamEvent(
+                            dfpDivId = adUnit.configuration.configId,
+                            sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+                        )
+                        listener.onSuccess(null)
+                    }
+                    else -> {
+                        val error =  Util.mapResultCodeToError(resultCode)
+                        if (error is Error.REQUEST_TIMEOUT) {
+                            EventManager.sendTimeoutEvent(
+                                dfpDivId = adUnit.configuration.configId,
+                                sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+                            )
+                        }
+                        listener.onError(error)
+                    }
                 }
         }
     }
@@ -70,8 +98,6 @@ abstract class Ad {
         adRequest: AdManagerAdRequest,
         listener: GamEventListener
     ) {
-
-        AnalyticsSDK.pushEvent(Event(name = "fetching_prebid", type = LoggingEvents.PROJECT.type))
         adView.setAppEventListener { key, value ->
             if (key == Constants.KEY_AD_RENDERED) {
                 // Mark our ad win
@@ -92,6 +118,7 @@ abstract class Ad {
                     }
                 })
                 AnalyticsSDK.pushEvent(Event(name = "ad_loaded", type = LoggingEvents.OPPORTUNITY.type))
+                adLoaded()
                 listener.onAdLoaded()
             }
 
@@ -114,25 +141,17 @@ abstract class Ad {
             override fun onAdImpression() {
                 listener.onAdImpression()
             }
-
-            /*override fun onAdSwipeGestureClicked() {
-                super.onAdSwipeGestureClicked()
-            }*/
         }
 
-        adUnit.fetchDemand(adRequest) { code ->
-            when(code) {
-                ResultCode.SUCCESS -> {
-                    listener.onSuccess()
-                    AnalyticsSDK.pushEvent(Event(name = "prebid_auction_success", type = LoggingEvents.PROJECT.type))
-                    adView.loadAd(adRequest)
-                }
-
-                else ->  {
-                    Util.mapResultCodeToError(code)
-                    AnalyticsSDK.pushEvent(Event(name = "prebid_auction_failure", type = LoggingEvents.PROJECT.type))
-                }
+        fetchDemand(adRequest, object : OnBidCompletionListener{
+            override fun onSuccess(keywordMap: Map<String, String>?) {
+                listener.onSuccess()
+                adView.loadAd(adRequest)
             }
-        }
+
+            override fun onError(error: Error) {
+                listener.onAdFailedToLoad(error)
+            }
+        })
     }
 }

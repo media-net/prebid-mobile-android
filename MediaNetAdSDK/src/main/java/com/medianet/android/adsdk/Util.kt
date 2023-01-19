@@ -147,4 +147,12 @@ object Util {
     fun getPrebidAdSizeFromGAMAdSize(adSize: AdSize): org.prebid.mobile.AdSize {
         return org.prebid.mobile.AdSize(adSize.width, adSize.height)
     }
+
+    inline fun mapAdSizeToMAdSize(size: org.prebid.mobile.AdSize) = MAdSize(height = size.height, width = size.width)
+
+    fun mapAdSizesToMAdSizes(adSizes: HashSet<org.prebid.mobile.AdSize>): List<MAdSize> {
+        return adSizes.map {
+            mapAdSizeToMAdSize(it)
+        }.toList()
+    }
 }

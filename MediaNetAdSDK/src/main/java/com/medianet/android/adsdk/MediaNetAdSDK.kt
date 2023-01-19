@@ -4,10 +4,10 @@ import android.content.Context
 import android.util.Log
 import com.app.analytics.AnalyticsSDK
 import com.app.analytics.SamplingMap
-import com.app.analytics.Event
 import com.app.analytics.providers.AnalyticsProviderFactory
 import com.app.network.RetryPolicy
 import com.app.network.wrapper.safeApiCall
+import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.model.ConfigResponse
 import kotlinx.coroutines.*
 import org.prebid.mobile.Host
@@ -83,7 +83,10 @@ object MediaNetAdSDK {
                 crIdMap.put(item.dfpAdUnitId, item.crId)
             }
             return Configuration(
-                accountId = data.pub.cId,
+                customerId = data.pub.cId,
+                partnerId = data.pub.partnerId,
+                domainName = data.targeting.domainName,
+                countryCode = data.targeting.countryCode,
                 auctionTimeOutMillis = it.timeout.auctionTimeout.toLong(),
                 projectEventPercentage = it.logPercentage.projectEvent.toInt(),
                 opportunityEventPercentage = it.logPercentage.opportunityEvent.toInt(),
@@ -98,7 +101,7 @@ object MediaNetAdSDK {
     }
 
     private suspend fun updateSDKConfigDependencies(applicationContext: Context, config: Configuration) {
-        PrebidMobile.setPrebidServerAccountId(config.accountId)
+        PrebidMobile.setPrebidServerAccountId(config.customerId)
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.auctionUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
         PrebidMobile.setTimeoutMillis(config.auctionTimeOutMillis.toInt())
         //Initialising Analytics
@@ -176,8 +179,7 @@ object MediaNetAdSDK {
     fun setSubjectToGDPR(enable: Boolean) = apply { TargetingParams.setSubjectToGDPR(enable) }
 
     private fun initAnalytics(applicationContext: Context, sdkConfig: Configuration) {
-        //TODO pass config to our AnalyticsEventFactory also
-
+        EventManager.init(sdkConfig)
         val samplingMap = SamplingMap()
         samplingMap.put(LoggingEvents.PROJECT.type, sdkConfig.projectEventPercentage)
         samplingMap.put(LoggingEvents.OPPORTUNITY.type, sdkConfig.opportunityEventPercentage)
@@ -201,6 +203,7 @@ object MediaNetAdSDK {
         coroutineScope.coroutineContext.cancelChildren()
         config = null
         serverApiService = null
+        EventManager.clear()
     }
 
     fun isSubjectToGDPR(): Boolean? {
@@ -212,15 +215,25 @@ object MediaNetAdSDK {
     }
 
     data class Configuration(
-        val accountId: String,
+        val customerId: String,
+        val partnerId: String,
+        val domainName: String,
+        val countryCode: String,
         val auctionTimeOutMillis: Long,
-        val dpfToCrIdMap: MutableMap<String, String>,
+        private val dpfToCrIdMap: MutableMap<String, String>,
         val eventsBufferInterval: Long = 0,
         val projectEventPercentage: Int,
         val opportunityEventPercentage: Int,
         val shouldKillSDK: Boolean,
         val auctionUrl: String,
         val projectEventUrl: String,
-        val opportunityEventUrl: String
-    )
+        val opportunityEventUrl: String,
+        val sdkVersion: String = "0.0.1"  //todo - get it from buid config
+    ) {
+
+        fun getCrId(dfpAdId: String): String {
+            val id =  dpfToCrIdMap[dfpAdId] ?: "default_cr"
+            return id
+        }
+    }
 }

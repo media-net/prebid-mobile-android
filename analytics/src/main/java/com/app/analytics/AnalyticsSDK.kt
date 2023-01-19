@@ -1,7 +1,6 @@
 package com.app.analytics
 
 import android.content.Context
-import com.app.analytics.events.Event
 import com.app.analytics.providers.AnalyticsProvider
 import com.app.analytics.providers.AnalyticsProviderFactory
 import com.app.analytics.utils.NetworkWatcher

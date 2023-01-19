@@ -18,6 +18,17 @@ object AnalyticsUtil {
         )
     }
 
+    fun getDefaultAnalyticsPixel(event: Event): DefaultAnalyticsPixel {
+        val uriBuilder = Uri.parse(event.baseUrl).buildUpon()
+        event.params.forEach { paramEntry ->
+            uriBuilder.appendQueryParameter(paramEntry.key, paramEntry.value)
+        }
+        return DefaultAnalyticsPixel(
+            name = event.name,
+            pixel = uriBuilder.toString()
+        )
+    }
+
     fun DefaultAnalyticsPixel.toDbEntry(): EventDBEntity {
         return EventDBEntity(
             name = this.name,

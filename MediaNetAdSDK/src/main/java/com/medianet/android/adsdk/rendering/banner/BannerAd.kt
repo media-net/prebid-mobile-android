@@ -5,13 +5,14 @@ import android.widget.FrameLayout
 import com.google.android.gms.ads.AdSize
 import com.medianet.android.adsdk.Util
 import com.medianet.android.adsdk.Util.getPrebidAdSizeFromGAMAdSize
+import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.rendering.AdEventListener
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 
-class BannerAd(context: Context, adUnitId: String, adSize: AdSize) {
+class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
 
     constructor(context: Context, adUnitId: String, width: Int, height: Int) : this(context, adUnitId, AdSize(width, height))
 
@@ -23,7 +24,11 @@ class BannerAd(context: Context, adUnitId: String, adSize: AdSize) {
     fun setBannerAdListener(listener: AdEventListener) = apply {
         bannerAdListener = listener
         bannerView.setBannerListener(object: BannerViewListener {
-            override fun onAdLoaded(bannerView: BannerView?) {
+            override fun onAdLoaded(view: BannerView?) {
+                EventManager.sendAdLoadedEvent(
+                    dfpDivId = adUnitId,
+                    sizes = Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
+                )
                 bannerAdListener?.onAdLoaded()
             }
 
@@ -55,6 +60,10 @@ class BannerAd(context: Context, adUnitId: String, adSize: AdSize) {
     }
 
     fun loadAd() {
+        EventManager.sendBidRequestEvent(
+            dfpDivId = adUnitId,
+            sizes = Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
+        )
         bannerView.loadAd()
     }
 
@@ -65,4 +74,6 @@ class BannerAd(context: Context, adUnitId: String, adSize: AdSize) {
     fun stopRefresh() {
         bannerView.stopRefresh()
     }
+
+    //TODO - we have not added method to add additional sizes??
 }
