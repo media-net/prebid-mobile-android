@@ -2,13 +2,14 @@ package com.medianet.android.adsdk
 
 import android.content.Context
 import android.util.Log
+import com.app.analytics.AnalyticsSDK
+import com.app.analytics.SamplingMap
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.api.exceptions.InitError
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener
-import org.prebid.mobile.rendering.sdk.SdkInitializer
 
 object MediaNetAdSDK {
 
@@ -50,8 +51,10 @@ object MediaNetAdSDK {
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
         publisherSdkInitListener = sdkInitListener
         PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
-    }
 
+        //Initialising Aanalytics
+        initAnalytics(applicationContext)
+    }
 
     // TODO - publisherAccountId is better name?
     fun getAccountId() = PrebidMobile.getPrebidServerAccountId()
@@ -92,7 +95,7 @@ object MediaNetAdSDK {
         PrebidMobile.setLogLevel(Util.mapLogLevelToPrebidLogLevel(level))
     }
 
-    fun getLoLevel() = logLevel
+    fun getLogLevel() = logLevel
 
     fun isCompatibleWithGoogleMobileAds(version: String) = PrebidMobile.checkGoogleMobileAdsCompatibility(version)
 
@@ -100,6 +103,28 @@ object MediaNetAdSDK {
     fun isSharingGeoLocation() = PrebidMobile.isShareGeoLocation()
 
     fun setSubjectToGDPR(enable: Boolean) = apply { TargetingParams.setSubjectToGDPR(enable) }
+
+    private fun initAnalytics(applicationContext: Context) {
+        val samplingMap = SamplingMap()
+        samplingMap.put(LoggingEvents.PROJECT.type, 100) //TODO get this in config call
+        samplingMap.put(LoggingEvents.SLOT_OPPORTUNITY.type, 100) //TODO get this in config call
+
+        val configuration = AnalyticsSDK.Configuration.Builder()
+            .setDebugMode(false)
+            .setAnalyticsUrl("https://logstash-gcpi.net") //TODO get this in config call
+            .enableEventCaching(true)
+            .enableEventSampling(false, samplingMap)
+            .build()
+
+        AnalyticsSDK.init(applicationContext, configuration)
+        //AnalyticsSDK.pushEvent(Event(name = "Config_call_success", type = LoggingEvents.PROJECT.type))
+    }
+
+
+    //TODO - when to call this
+    fun clear() {
+        AnalyticsSDK.clear()
+    }
 
     fun isSubjectToGDPR(): Boolean? {
         return TargetingParams.isSubjectToGDPR()
