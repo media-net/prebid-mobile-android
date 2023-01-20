@@ -16,6 +16,8 @@
 
 package org.prebid.mobile.api.exceptions;
 
+import org.prebid.mobile.api.data.FetchDemandResult;
+
 /**
  * Base error. Maintaining error description.
  */
@@ -45,5 +47,10 @@ public class AdException extends Exception {
 
     public AdException(String type, String message) {
         setMessage(type + ": " + message);
+    }
+
+    public Boolean isTimeoutException() {
+        FetchDemandResult result = FetchDemandResult.parseErrorMessage(getMessage());
+        return  (result  == FetchDemandResult.TIMEOUT);
     }
 }

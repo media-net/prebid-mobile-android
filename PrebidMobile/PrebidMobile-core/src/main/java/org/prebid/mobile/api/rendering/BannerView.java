@@ -125,12 +125,16 @@ public class BannerView extends FrameLayout {
 
             isPrimaryAdServerRequestInProgress = true;
             eventHandler.requestAdWithBid(getWinnerBid());
+            bannerViewListener.onRequestSentToGam();
         }
 
         @Override
         public void onError(AdException exception) {
             bidResponse = null;
             eventHandler.requestAdWithBid(null);
+            if (exception.isTimeoutException()) {
+                bannerViewListener.onBidRequestTimeout();
+            }
         }
     };
 
@@ -253,6 +257,9 @@ public class BannerView extends FrameLayout {
             return;
         }
 
+        if (bannerViewListener != null) {
+            bannerViewListener.onBidRequest();
+        }
         bidLoader.load();
     }
 
@@ -496,6 +503,7 @@ public class BannerView extends FrameLayout {
     private void notifyAdLoadedListener() {
         if (bannerViewListener != null) {
             bannerViewListener.onAdLoaded(BannerView.this);
+            bannerViewListener.onAdLoaded();
         }
     }
 

@@ -24,11 +24,35 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
     fun setBannerAdListener(listener: AdEventListener) = apply {
         bannerAdListener = listener
         bannerView.setBannerListener(object: BannerViewListener {
-            override fun onAdLoaded(view: BannerView?) {
+            override fun onBidRequest() {
+                EventManager.sendBidRequestEvent(
+                    dfpDivId = adUnitId,
+                    sizes = Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
+                )
+            }
+
+            override fun onBidRequestTimeout() {
+                EventManager.sendTimeoutEvent(
+                    dfpDivId = adUnitId,
+                    sizes = Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
+                )
+            }
+
+            override fun onRequestSentToGam() {
+                EventManager.sendAdRequestToGamEvent(
+                    dfpDivId = adUnitId,
+                    sizes = Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
+                )
+            }
+
+            override fun onAdLoaded() {
                 EventManager.sendAdLoadedEvent(
                     dfpDivId = adUnitId,
                     sizes = Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
                 )
+            }
+
+            override fun onAdLoaded(view: BannerView?) {
                 bannerAdListener?.onAdLoaded()
             }
 
@@ -60,10 +84,6 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
     }
 
     fun loadAd() {
-        EventManager.sendBidRequestEvent(
-            dfpDivId = adUnitId,
-            sizes = Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
-        )
         bannerView.loadAd()
     }
 

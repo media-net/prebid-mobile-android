@@ -23,7 +23,7 @@ import org.prebid.mobile.api.rendering.BannerView;
  * Listener interface representing BannerView events.
  * All methods will be invoked on the main thread.
  */
-public interface BannerViewListener {
+public interface BannerViewListener extends MediaEventListener {
     /**
      * Executed when the ad is loaded and is ready for display.
      *
