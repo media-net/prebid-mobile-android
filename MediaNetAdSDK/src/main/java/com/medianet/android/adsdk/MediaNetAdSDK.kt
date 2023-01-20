@@ -7,7 +7,15 @@ import com.app.analytics.SamplingMap
 import com.app.analytics.providers.AnalyticsProviderFactory
 import com.app.network.RetryPolicy
 import com.app.network.wrapper.safeApiCall
+import com.medianet.android.adsdk.utils.Constants.KEY_CC
+import com.medianet.android.adsdk.utils.Constants.KEY_DN
+import com.medianet.android.adsdk.utils.Constants.KEY_UGD
+import com.medianet.android.adsdk.utils.Constants.VALUE_MOBILE
+import com.medianet.android.adsdk.utils.Constants.VALUE_US
 import com.medianet.android.adsdk.model.ConfigResponse
+import com.medianet.android.adsdk.network.NetworkComponentFactory
+import com.medianet.android.adsdk.network.ServerApiService
+import com.medianet.android.adsdk.utils.Util
 import kotlinx.coroutines.*
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
@@ -106,9 +114,9 @@ object MediaNetAdSDK {
 
     private suspend fun getConfigFromServer(accountId: String): ConfigResponse? {
         val configParams = mapOf(
-            "cc" to "US",
-            "dn" to BuildConfig.LIBRARY_PACKAGE_NAME,
-            "ugd" to "mobile"
+            KEY_CC to VALUE_US,
+            KEY_DN to BuildConfig.LIBRARY_PACKAGE_NAME,
+            KEY_UGD to VALUE_MOBILE
         )
         val configResult = safeApiCall(
             apiCall = {
@@ -187,7 +195,7 @@ object MediaNetAdSDK {
             .build()
 
         //TODO we get interval minute from config, need to update code for this use case, currently we only sync immediately
-        val analyticsProvider = AnalyticsProviderFactory.getCachedProvider(applicationContext, "", 0)
+        val analyticsProvider = AnalyticsProviderFactory.getCachedProvider(applicationContext, sdkConfig.projectEventUrl, 0)
         AnalyticsSDK.init(applicationContext, configuration, providers = listOf(analyticsProvider))
     }
 

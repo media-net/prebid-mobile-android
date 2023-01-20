@@ -1,4 +1,4 @@
-package com.medianet.android.adsdk
+package com.medianet.android.adsdk.network
 
 import com.app.network.builder.RetrofitBuilder
 import com.app.network.builder.RetrofitParams
@@ -12,7 +12,7 @@ object NetworkComponentFactory {
         retryOnConnectionFailure = true
     }
 
-    fun getServerApiService(baseUrl: String, networkConfig: RetrofitParams? = null): ServerApiService  {
+    fun getServerApiService(baseUrl: String, networkConfig: RetrofitParams? = null): ServerApiService {
         if (this::serverApiService.isInitialized.not()) {
             serverApiService = RetrofitBuilder(
                 baseUrl = baseUrl,
