@@ -74,7 +74,10 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
             }
 
             override fun onAdFailedToLoad(error: Error) {
-                Log.d("NativeInAppAd", "Error code: ${error.errorCode}, message: ${error.errorMessage}")
+                Log.d(
+                    "NativeInAppAd",
+                    "Error code: ${error.errorCode}, message: ${error.errorMessage}"
+                )
             }
 
             override fun onAdOpened() {
@@ -131,26 +134,27 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
             this.unifiedNativeAd = it
         }
 
-        val onCustomAdLoaded = OnCustomFormatAdLoadedListener { nativeCustomTemplateAd: NativeCustomFormatAd ->
-            Log.d(TAG, "Custom ad loaded")
+        val onCustomAdLoaded =
+            OnCustomFormatAdLoadedListener { nativeCustomTemplateAd: NativeCustomFormatAd ->
+                Log.d(TAG, "Custom ad loaded")
 
-            // 5. Find Native Ad
-            MAdViewUtils.findNative(nativeCustomTemplateAd, object : NativeAdListener {
+                // 5. Find Native Ad
+                MAdViewUtils.findNative(nativeCustomTemplateAd, object : NativeAdListener {
 
-                override fun onNativeLoaded(ad: NativeInAppAd) {
-                    // 6. Render native ad
-                    inflateNativeInAppAd(ad, wrapper)
-                }
+                    override fun onNativeLoaded(ad: NativeInAppAd) {
+                        // 6. Render native ad
+                        inflateNativeInAppAd(ad, wrapper)
+                    }
 
-                override fun onNativeNotFound() {
-                    Log.e(TAG, "onNativeNotFound")
-                }
+                    override fun onNativeNotFound() {
+                        Log.e(TAG, "onNativeNotFound")
+                    }
 
-                override fun onNativeNotValid() {
-                    Log.e(TAG, "onNativeNotValid")
-                }
-            })
-        }
+                    override fun onNativeNotValid() {
+                        Log.e(TAG, "onNativeNotValid")
+                    }
+                })
+            }
 
         return AdLoader.Builder(wrapper.context, AD_UNIT_ID)
             .forAdManagerAdView(onGamAdLoaded, AdSize.BANNER)
@@ -167,7 +171,7 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
             .build()
     }
 
-    private fun addNativeAssets(adUnit: NativeAd?)  {
+    private fun addNativeAssets(adUnit: NativeAd?) {
         // ADD NATIVE ASSETS
 
         val title = TitleAsset()
