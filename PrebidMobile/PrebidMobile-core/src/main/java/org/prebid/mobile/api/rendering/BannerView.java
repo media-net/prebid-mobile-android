@@ -503,7 +503,6 @@ public class BannerView extends FrameLayout {
     private void notifyAdLoadedListener() {
         if (bannerViewListener != null) {
             bannerViewListener.onAdLoaded(BannerView.this);
-            bannerViewListener.onAdLoaded();
         }
     }
 

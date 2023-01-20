@@ -54,6 +54,7 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
 
             override fun onAdLoaded(view: BannerView?) {
                 bannerAdListener?.onAdLoaded()
+                onAdLoaded()
             }
 
             override fun onAdDisplayed(bannerView: BannerView?) {
