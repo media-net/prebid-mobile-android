@@ -2,8 +2,6 @@ package com.medianet.android.adsdk
 
 import android.util.Log
 import androidx.annotation.IntRange
-import com.app.analytics.AnalyticsSDK
-import com.app.analytics.Event
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
@@ -15,11 +13,42 @@ import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.ResultCode
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
+import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 
-abstract class Ad {
+abstract class Ad(val adUnit: AdUnit) {
 
-    abstract val adUnit: AdUnit
     abstract val adType: AdType
+
+    private val mediaEventListener = object : MediaEventListener {
+        override fun onBidRequest() {
+            EventManager.sendBidRequestEvent(
+                dfpDivId = adUnit.configuration.configId,
+                sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+            )
+        }
+
+        override fun onBidRequestTimeout() {
+            EventManager.sendTimeoutEvent(
+                dfpDivId = adUnit.configuration.configId,
+                sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+            )
+        }
+
+        override fun onRequestSentToGam() {
+            EventManager.sendAdRequestToGamEvent(
+                dfpDivId = adUnit.configuration.configId,
+                sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+            )
+        }
+
+        override fun onAdLoaded() {
+            adLoaded()
+        }
+    }
+
+    init {
+        adUnit.setMediaEventListener(mediaEventListener)
+    }
 
     fun getConfigId() = adUnit.configuration.configId
 
@@ -65,28 +94,14 @@ abstract class Ad {
     }
 
     fun fetchDemand(adRequest: AdManagerAdRequest, listener: OnBidCompletionListener) {
-        EventManager.sendBidRequestEvent(
-            dfpDivId = adUnit.configuration.configId,
-            sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
-        )
         adUnit.fetchDemand(adRequest) {
         resultCode ->
                 when(resultCode) {
                     ResultCode.SUCCESS -> {
-                        EventManager.sendAdRequestToGamEvent(
-                            dfpDivId = adUnit.configuration.configId,
-                            sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
-                        )
                         listener.onSuccess(null)
                     }
                     else -> {
                         val error =  Util.mapResultCodeToError(resultCode)
-                        if (error is Error.REQUEST_TIMEOUT) {
-                            EventManager.sendTimeoutEvent(
-                                dfpDivId = adUnit.configuration.configId,
-                                sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
-                            )
-                        }
                         listener.onError(error)
                     }
                 }
@@ -117,7 +132,6 @@ abstract class Ad {
                         Log.e("Nikhil", "error in adjusting ad view")
                     }
                 })
-                AnalyticsSDK.pushEvent(Event(name = "ad_loaded", type = LoggingEvents.OPPORTUNITY.type))
                 adLoaded()
                 listener.onAdLoaded()
             }

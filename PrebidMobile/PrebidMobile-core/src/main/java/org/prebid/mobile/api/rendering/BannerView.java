@@ -34,6 +34,7 @@ import org.prebid.mobile.api.data.BannerAdPosition;
 import org.prebid.mobile.api.data.VideoPlacementType;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener;
+import org.prebid.mobile.api.rendering.listeners.MediaEventListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -71,6 +72,7 @@ public class BannerView extends FrameLayout {
     private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
     @Nullable private BannerViewListener bannerViewListener;
+    @Nullable public MediaEventListener mediaEventListener;
 
     private int refreshIntervalSec = 0;
 
@@ -125,16 +127,13 @@ public class BannerView extends FrameLayout {
 
             isPrimaryAdServerRequestInProgress = true;
             eventHandler.requestAdWithBid(getWinnerBid());
-            bannerViewListener.onRequestSentToGam();
+            mediaEventListener.onRequestSentToGam();
         }
 
         @Override
         public void onError(AdException exception) {
             bidResponse = null;
             eventHandler.requestAdWithBid(null);
-            if (exception.isTimeoutException()) {
-                bannerViewListener.onBidRequestTimeout();
-            }
         }
     };
 
@@ -244,6 +243,24 @@ public class BannerView extends FrameLayout {
     }
 
     /**
+     * Instantiates an BannerView for GAM prebid integration.
+     */
+    public BannerView(
+            Context context,
+            String configId,
+            @NonNull
+                    BannerEventHandler eventHandler,
+            @NonNull MediaEventListener mediaEventListener
+            ) {
+        super(context);
+        this.eventHandler = eventHandler;
+        this.configId = configId;
+        this.mediaEventListener = mediaEventListener;
+
+        init();
+    }
+
+    /**
      * Executes ad loading if no request is running.
      */
     public void loadAd() {
@@ -257,9 +274,6 @@ public class BannerView extends FrameLayout {
             return;
         }
 
-        if (bannerViewListener != null) {
-            bannerViewListener.onBidRequest();
-        }
         bidLoader.load();
     }
 
@@ -441,7 +455,7 @@ public class BannerView extends FrameLayout {
     }
 
     private void initBidLoader() {
-        bidLoader = new BidLoader(getContext(), adUnitConfig, bidRequesterListener);
+        bidLoader = new BidLoader(getContext(), adUnitConfig, bidRequesterListener, mediaEventListener);
         final VisibilityTrackerOption visibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
         final VisibilityChecker visibilityChecker = new VisibilityChecker(visibilityTrackerOption);
 

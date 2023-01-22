@@ -10,6 +10,7 @@ import com.medianet.android.adsdk.rendering.AdEventListener
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener
+import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 
 class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
@@ -18,43 +19,43 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
 
     private val bannerEventHandler = GamBannerEventHandler(context, adUnitId, getPrebidAdSizeFromGAMAdSize(adSize))
     // TODO Pass adUnitId to BannerAdUnit once it is configured
-    private val bannerView = BannerView(context, "imp-prebid-banner-320-50", bannerEventHandler)
+    private val bannerView = BannerView(context, "imp-prebid-banner-320-50", bannerEventHandler, object : MediaEventListener{
+        override fun onBidRequest() {
+            EventManager.sendBidRequestEvent(
+                dfpDivId = adUnitId,
+                sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+            )
+        }
+
+        override fun onBidRequestTimeout() {
+            EventManager.sendTimeoutEvent(
+                dfpDivId = adUnitId,
+                sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+            )
+        }
+
+        override fun onRequestSentToGam() {
+            EventManager.sendAdRequestToGamEvent(
+                dfpDivId = adUnitId,
+                sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+            )
+        }
+
+        override fun onAdLoaded() {
+            EventManager.sendAdLoadedEvent(
+                dfpDivId = adUnitId,
+                sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+            )
+        }
+    })
     private var bannerAdListener: AdEventListener? = null
 
     fun setBannerAdListener(listener: AdEventListener) = apply {
         bannerAdListener = listener
         bannerView.setBannerListener(object: BannerViewListener {
-            override fun onBidRequest() {
-                EventManager.sendBidRequestEvent(
-                    dfpDivId = adUnitId,
-                    sizes = Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
-                )
-            }
-
-            override fun onBidRequestTimeout() {
-                EventManager.sendTimeoutEvent(
-                    dfpDivId = adUnitId,
-                    sizes = Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
-                )
-            }
-
-            override fun onRequestSentToGam() {
-                EventManager.sendAdRequestToGamEvent(
-                    dfpDivId = adUnitId,
-                    sizes = Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
-                )
-            }
-
-            override fun onAdLoaded() {
-                EventManager.sendAdLoadedEvent(
-                    dfpDivId = adUnitId,
-                    sizes = Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
-                )
-            }
-
             override fun onAdLoaded(view: BannerView?) {
                 bannerAdListener?.onAdLoaded()
-                onAdLoaded()
+                bannerView.mediaEventListener?.onAdLoaded()
             }
 
             override fun onAdDisplayed(bannerView: BannerView?) {

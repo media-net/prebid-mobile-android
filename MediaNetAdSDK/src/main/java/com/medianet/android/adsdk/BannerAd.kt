@@ -5,14 +5,12 @@ import org.prebid.mobile.AdUnit
 import org.prebid.mobile.BannerAdUnit
 
 
-class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad() {
+class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerAdUnit("imp-prebid-banner-300-250", adSize.width, adSize.height)) {
 
     constructor(adUnitId: String, width: Int, height: Int) : this(adUnitId, AdSize(width, height))
 
     // TODO Pass adUnitId to BannerAdUnit once it is configured
-    private val bannerAdUnit: BannerAdUnit = BannerAdUnit("imp-prebid-banner-300-250", adSize.width, adSize.height)
-
-    override val adUnit: AdUnit = bannerAdUnit
+    private val bannerAdUnit: BannerAdUnit = adUnit as BannerAdUnit
     override val adType: AdType = AdType.BANNER
 
 

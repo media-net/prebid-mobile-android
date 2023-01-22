@@ -25,6 +25,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.listeners.MediaEventListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -50,6 +51,7 @@ public abstract class BaseInterstitialAdUnit {
     private BidResponse bidResponse;
     private InterstitialController interstitialController;
     private InterstitialAdUnitState interstitialAdUnitState = READY_FOR_LOAD;
+    private MediaEventListener mediaEventListener;
 
     private final WeakReference<Context> weakContext;
     private final BidRequesterListener bidRequesterListener = createBidRequesterListener();
@@ -275,7 +277,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     private void initBidLoader() {
-        bidLoader = new BidLoader(getContext(), adUnitConfig, bidRequesterListener);
+        bidLoader = new BidLoader(getContext(), adUnitConfig, bidRequesterListener, mediaEventListener);
     }
 
     private void initInterstitialController() {
@@ -320,6 +322,7 @@ public abstract class BaseInterstitialAdUnit {
 
                 changeInterstitialAdUnitState(LOADING);
                 requestAdWithBid(getWinnerBid());
+                mediaEventListener.onRequestSentToGam();
             }
 
             @Override
@@ -361,6 +364,11 @@ public abstract class BaseInterstitialAdUnit {
                 notifyAdEventListener(AdListenerEvent.USER_RECEIVED_PREBID_REWARD);
             }
         };
+    }
+
+    public void setMediaEventListener(MediaEventListener listener) {
+        this.mediaEventListener = listener;
+        bidLoader.setMediaEventListener(mediaEventListener);
     }
 
 

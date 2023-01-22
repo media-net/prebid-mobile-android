@@ -63,7 +63,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
                     createListener())
             }
             override fun onError(error: Error) {
-                TODO("Not yet implemented")
+                Log.e("Nikhil", error.errorMessage)
             }
         })
 
