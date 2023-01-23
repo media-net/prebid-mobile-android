@@ -95,10 +95,11 @@ object MediaNetAdSDK {
                 projectEventPercentage = it.logPercentage.projectEvent.toInt(),
                 opportunityEventPercentage = it.logPercentage.opportunityEvent.toInt(),
                 shouldKillSDK = it.publisherConfig.killSwitch,
-                auctionUrl = it.urls.auctionLayerUrl,
+                bidRequestUrl = it.urls.auctionLayerUrl,
                 projectEventUrl = it.urls.projectEventUrl,
                 opportunityEventUrl = it.urls.opportunityEventUrl,
-                dpfToCrIdMap = crIdMap
+                dpfToCrIdMap = crIdMap,
+                dummyCCrId = data.dummyCrId.crId
             )
         }
         return null
@@ -106,7 +107,7 @@ object MediaNetAdSDK {
 
     private suspend fun updateSDKConfigDependencies(applicationContext: Context, config: Configuration) {
         PrebidMobile.setPrebidServerAccountId(config.accountId)
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.auctionUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
         PrebidMobile.setTimeoutMillis(config.auctionTimeOutMillis.toInt())
         //Initialising Analytics
         initAnalytics(applicationContext, config)
@@ -222,11 +223,12 @@ object MediaNetAdSDK {
         val accountId: String,
         val auctionTimeOutMillis: Long,
         val dpfToCrIdMap: MutableMap<String, String>,
+        val dummyCCrId: String,
         val eventsBufferInterval: Long = 0,
         val projectEventPercentage: Int,
         val opportunityEventPercentage: Int,
         val shouldKillSDK: Boolean,
-        val auctionUrl: String,
+        val bidRequestUrl: String,
         val projectEventUrl: String,
         val opportunityEventUrl: String
     )
