@@ -22,7 +22,9 @@ data class ConfigResponse(
     @Json(name = "to")
     val timeout: TimeOut,
     @Json(name = "urls")
-    val urls: Urls
+    val urls: Urls,
+    @Json(name = "dummy_crid")
+    val dummyCrId: Crid
 )
 
 @JsonClass(generateAdapter = true)

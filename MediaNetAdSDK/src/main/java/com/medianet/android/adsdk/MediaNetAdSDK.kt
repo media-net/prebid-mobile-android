@@ -95,10 +95,11 @@ object MediaNetAdSDK {
                 projectEventPercentage = it.logPercentage.projectEvent.toInt(),
                 opportunityEventPercentage = it.logPercentage.opportunityEvent.toInt(),
                 shouldKillSDK = it.publisherConfig.killSwitch,
-                auctionUrl = it.urls.auctionLayerUrl,
+                bidRequestUrl = it.urls.auctionLayerUrl,
                 projectEventUrl = it.urls.projectEventUrl,
                 opportunityEventUrl = it.urls.opportunityEventUrl,
-                dpfToCrIdMap = crIdMap
+                dpfToCrIdMap = crIdMap,
+                dummyCCrId = data.dummyCrId.crId
             )
         }
         return null
@@ -114,9 +115,9 @@ object MediaNetAdSDK {
 
     private suspend fun getConfigFromServer(accountId: String): ConfigResponse? {
         val configParams = mapOf(
-            "cc" to "US",
-            "dn" to BuildConfig.LIBRARY_PACKAGE_NAME,
-            "ugd" to "mobile"
+            KEY_CC to VALUE_US,
+            KEY_DN to BuildConfig.LIBRARY_PACKAGE_NAME,
+            KEY_UGD to VALUE_MOBILE
         )
         val configResult = safeApiCall(
             apiCall = {
@@ -194,7 +195,7 @@ object MediaNetAdSDK {
             .build()
 
         //TODO we get interval minute from config, need to update code for this use case, currently we only sync immediately
-        val analyticsProvider = AnalyticsProviderFactory.getCachedProvider(applicationContext, "", 0)
+        val analyticsProvider = AnalyticsProviderFactory.getCachedProvider(applicationContext, sdkConfig.projectEventUrl, 0)
         AnalyticsSDK.init(applicationContext, configuration, providers = listOf(analyticsProvider))
     }
 
@@ -224,12 +225,13 @@ object MediaNetAdSDK {
         val domainName: String,
         val countryCode: String,
         val auctionTimeOutMillis: Long,
-        private val dpfToCrIdMap: MutableMap<String, String>,
+        val dpfToCrIdMap: MutableMap<String, String>,
+        val dummyCCrId: String,
         val eventsBufferInterval: Long = 0,
         val projectEventPercentage: Int,
         val opportunityEventPercentage: Int,
         val shouldKillSDK: Boolean,
-        val auctionUrl: String,
+        val bidRequestUrl: String,
         val projectEventUrl: String,
         val opportunityEventUrl: String,
         val sdkVersion: String = "0.0.1"  //todo - get it from buid config

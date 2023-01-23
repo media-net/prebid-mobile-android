@@ -1,7 +1,8 @@
-package com.medianet.android.adsdk
+package com.medianet.android.adsdk.utils
 
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
+import com.medianet.android.adsdk.*
 import org.prebid.mobile.ContentObject
 import org.prebid.mobile.ContentObject.ProducerObject
 import org.prebid.mobile.DataObject
