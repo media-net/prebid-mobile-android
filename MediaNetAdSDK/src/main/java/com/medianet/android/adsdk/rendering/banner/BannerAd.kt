@@ -3,10 +3,10 @@ package com.medianet.android.adsdk.rendering.banner
 import android.content.Context
 import android.widget.FrameLayout
 import com.google.android.gms.ads.AdSize
-import com.medianet.android.adsdk.Util
-import com.medianet.android.adsdk.Util.getPrebidAdSizeFromGAMAdSize
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.rendering.AdEventListener
+import com.medianet.android.adsdk.utils.Util
+import com.medianet.android.adsdk.utils.Util.getPrebidAdSizeFromGAMAdSize
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener

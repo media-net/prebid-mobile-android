@@ -9,6 +9,8 @@ import com.app.network.RetryPolicy
 import com.app.network.wrapper.safeApiCall
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.model.ConfigResponse
+import com.medianet.android.adsdk.network.NetworkComponentFactory
+import com.medianet.android.adsdk.network.ServerApiService
 import kotlinx.coroutines.*
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
@@ -16,6 +18,12 @@ import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.api.exceptions.InitError
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener
+import com.medianet.android.adsdk.utils.Constants.KEY_CC
+import com.medianet.android.adsdk.utils.Constants.KEY_DN
+import com.medianet.android.adsdk.utils.Constants.KEY_UGD
+import com.medianet.android.adsdk.utils.Constants.VALUE_MOBILE
+import com.medianet.android.adsdk.utils.Constants.VALUE_US
+import com.medianet.android.adsdk.utils.Util
 
 object MediaNetAdSDK {
 
@@ -107,7 +115,7 @@ object MediaNetAdSDK {
 
     private suspend fun updateSDKConfigDependencies(applicationContext: Context, config: Configuration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.auctionUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
         PrebidMobile.setTimeoutMillis(config.auctionTimeOutMillis.toInt())
         //Initialising Analytics
         initAnalytics(applicationContext, config)
@@ -234,7 +242,7 @@ object MediaNetAdSDK {
         val bidRequestUrl: String,
         val projectEventUrl: String,
         val opportunityEventUrl: String,
-        val sdkVersion: String = "0.0.1"  //todo - get it from buid config
+        val sdkVersion: String = "0.0.1"  //todo - get it from build config
     ) {
 
         fun getCrId(dfpAdId: String): String {

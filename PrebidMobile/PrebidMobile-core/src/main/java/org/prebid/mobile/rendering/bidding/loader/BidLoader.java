@@ -34,6 +34,7 @@ import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 
 import java.lang.ref.WeakReference;
+import java.net.SocketTimeoutException;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -87,9 +88,16 @@ public class BidLoader {
                 Exception e,
                 long responseTime
         ) {
-            failedToLoadBid(e.getMessage());
+            handleException(e);
         }
     };
+
+    private void handleException(Exception exception) {
+        if (exception instanceof SocketTimeoutException) {
+            mediaEventListener.onBidRequestTimeout();
+        }
+        failedToLoadBid(exception.getMessage());
+    }
 
     private final RefreshTimerTask refreshTimerTask = new RefreshTimerTask(() -> {
         if (adConfiguration == null) {
