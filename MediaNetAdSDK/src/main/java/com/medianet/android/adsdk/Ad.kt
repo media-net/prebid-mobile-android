@@ -1,20 +1,12 @@
 package com.medianet.android.adsdk
 
-import android.util.Log
 import androidx.annotation.IntRange
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
-import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.medianet.android.adsdk.events.EventManager
-import com.medianet.android.adsdk.utils.Constants
 import com.medianet.android.adsdk.utils.Util
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.ResultCode
-import org.prebid.mobile.addendum.AdViewUtils
-import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 
 abstract class Ad(val adUnit: AdUnit) {
@@ -44,7 +36,7 @@ abstract class Ad(val adUnit: AdUnit) {
         }
 
         override fun onAdLoaded() {
-            adLoaded()
+            sendAdLoadedEvent()
         }
     }
 
@@ -77,25 +69,14 @@ abstract class Ad(val adUnit: AdUnit) {
     fun getPrebidAdSlot() = adUnit.pbAdSlot
     fun setPrebidAdSlot(slot: String) = apply { adUnit.pbAdSlot =  slot }
 
-    //We assume that publisher will fire this method when ad loaded on his side
-    fun adLoaded() {
+    fun sendAdLoadedEvent() {
         EventManager.sendAdLoadedEvent(
             dfpDivId = adUnit.configuration.configId,
             sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
         )
     }
 
-    // TODO - need to expose this?
-    fun fetchDemand(listener: OnBidCompletionListener) {
-        adUnit.fetchDemand { resultCode, unmodifiableMap ->
-            when(resultCode) {
-                ResultCode.SUCCESS -> listener.onSuccess(unmodifiableMap)
-                else -> Util.mapResultCodeToError(resultCode)
-            }
-        }
-    }
-
-    fun fetchDemand(adRequest: AdManagerAdRequest, listener: OnBidCompletionListener) {
+    protected fun fetchDemand(adRequest: AdManagerAdRequest, listener: OnBidCompletionListener) {
         adUnit.fetchDemand(adRequest) {
         resultCode ->
                 when(resultCode) {
@@ -108,66 +89,5 @@ abstract class Ad(val adUnit: AdUnit) {
                     }
                 }
         }
-    }
-
-    fun fetchDemand(
-        adView: AdManagerAdView,
-        adRequest: AdManagerAdRequest,
-        listener: GamEventListener
-    ) {
-        adView.setAppEventListener { key, value ->
-            if (key == Constants.KEY_AD_RENDERED) {
-                // Mark our ad win
-            }
-            listener.onEvent(key, value)
-        }
-
-        adView.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                // Update ad view
-                AdViewUtils.findPrebidCreativeSize(adView, object : AdViewUtils.PbFindSizeListener {
-                    override fun success(width: Int, height: Int) {
-                        adView.setAdSizes(AdSize(width, height))
-                    }
-
-                    override fun failure(error: PbFindSizeError) {
-                        Log.e("Nikhil", "error in adjusting ad view")
-                    }
-                })
-                adLoaded()
-                listener.onAdLoaded()
-            }
-
-            override fun onAdClicked() {
-                listener.onAdClicked()
-            }
-
-            override fun onAdClosed() {
-                listener.onAdClosed()
-            }
-
-            override fun onAdFailedToLoad(p0: LoadAdError) {
-                listener.onAdFailedToLoad(Util.mapGamLoadAdErrorToError(p0))
-            }
-
-            override fun onAdOpened() {
-                listener.onAdOpened()
-            }
-
-            override fun onAdImpression() {
-                listener.onAdImpression()
-            }
-        }
-
-        fetchDemand(adRequest, object : OnBidCompletionListener{
-            override fun onSuccess(keywordMap: Map<String, String>?) {
-                listener.onSuccess()
-                adView.loadAd(adRequest)
-            }
-
-            override fun onError(error: Error) {
-                listener.onAdFailedToLoad(error)
-            }
-        })
     }
 }
