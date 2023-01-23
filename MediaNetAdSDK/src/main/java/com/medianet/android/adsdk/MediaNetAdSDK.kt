@@ -242,11 +242,11 @@ object MediaNetAdSDK {
         val bidRequestUrl: String,
         val projectEventUrl: String,
         val opportunityEventUrl: String,
-        val sdkVersion: String = "0.0.1"  //todo - get it from build config
+        val sdkVersion: String = BuildConfig.VERSION_NAME
     ) {
 
         fun getCrId(dfpAdId: String): String {
-            val id =  dpfToCrIdMap[dfpAdId] ?: "default_cr"
+            val id =  dpfToCrIdMap[dfpAdId] ?: dummyCCrId
             return id
         }
     }
