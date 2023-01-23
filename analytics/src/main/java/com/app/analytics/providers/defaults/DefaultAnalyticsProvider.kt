@@ -22,29 +22,43 @@ class DefaultAnalyticsProvider(
 
     override suspend fun pushEvent(event: Event): Boolean {
         CustomLogger.debug(TAG, "pushing event to default analytics: ${event.name}")
-        val pixel = getDefaultAnalyticsPixel(event, analyticsBaseUrl)
-        pushEventToServer(pixel)
-        return true
+        if (analyticsBaseUrl.isBlank() && event.baseUrl.isBlank()) {
+            CustomLogger.error(TAG, "Invalid host url: Empty base url to push event")
+        }
+        val url = event.baseUrl.ifBlank { analyticsBaseUrl }
+        val pixel = getDefaultAnalyticsPixel(event, url)
+        return pushEventToServer(pixel)
     }
 
-    private suspend fun pushEventToServer(pixel: DefaultAnalyticsPixel) {
-        withContext(Dispatchers.IO) {
+    private suspend fun pushEventToServer(pixel: DefaultAnalyticsPixel) = withContext(Dispatchers.IO) {
             val result = safeApiCall(
                 apiCall = {
-                    //pushService.pushAnalyticsEvent(pixel.pixel)
-                    delay(200)
+                    pushService.pushAnalyticsEvent(pixel.pixel)
                     CustomLogger.debug(TAG, "pushing pixel to server: $pixel")
                 },
-                successTransform = {}
+                successTransform = {
+                    it
+                }
             )
-            //TODO error handling or retry on failure logic
-        }
+        return@withContext (result.isSuccess)
     }
 
     override suspend fun pushEvents(events: List<Event>): Boolean {
         var allEventsPushed = true
         events.forEach {
             allEventsPushed = allEventsPushed && pushEvent(it)
+        }
+        return allEventsPushed
+    }
+
+    override suspend fun pushPixel(pixel: DefaultAnalyticsPixel): Boolean {
+        return pushEventToServer(pixel)
+    }
+
+    override suspend fun pushPixels(pixels: List<DefaultAnalyticsPixel>): Boolean {
+        var allEventsPushed = true
+        pixels.forEach {
+            allEventsPushed = allEventsPushed && pushPixel(it)
         }
         return allEventsPushed
     }

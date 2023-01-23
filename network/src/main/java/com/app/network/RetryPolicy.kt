@@ -4,7 +4,7 @@ import kotlin.math.pow
 
 class RetryPolicy(
     private val maxTries: Int = TOTAL_RETRY,
-    private var remainingTries: Int = TOTAL_RETRY,
+    private var remainingTries: Int = maxTries,
     private val multiplier: RetryMultiplier = RetryMultiplier.LINEAR,
     private val delayInMillis: Long = 500
 ) {

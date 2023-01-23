@@ -3,8 +3,8 @@ package com.medianet.android.adsdk.rendering.interstitial
 import android.app.Activity
 import android.content.Context
 import com.medianet.android.adsdk.AdType
-import com.medianet.android.adsdk.Util.mapAdExceptionToError
-import com.medianet.android.adsdk.Util.mapInterstitialAdFormat
+import com.medianet.android.adsdk.utils.Util.mapAdExceptionToError
+import com.medianet.android.adsdk.utils.Util.mapInterstitialAdFormat
 import com.medianet.android.adsdk.rendering.AdEventListener
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.exceptions.AdException
