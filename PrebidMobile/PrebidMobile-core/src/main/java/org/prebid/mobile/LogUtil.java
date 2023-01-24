@@ -23,7 +23,7 @@ import com.app.logger.LogLevels;
 
 public class LogUtil {
 
-    private static String BASE_TAG = "MediaNetMobile";
+    private static String BASE_TAG = "MediaNetAdSDK";
 
     public static final int NONE = -1;
     public static final int VERBOSE = android.util.Log.VERBOSE; // 2
@@ -178,7 +178,7 @@ public class LogUtil {
         if (tag.startsWith(BASE_TAG)) {
             result.append(tag);
         } else {
-            result.append(BASE_TAG).append(tag);
+            result.append(BASE_TAG).append(":").append(tag);
         }
 
         if (result.length() > 23) {
