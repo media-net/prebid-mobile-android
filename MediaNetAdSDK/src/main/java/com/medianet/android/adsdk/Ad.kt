@@ -22,6 +22,9 @@ abstract class Ad {
 
     abstract val adUnit: AdUnit
     abstract val adType: AdType
+    companion object{
+        private const val ADSIZE_ADJUSTMENT_ERROR_TAG = "AdSizeAdjustmentError"
+    }
 
     fun getConfigId() = adUnit.configuration.configId
 
@@ -91,7 +94,7 @@ abstract class Ad {
                     }
 
                     override fun failure(error: PbFindSizeError) {
-                        CustomLogger.error("AdSizeAdjustmentError", "error in adjusting ad view")
+                        CustomLogger.error(ADSIZE_ADJUSTMENT_ERROR_TAG, "error in adjusting ad view")
                     }
                 })
                 AnalyticsSDK.pushEvent(Event(name = "ad_loaded", type = LoggingEvents.OPPORTUNITY.type))
