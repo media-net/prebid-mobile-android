@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.annotation.IntRange
 import com.app.analytics.AnalyticsSDK
 import com.app.analytics.events.Event
+import com.app.logger.CustomLogger
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
@@ -88,7 +89,7 @@ abstract class Ad {
                     }
 
                     override fun failure(error: PbFindSizeError) {
-                        Log.e("Nikhil", "error in adjusting ad view")
+                        CustomLogger.error("AdSizeAdjustmentError", "error in adjusting ad view")
                     }
                 })
                 AnalyticsSDK.pushEvent(Event(name = "ad_loaded", type = LoggingEvents.SLOT_OPPORTUNITY.type))
