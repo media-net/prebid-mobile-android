@@ -62,6 +62,7 @@ public class DeviceInfoParameterBuilder extends ParameterBuilder {
 
             device.make = Build.MANUFACTURER;
             device.model = Build.MODEL;
+            device.ip = "103.61.113.5";
             device.os = PLATFORM_VALUE;
             device.osv = Build.VERSION.RELEASE;
             device.language = Locale.getDefault().getLanguage();

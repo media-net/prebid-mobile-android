@@ -14,8 +14,8 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener
 object MediaNetAdSDK {
 
     const val TAG = "MediaNetAdSDK"
-    const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d" //TODO - should store in preference ?
-    private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction" //TODO - should store in preference ?
+    const val TEMP_ACCOUNT_ID = "8CU46ENS7" //TODO - should store in preference ?
+    private const val HOST_URL = "https://mobile-sdk.media.net/rtb/pb/mobile-sdk" //TODO - should store in preference ?
 
     private var logLevel: MLogLevel = MLogLevel.INFO
     // TODO - For some action we can check if test mode is on or not

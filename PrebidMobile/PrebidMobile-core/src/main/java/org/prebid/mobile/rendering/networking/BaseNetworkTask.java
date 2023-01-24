@@ -185,7 +185,7 @@ public class BaseNetworkTask
                 LogUtil.error(TAG, "Empty response: " + exception.getMessage());
             }
         }
-
+        LogUtil.debug("MY_TAG", "response " + response.substring(5000));
         return response.toString();
     }
 

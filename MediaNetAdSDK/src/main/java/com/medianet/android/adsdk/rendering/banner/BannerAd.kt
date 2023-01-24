@@ -17,7 +17,7 @@ class BannerAd(context: Context, adUnitId: String, adSize: AdSize) {
 
     private val bannerEventHandler = GamBannerEventHandler(context, adUnitId, getPrebidAdSizeFromGAMAdSize(adSize))
     // TODO Pass adUnitId to BannerAdUnit once it is configured
-    private val bannerView = BannerView(context, "imp-prebid-banner-320-50", bannerEventHandler)
+    private val bannerView = BannerView(context, "divid", bannerEventHandler)
     private var bannerAdListener: AdEventListener? = null
 
     fun setBannerAdListener(listener: AdEventListener) = apply {

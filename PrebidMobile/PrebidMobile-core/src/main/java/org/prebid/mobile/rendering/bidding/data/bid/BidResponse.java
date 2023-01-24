@@ -163,7 +163,7 @@ public class BidResponse {
             mobileSdkPassThrough = MobileSdkPassThrough.combine(bidMobilePassThrough, rootMobilePassThrough);
             creationTime = System.currentTimeMillis();
         }
-        catch (JSONException e) {
+        catch (Exception e) {
             hasParseError = true;
             parseError = "Failed to parse JSON String: " + e.getMessage();
             LogUtil.error(TAG, parseError);

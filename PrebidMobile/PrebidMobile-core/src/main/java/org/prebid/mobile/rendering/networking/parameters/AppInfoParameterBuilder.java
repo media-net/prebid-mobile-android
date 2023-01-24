@@ -50,7 +50,8 @@ public class AppInfoParameterBuilder extends ParameterBuilder {
             app.ver = appVersion;
         }
 
-        String bundle = AppInfoManager.getPackageName();
+        //String bundle = AppInfoManager.getPackageName();
+        String bundle = "abc.com";
         if (Utils.isNotBlank(bundle)) {
             app.bundle = bundle;
         }

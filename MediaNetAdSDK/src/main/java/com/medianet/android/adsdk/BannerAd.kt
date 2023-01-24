@@ -10,7 +10,7 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad() {
     constructor(adUnitId: String, width: Int, height: Int) : this(adUnitId, AdSize(width, height))
 
     // TODO Pass adUnitId to BannerAdUnit once it is configured
-    private val bannerAdUnit: BannerAdUnit = BannerAdUnit("imp-prebid-banner-300-250", adSize.width, adSize.height)
+    private val bannerAdUnit: BannerAdUnit = BannerAdUnit("divid", adSize.width, adSize.height)
 
     override val adUnit: AdUnit = bannerAdUnit
     override val adType: AdType = AdType.BANNER
