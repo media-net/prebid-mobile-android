@@ -21,7 +21,7 @@ suspend fun <T, X> safeApiCall(
         return Either.Success(successTransform(response))
     } catch (e: Exception) {
         retryPolicy.reduceRetries()
-        if (shouldRetryHttpCall(e) && retryPolicy.shouldTry()) {
+        if (retryPolicy.shouldTry() && shouldRetryHttpCall(e)) {
             delay(retryPolicy.getDelay())
             CustomLogger.debug("safeApiCall", "Retry Api call")
             return safeApiCall(apiCall, successTransform, retryPolicy)

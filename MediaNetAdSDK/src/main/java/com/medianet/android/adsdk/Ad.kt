@@ -10,6 +10,8 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
+import com.medianet.android.adsdk.utils.Constants
+import com.medianet.android.adsdk.utils.Util
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.ResultCode
@@ -92,7 +94,7 @@ abstract class Ad {
                         CustomLogger.error("AdSizeAdjustmentError", "error in adjusting ad view")
                     }
                 })
-                AnalyticsSDK.pushEvent(Event(name = "ad_loaded", type = LoggingEvents.SLOT_OPPORTUNITY.type))
+                AnalyticsSDK.pushEvent(Event(name = "ad_loaded", type = LoggingEvents.OPPORTUNITY.type))
                 listener.onAdLoaded()
             }
 

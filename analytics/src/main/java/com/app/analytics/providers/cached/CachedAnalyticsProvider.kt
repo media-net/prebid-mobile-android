@@ -8,6 +8,7 @@ import com.app.analytics.providers.cached.db.IAnalyticsEventRepository
 import com.app.analytics.providers.cached.sync_strategy.EventSyncStrategy
 import com.app.analytics.providers.cached.sync_strategy.ImmediateSyncStrategy
 import com.app.analytics.providers.cached.sync_strategy.TimedSyncStrategy
+import com.app.analytics.providers.defaults.DefaultAnalyticsPixel
 import com.app.analytics.utils.AnalyticsUtil
 import com.app.analytics.utils.AnalyticsUtil.toDbEntry
 import com.app.analytics.utils.Constant
@@ -43,7 +44,11 @@ class CachedAnalyticsProvider(
 
     override suspend fun pushEvent(event: Event): Boolean {
         CustomLogger.debug(TAG, "pushing event to db: ${event.name}")
-        val dbPixel = AnalyticsUtil.getDefaultAnalyticsPixel(event = event, baseUrl = analyticsBaseUrl).toDbEntry()
+        if (analyticsBaseUrl.isBlank() && event.baseUrl.isBlank()) {
+            CustomLogger.error(TAG, "Invalid host url: Empty base url to push event")
+        }
+        val url = event.baseUrl.ifBlank { analyticsBaseUrl }
+        val dbPixel = AnalyticsUtil.getDefaultAnalyticsPixel(event = event, baseUrl = url).toDbEntry()
         eventRepository.insert(dbPixel)
         return true
     }
@@ -52,6 +57,19 @@ class CachedAnalyticsProvider(
         var allEventsPushed = true
         events.forEach {
             allEventsPushed = allEventsPushed && pushEvent(it)
+        }
+        return allEventsPushed
+    }
+
+    override suspend fun pushPixel(pixel: DefaultAnalyticsPixel): Boolean {
+        eventRepository.insert(pixel.toDbEntry())
+        return true
+    }
+
+    override suspend fun pushPixels(pixels: List<DefaultAnalyticsPixel>): Boolean {
+        var allEventsPushed = true
+        pixels.forEach {
+            allEventsPushed = allEventsPushed && pushPixel(it)
         }
         return allEventsPushed
     }
