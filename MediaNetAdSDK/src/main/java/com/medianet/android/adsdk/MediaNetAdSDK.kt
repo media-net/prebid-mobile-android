@@ -12,6 +12,7 @@ import com.medianet.android.adsdk.model.ConfigResponse
 import com.medianet.android.adsdk.network.NetworkComponentFactory
 import com.medianet.android.adsdk.network.ServerApiService
 import kotlinx.coroutines.*
+import com.app.logger.CustomLogger
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
@@ -42,13 +43,13 @@ object MediaNetAdSDK {
     private var publisherSdkInitListener: MSdkInitListener? = null
     private var prebidSdkInitializationListener: SdkInitializationListener = object : SdkInitializationListener  {
         override fun onSdkInit() {
-            Log.d(TAG, "SDK initialized successfully!")
+            CustomLogger.debug(TAG, "SDK initialized successfully!")
             // If we need to send event for SDK initialisation we can do here
             publisherSdkInitListener?.onInitSuccess()
         }
 
         override fun onSdkFailedToInit(error: InitError?) {
-            Log.e(TAG, "SDK initialization error: " + error?.error)
+            CustomLogger.error(TAG, "SDK initialization error: " + error?.error)
             val sdkInitError = Error.SDK_INIT_ERROR.apply {
                 errorMessage = error?.error.toString()
             }
@@ -66,10 +67,6 @@ object MediaNetAdSDK {
     ) {
         coroutineScope.launch {
             LogUtil.setBaseTag(TAG)
-
-            //PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
-            //PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
-
             val configFromServer = getConfigFromServer(CID) //TODO - replace it with account ID provided by publisher
             config = getSDKConfig(configFromServer)
 
@@ -116,6 +113,8 @@ object MediaNetAdSDK {
     private suspend fun updateSDKConfigDependencies(applicationContext: Context, config: Configuration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
+        //PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
+        //PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
         PrebidMobile.setTimeoutMillis(config.auctionTimeOutMillis.toInt())
         //Initialising Analytics
         initAnalytics(applicationContext, config)

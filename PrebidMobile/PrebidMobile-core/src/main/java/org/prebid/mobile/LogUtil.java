@@ -16,12 +16,14 @@
 
 package org.prebid.mobile;
 
-import android.util.Log;
 import androidx.annotation.Size;
+
+import com.app.logger.CustomLogger;
+import com.app.logger.LogLevels;
 
 public class LogUtil {
 
-    private static String BASE_TAG = "PrebidMobile";
+    private static String BASE_TAG = "MediaNetAdSDK";
 
     public static final int NONE = -1;
     public static final int VERBOSE = android.util.Log.VERBOSE; // 2
@@ -84,42 +86,42 @@ public class LogUtil {
      * Prints a message with VERBOSE priority.
      */
     public static void verbose(@Size(max = 23) String tag, String msg) {
-        print(VERBOSE, tag, msg);
+        print(VERBOSE, tag, msg, LogLevels.VERBOSE);
     }
 
     /**
      * Prints a message with DEBUG priority.
      */
     public static void debug(@Size(max = 23) String tag, String msg) {
-        print(DEBUG, tag, msg);
+        print(DEBUG, tag, msg, LogLevels.DEBUG);
     }
 
     /**
      * Prints a message with INFO priority.
      */
     public static void info(@Size(max = 23) String tag, String msg) {
-        print(INFO, tag, msg);
+        print(INFO, tag, msg, LogLevels.INFO);
     }
 
     /**
      * Prints a message with WARN priority.
      */
     public static void warning(@Size(max = 23) String tag, String msg) {
-        print(WARN, tag, msg);
+        print(WARN, tag, msg, LogLevels.WARNING);
     }
 
     /**
      * Prints a message with ERROR priority.
      */
     public static void error(@Size(max = 23) String tag, String msg) {
-        print(ERROR, tag, msg);
+        print(ERROR, tag, msg, LogLevels.ERROR);
     }
 
     /**
      * Prints a message with ASSERT priority.
      */
     public static void wtf(@Size(max = 23) String tag, String msg) {
-        print(ASSERT, tag, msg);
+        print(ASSERT, tag, msg, LogLevels.ASSERT);
     }
 
     /**
@@ -131,20 +133,39 @@ public class LogUtil {
         }
 
         if (ERROR >= getLogLevel()) {
-            Log.e(getTagWithBase(tag), message, throwable);
+            CustomLogger.error(getTagWithBase(tag), message, throwable);
         }
     }
 
     /**
      * Prints information with set priority. Every tag
      */
-    private static void print(int messagePriority, String tag, String message) {
+    private static void print(int messagePriority, String tag, String message, LogLevels logLevel) {
         if (tag == null || message == null) {
             return;
         }
 
         if (messagePriority >= getLogLevel()) {
-            Log.println(messagePriority, getTagWithBase(tag), message);
+            switch (logLevel){
+                case DEBUG:
+                    CustomLogger.debug(getTagWithBase(tag), message);
+                    break;
+                case VERBOSE:
+                    CustomLogger.verbose(getTagWithBase(tag), message);
+                    break;
+                case ERROR:
+                    CustomLogger.error(getTagWithBase(tag), message);
+                    break;
+                case INFO:
+                    CustomLogger.info(getTagWithBase(tag), message);
+                    break;
+                case WARNING:
+                    CustomLogger.warning(getTagWithBase(tag), message);
+                    break;
+                case ASSERT:
+                    CustomLogger.assertLog(getTagWithBase(tag), message);
+            }
+
         }
     }
 
@@ -157,7 +178,7 @@ public class LogUtil {
         if (tag.startsWith(BASE_TAG)) {
             result.append(tag);
         } else {
-            result.append(BASE_TAG).append(tag);
+            result.append(BASE_TAG).append(":").append(tag);
         }
 
         if (result.length() > 23) {

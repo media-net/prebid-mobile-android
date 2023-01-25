@@ -21,8 +21,8 @@ object AnalyticsSDK {
             config = configuration
             customProviders = providers
             NetworkWatcher.init(context)
-            addProviders(providers)
             isInitialised = true
+            addProviders(providers)
             sendPendingEventIfAny()
             CustomLogger.debug(TAG, "Analytics SDK initialised")
         }
@@ -38,6 +38,9 @@ object AnalyticsSDK {
                 return
             }
             AnalyticsProviderFactory.addAllProvider(providers)
+            providers.forEach {
+                it.initialise()
+            }
         }
     }
 

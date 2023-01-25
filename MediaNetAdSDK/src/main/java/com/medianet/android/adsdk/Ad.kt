@@ -12,6 +12,9 @@ import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 abstract class Ad(val adUnit: AdUnit) {
 
     abstract val adType: AdType
+    companion object{
+        private const val ADSIZE_ADJUSTMENT_ERROR_TAG = "AdSizeAdjustmentError"
+    }
 
     private val mediaEventListener = object : MediaEventListener {
         override fun onBidRequest() {

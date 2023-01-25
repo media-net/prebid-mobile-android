@@ -111,7 +111,7 @@ class ImmediateSyncStrategy(
     override fun clean() {
         topEventInDbLiveData = null
         context = null
-        NetworkWatcher.startListening(this)
+        NetworkWatcher.stopListening(this)
         eventLifecycleOwner.stopListening()
     }
 }
