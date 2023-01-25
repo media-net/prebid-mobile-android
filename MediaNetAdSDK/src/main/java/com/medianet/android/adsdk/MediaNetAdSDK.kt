@@ -138,7 +138,7 @@ object MediaNetAdSDK {
         return if (configResult.isSuccess) {
             configResult.successValue()
         } else {
-            Log.e(TAG, "config call fails: ${configResult.errorValue()?.errorModel?.errorMessage}")
+            CustomLogger.error(TAG, "config call fails: ${configResult.errorValue()?.errorModel?.errorMessage}")
             null
         }
     }
