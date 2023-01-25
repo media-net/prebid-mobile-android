@@ -67,21 +67,35 @@ object MediaNetAdSDK {
     ) {
         coroutineScope.launch {
             LogUtil.setBaseTag(TAG)
-            val configFromServer = getConfigFromServer(CID) //TODO - replace it with account ID provided by publisher
-            config = getSDKConfig(configFromServer)
-
-            //Disable SDK if kill switch is onn
-            if (config == null || config?.shouldKillSDK == true) {
-                sdkOnVacation = true
-                return@launch
-            }
-            config?.let {
-                updateSDKConfigDependencies(applicationContext, it)
-            }
+            initialiseSdkConfig(applicationContext)
             publisherSdkInitListener = sdkInitListener
             PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
             //TODO - that need to be come from customer
             TargetingParams.setSubjectToGDPR(true)
+        }
+    }
+
+    private suspend fun initialiseSdkConfig(applicationContext: Context) {
+        CustomLogger.debug(TAG, "fetching config from server")
+        val configFromServer = getConfigFromServer(CID) //TODO - replace it with account ID provided by publisher
+        config = getSDKConfig(configFromServer)
+
+        //Disable SDK if kill switch is onn
+        if (config == null || config?.shouldKillSDK == true) {
+            sdkOnVacation = true
+            return
+        }
+        config?.let {
+            updateSDKConfigDependencies(applicationContext, it)
+            initConfigExpiryTimer(applicationContext, it.configExpiry)
+        }
+    }
+
+    private suspend fun initConfigExpiryTimer(applicationContext: Context, expiry: Long?) = withContext(Dispatchers.IO) {
+        expiry?.let {
+            CustomLogger.debug(TAG, "refreshing config after $it seconds")
+            delay(it * 1000)
+            initialiseSdkConfig(applicationContext)
         }
     }
 
@@ -104,13 +118,14 @@ object MediaNetAdSDK {
                 projectEventUrl = it.urls.projectEventUrl,
                 opportunityEventUrl = it.urls.opportunityEventUrl,
                 dpfToCrIdMap = crIdMap,
-                dummyCCrId = data.dummyCrId.crId
+                dummyCCrId = data.dummyCrId.crId,
+                configExpiry = data.globalConfig.configExpiryInSec
             )
         }
         return null
     }
 
-    private suspend fun updateSDKConfigDependencies(applicationContext: Context, config: Configuration) {
+    private fun updateSDKConfigDependencies(applicationContext: Context, config: Configuration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
         //PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
@@ -121,6 +136,7 @@ object MediaNetAdSDK {
     }
 
     private suspend fun getConfigFromServer(accountId: String): ConfigResponse? {
+        var configExpiry: Long? = null
         val configParams = mapOf(
             KEY_CC to VALUE_US,
             KEY_DN to BuildConfig.LIBRARY_PACKAGE_NAME,
@@ -131,7 +147,10 @@ object MediaNetAdSDK {
                 serverApiService?.getSdkConfig(accountId, configParams)
             },
             successTransform = {
-                it
+                configExpiry = Util.parseConfigExpiryTime(it?.headers()?.get("Cache-Control"))
+                it?.body()?.apply {
+                    globalConfig.configExpiryInSec = configExpiry
+                }
             },
             retryPolicy = RetryPolicy(maxTries = 0)
         )
@@ -241,7 +260,8 @@ object MediaNetAdSDK {
         val bidRequestUrl: String,
         val projectEventUrl: String,
         val opportunityEventUrl: String,
-        val sdkVersion: String = BuildConfig.VERSION_NAME
+        val sdkVersion: String = BuildConfig.VERSION_NAME,
+        val configExpiry: Long? = null
     ) {
 
         fun getCrId(dfpAdId: String): String {

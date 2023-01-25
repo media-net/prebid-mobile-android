@@ -156,4 +156,11 @@ object Util {
             mapAdSizeToMAdSize(it)
         }.toList()
     }
+
+    fun parseConfigExpiryTime(headerValue: String?): Long? {
+        headerValue?.let {
+            return it.subSequence(8, 13).toString().toLongOrNull()
+        }
+        return null
+    }
 }
