@@ -2,7 +2,7 @@ package com.app.analytics.providers.cached
 
 import android.content.Context
 import com.app.analytics.PushEventToServerService
-import com.app.analytics.events.Event
+import com.app.analytics.Event
 import com.app.analytics.providers.AnalyticsProvider
 import com.app.analytics.providers.cached.db.IAnalyticsEventRepository
 import com.app.analytics.providers.cached.sync_strategy.EventSyncStrategy
@@ -15,30 +15,29 @@ import com.app.analytics.utils.Constant
 import com.app.logger.CustomLogger
 
 class CachedAnalyticsProvider(
-    context: Context,
+    val context: Context,
     private val analyticsBaseUrl: String,
     private val eventRepository: IAnalyticsEventRepository,
-    pushService: PushEventToServerService,
-    syncIntervalInMinutes: Long = 0
+    val pushService: PushEventToServerService,
+    val syncIntervalInMinutes: Long = 0
 ) : AnalyticsProvider {
 
     companion object {
         private val TAG = CachedAnalyticsProvider::class.java.simpleName
     }
 
-    private val syncStrategy: EventSyncStrategy
+    private var syncStrategy: EventSyncStrategy? = null
 
     override val defaultParams = mutableMapOf<String, Any>()
     override fun getName() = Constant.Providers.PROVIDER_DEFAULT
 
-
-    init {
+    override fun initialise() {
         syncStrategy = if (syncIntervalInMinutes > 15) {
             TimedSyncStrategy(context, eventRepository, pushService)
         } else  {
             ImmediateSyncStrategy(context, eventRepository, pushService)
         }
-        syncStrategy.initialise()
+        syncStrategy?.initialise()
     }
 
 
@@ -79,6 +78,7 @@ class CachedAnalyticsProvider(
     }
 
     override fun clean() {
-        syncStrategy.clean()
+        syncStrategy?.clean()
+        syncStrategy = null
     }
 }

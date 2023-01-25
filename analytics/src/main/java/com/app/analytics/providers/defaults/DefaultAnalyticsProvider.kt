@@ -1,7 +1,7 @@
 package com.app.analytics.providers.defaults
 
 import com.app.analytics.PushEventToServerService
-import com.app.analytics.events.Event
+import com.app.analytics.Event
 import com.app.analytics.providers.AnalyticsProvider
 import com.app.analytics.utils.AnalyticsUtil.getDefaultAnalyticsPixel
 import com.app.analytics.utils.Constant

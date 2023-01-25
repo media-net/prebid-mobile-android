@@ -24,6 +24,7 @@ object NetworkWatcher {
     private var networkStateIntentFilter: IntentFilter? = null
 
     fun init(context: Context) {
+        CustomLogger.debug(TAG, "init")
         contextReference = WeakReference(context)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             contextReference?.get()?.let { initConnectivityManagerCallback(it) }
@@ -34,6 +35,7 @@ object NetworkWatcher {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun initConnectivityManagerCallback(context: Context) {
+        CustomLogger.debug(TAG, "initialising connectivity manager")
         connectivityManager = context.getSystemService(ConnectivityManager::class.java) as ConnectivityManager
         networkRequest = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -56,6 +58,7 @@ object NetworkWatcher {
     }
 
     private fun initNetworkMonitorBR() {
+        CustomLogger.debug(TAG, "initialising network BR")
         networkStateListenerBR = NetworkStateBroadcastReceiver(object : NetworkConnectionListener {
             override fun onNetworkChange(isConnected: Boolean) {
                 sendUpdatesToListener(isConnected)
@@ -73,6 +76,7 @@ object NetworkWatcher {
     }
 
     private fun startNetworkMonitor() {
+        CustomLogger.debug(TAG, "startNetworkMonitor()")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             networkRequest?.let { request ->
                 connectivityManagerCallback?.let { callback ->
@@ -85,6 +89,7 @@ object NetworkWatcher {
     }
 
     private fun stopNetworkMonitor() {
+        CustomLogger.debug(TAG, "stopNetworkMonitor()")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             connectivityManagerCallback?.let { connectivityManager?.unregisterNetworkCallback(it) }
         } else {
@@ -104,6 +109,7 @@ object NetworkWatcher {
     }
 
     fun startListening(listener: NetworkConnectionListener) {
+        CustomLogger.debug(TAG, "startListening(), listener: $listener")
         synchronized(this) {
             if (listeners.isEmpty()) {
                 startNetworkMonitor()
@@ -113,6 +119,7 @@ object NetworkWatcher {
     }
 
     fun stopListening(listener: NetworkConnectionListener) {
+        CustomLogger.debug(TAG, "stopListening(), listener: $listener")
         synchronized(this) {
             listeners.remove(listener)
             if (listeners.isEmpty()) {

@@ -1,29 +1,50 @@
 package com.medianet.android.adsdk
 
-import android.util.Log
 import androidx.annotation.IntRange
-import com.app.analytics.AnalyticsSDK
-import com.app.analytics.events.Event
-import com.app.logger.CustomLogger
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
-import com.google.android.gms.ads.admanager.AdManagerAdView
-import com.medianet.android.adsdk.utils.Constants
+import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.utils.Util
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.ResultCode
-import org.prebid.mobile.addendum.AdViewUtils
-import org.prebid.mobile.addendum.PbFindSizeError
+import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 
-abstract class Ad {
+abstract class Ad(val adUnit: AdUnit) {
 
-    abstract val adUnit: AdUnit
     abstract val adType: AdType
     companion object{
         private const val ADSIZE_ADJUSTMENT_ERROR_TAG = "AdSizeAdjustmentError"
+    }
+
+    private val mediaEventListener = object : MediaEventListener {
+        override fun onBidRequest() {
+            EventManager.sendBidRequestEvent(
+                dfpDivId = adUnit.configuration.configId,
+                sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+            )
+        }
+
+        override fun onBidRequestTimeout() {
+            EventManager.sendTimeoutEvent(
+                dfpDivId = adUnit.configuration.configId,
+                sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+            )
+        }
+
+        override fun onRequestSentToGam() {
+            EventManager.sendAdRequestToGamEvent(
+                dfpDivId = adUnit.configuration.configId,
+                sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+            )
+        }
+
+        override fun onAdLoaded() {
+            sendAdLoadedEvent()
+        }
+    }
+
+    init {
+        adUnit.setMediaEventListener(mediaEventListener)
     }
 
     fun getConfigId() = adUnit.configuration.configId
@@ -51,94 +72,25 @@ abstract class Ad {
     fun getPrebidAdSlot() = adUnit.pbAdSlot
     fun setPrebidAdSlot(slot: String) = apply { adUnit.pbAdSlot =  slot }
 
-
-    fun fetchDemand(listener: OnBidCompletionListener) {
-        adUnit.fetchDemand { resultCode, unmodifiableMap ->
-            when(resultCode) {
-                ResultCode.SUCCESS -> listener.onSuccess(unmodifiableMap)
-                else -> Util.mapResultCodeToError(resultCode)
-            }
-        }
+    fun sendAdLoadedEvent() {
+        EventManager.sendAdLoadedEvent(
+            dfpDivId = adUnit.configuration.configId,
+            sizes = Util.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+        )
     }
 
-    fun fetchDemand(adRequest: AdManagerAdRequest, listener: OnBidCompletionListener) {
+    protected fun fetchDemand(adRequest: AdManagerAdRequest, listener: OnBidCompletionListener) {
         adUnit.fetchDemand(adRequest) {
         resultCode ->
                 when(resultCode) {
-                    ResultCode.SUCCESS -> listener.onSuccess(null)
-                    else -> Util.mapResultCodeToError(resultCode)
-                }
-        }
-    }
-
-    fun fetchDemand(
-        adView: AdManagerAdView,
-        adRequest: AdManagerAdRequest,
-        listener: GamEventListener
-    ) {
-
-        AnalyticsSDK.pushEvent(Event(name = "fetching_prebid", type = LoggingEvents.PROJECT.type))
-        adView.setAppEventListener { key, value ->
-            if (key == Constants.KEY_AD_RENDERED) {
-                // Mark our ad win
-            }
-            listener.onEvent(key, value)
-        }
-
-        adView.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                // Update ad view
-                AdViewUtils.findPrebidCreativeSize(adView, object : AdViewUtils.PbFindSizeListener {
-                    override fun success(width: Int, height: Int) {
-                        adView.setAdSizes(AdSize(width, height))
+                    ResultCode.SUCCESS -> {
+                        listener.onSuccess(null)
                     }
-
-                    override fun failure(error: PbFindSizeError) {
-                        CustomLogger.error(ADSIZE_ADJUSTMENT_ERROR_TAG, "error in adjusting ad view")
+                    else -> {
+                        val error =  Util.mapResultCodeToError(resultCode)
+                        listener.onError(error)
                     }
-                })
-                AnalyticsSDK.pushEvent(Event(name = "ad_loaded", type = LoggingEvents.OPPORTUNITY.type))
-                listener.onAdLoaded()
-            }
-
-            override fun onAdClicked() {
-                listener.onAdClicked()
-            }
-
-            override fun onAdClosed() {
-                listener.onAdClosed()
-            }
-
-            override fun onAdFailedToLoad(p0: LoadAdError) {
-                listener.onAdFailedToLoad(Util.mapGamLoadAdErrorToError(p0))
-            }
-
-            override fun onAdOpened() {
-                listener.onAdOpened()
-            }
-
-            override fun onAdImpression() {
-                listener.onAdImpression()
-            }
-
-            /*override fun onAdSwipeGestureClicked() {
-                super.onAdSwipeGestureClicked()
-            }*/
-        }
-
-        adUnit.fetchDemand(adRequest) { code ->
-            when(code) {
-                ResultCode.SUCCESS -> {
-                    listener.onSuccess()
-                    AnalyticsSDK.pushEvent(Event(name = "prebid_auction_success", type = LoggingEvents.PROJECT.type))
-                    adView.loadAd(adRequest)
                 }
-
-                else ->  {
-                    Util.mapResultCodeToError(code)
-                    AnalyticsSDK.pushEvent(Event(name = "prebid_auction_failure", type = LoggingEvents.PROJECT.type))
-                }
-            }
         }
     }
 }

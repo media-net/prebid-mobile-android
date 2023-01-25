@@ -11,8 +11,10 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSDKVersion
         targetSdkVersion rootProject.targetSDKVersion
-        versionCode rootProject.prebidVersionCode
-        versionName rootProject.prebidVersionName
+        versionCode 0
+        versionName "0.0.1"
+        buildConfigField "int", "VERSION_CODE", "$versionCode"
+        buildConfigField "String", "VERSION_NAME", '"' + versionName + '"'
     }
 
     buildTypes {

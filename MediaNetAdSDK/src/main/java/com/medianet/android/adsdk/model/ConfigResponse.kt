@@ -56,7 +56,7 @@ data class PublisherIds(
     @Json(name = "cid")
     val cId: String,
     @Json(name = "pid")
-    val publisherId: String
+    val partnerId: String
 )
 
 @JsonClass(generateAdapter = true)

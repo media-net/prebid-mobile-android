@@ -22,6 +22,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.listeners.MediaEventListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -33,6 +34,7 @@ import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 
 import java.lang.ref.WeakReference;
+import java.net.SocketTimeoutException;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -51,6 +53,7 @@ public class BidLoader {
     private AtomicBoolean currentlyLoading;
 
     private BidRequesterListener requestListener;
+    private MediaEventListener mediaEventListener;
     private BidRefreshListener bidRefreshListener;
 
     private final ResponseHandler responseHandler = new ResponseHandler() {
@@ -85,9 +88,16 @@ public class BidLoader {
                 Exception e,
                 long responseTime
         ) {
-            failedToLoadBid(e.getMessage());
+            handleException(e);
         }
     };
+
+    private void handleException(Exception exception) {
+        if (exception instanceof SocketTimeoutException) {
+            mediaEventListener.onBidRequestTimeout();
+        }
+        failedToLoadBid(exception.getMessage());
+    }
 
     private final RefreshTimerTask refreshTimerTask = new RefreshTimerTask(() -> {
         if (adConfiguration == null) {
@@ -117,6 +127,15 @@ public class BidLoader {
         currentlyLoading = new AtomicBoolean();
     }
 
+    public BidLoader(Context context, AdUnitConfiguration adConfiguration, BidRequesterListener requestListener, MediaEventListener mediaEventListener) {
+        this (context, adConfiguration, requestListener);
+        this.mediaEventListener = mediaEventListener;
+    }
+
+    public void setMediaEventListener(MediaEventListener mediaEventListener) {
+        this.mediaEventListener = mediaEventListener;
+    }
+
     public void setBidRefreshListener(BidRefreshListener bidRefreshListener) {
         this.bidRefreshListener = bidRefreshListener;
     }
@@ -142,6 +161,7 @@ public class BidLoader {
             return;
         }
 
+        mediaEventListener.onBidRequest();
         sendBidRequest(contextReference.get(), adConfiguration);
     }
 
@@ -205,7 +225,11 @@ public class BidLoader {
         }
 
         setupRefreshTimer();
-        requestListener.onError(new AdException(AdException.INTERNAL_ERROR, "Invalid bid response: " + msg));
+        AdException exception = new AdException(AdException.INTERNAL_ERROR, "Invalid bid response: " + msg);
+        if (exception.isTimeoutException()) {
+            mediaEventListener.onBidRequestTimeout();
+        }
+        requestListener.onError(exception);
     }
 
     private void checkTmax(

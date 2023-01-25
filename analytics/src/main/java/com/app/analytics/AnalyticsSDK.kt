@@ -1,7 +1,6 @@
 package com.app.analytics
 
 import android.content.Context
-import com.app.analytics.events.Event
 import com.app.analytics.providers.AnalyticsProvider
 import com.app.analytics.providers.AnalyticsProviderFactory
 import com.app.analytics.utils.NetworkWatcher
@@ -22,8 +21,8 @@ object AnalyticsSDK {
             config = configuration
             customProviders = providers
             NetworkWatcher.init(context)
-            addProviders(providers)
             isInitialised = true
+            addProviders(providers)
             sendPendingEventIfAny()
             CustomLogger.debug(TAG, "Analytics SDK initialised")
         }
@@ -39,6 +38,9 @@ object AnalyticsSDK {
                 return
             }
             AnalyticsProviderFactory.addAllProvider(providers)
+            providers.forEach {
+                it.initialise()
+            }
         }
     }
 

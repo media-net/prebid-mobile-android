@@ -2,7 +2,7 @@ package com.app.analytics
 
 import com.app.logger.CustomLogger
 
-class SamplingMap() {
+class SamplingMap {
 
     companion object {
         private val TAG = SamplingMap::class.java.simpleName
@@ -18,6 +18,6 @@ class SamplingMap() {
             CustomLogger.error(TAG, "Event type can not be blank")
             return
         }
-        map.put(eventType, loggingPercentage)
+        map[eventType] = loggingPercentage
     }
 }

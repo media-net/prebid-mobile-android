@@ -17,15 +17,12 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 
 import android.os.Bundle
 import android.util.Log
-import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
-import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
-import com.medianet.android.adsdk.Ad
 import com.medianet.android.adsdk.Error
+import com.medianet.android.adsdk.GamEventListener
 import com.medianet.android.adsdk.InterstitialAd
 import com.medianet.android.adsdk.MediaNetAdSDK
-import com.medianet.android.adsdk.OnBidCompletionListener
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
@@ -36,7 +33,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-display-interstitial-320-480"
     }
 
-    private var adUnit: Ad? = null
+    private var adUnit: InterstitialAd? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,22 +51,22 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
 
         // 2. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
-        adUnit?.fetchDemand(request, listener = object : OnBidCompletionListener{
+        adUnit?.fetchDemandAndLoad(this, request, listener = object : GamEventListener{
+
+            override fun onInterstitialAdLoaded(ad: AdManagerInterstitialAd) {
+                Log.e("Nikhil", "$ad with id: {ad.adUnitId} loaded")
+            }
             override fun onSuccess(keywordMap: Map<String, String>?) {
-                AdManagerInterstitialAd.load(
-                    this@GamOriginalApiDisplayInterstitialActivity,
-                    AD_UNIT_ID,
-                    request,
-                    createListener())
+                Log.e("Nikhil", "bid request successful")
             }
             override fun onError(error: Error) {
-                TODO("Not yet implemented")
+                Log.e("Nikhil", error.errorMessage)
             }
         })
 
     }
 
-    private fun createListener(): AdManagerInterstitialAdLoadCallback {
+    /*private fun createListener(): AdManagerInterstitialAdLoadCallback {
         return object : AdManagerInterstitialAdLoadCallback() {
 
             override fun onAdLoaded(adManagerInterstitialAd: AdManagerInterstitialAd) {
@@ -84,7 +81,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
                 Log.e("GAM", "Ad failed to load: $loadAdError")
             }
         }
-    }
+    }*/
 
     override fun onDestroy() {
         super.onDestroy()
