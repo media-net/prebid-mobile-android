@@ -54,7 +54,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         adUnit?.fetchDemandAndLoad(this, request, listener = object : GamEventListener{
 
             override fun onInterstitialAdLoaded(ad: AdManagerInterstitialAd) {
-                Log.e("Nikhil", "$ad with id: {ad.adUnitId} loaded")
+                Log.e("Nikhil", "$ad with id: ${ad.adUnitId} loaded")
             }
             override fun onSuccess(keywordMap: Map<String, String>?) {
                 Log.e("Nikhil", "bid request successful")
