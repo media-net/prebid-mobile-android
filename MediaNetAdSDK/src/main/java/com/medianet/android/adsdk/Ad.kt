@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.annotation.IntRange
 import com.app.analytics.AnalyticsSDK
 import com.app.analytics.events.Event
+import com.app.logger.CustomLogger
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
@@ -21,6 +22,9 @@ abstract class Ad {
 
     abstract val adUnit: AdUnit
     abstract val adType: AdType
+    companion object{
+        private const val ADSIZE_ADJUSTMENT_ERROR_TAG = "AdSizeAdjustmentError"
+    }
 
     fun getConfigId() = adUnit.configuration.configId
 
@@ -90,7 +94,7 @@ abstract class Ad {
                     }
 
                     override fun failure(error: PbFindSizeError) {
-                        Log.e("Nikhil", "error in adjusting ad view")
+                        CustomLogger.error(ADSIZE_ADJUSTMENT_ERROR_TAG, "error in adjusting ad view")
                     }
                 })
                 AnalyticsSDK.pushEvent(Event(name = "ad_loaded", type = LoggingEvents.OPPORTUNITY.type))

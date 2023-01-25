@@ -30,6 +30,9 @@ object CustomLogger {
             LogLevels.VERBOSE -> {
                 Log.v(tag, messageLog)
             }
+            LogLevels.ASSERT -> {
+                Log.println(Log.ASSERT, tag, messageLog)
+            }
         }
     }
 
@@ -46,6 +49,21 @@ object CustomLogger {
     @JvmStatic
     fun error(tag: String, message: String?) {
         error(tag, message, null)
+    }
+
+    @JvmStatic
+    fun verbose(tag: String, message: String?) {
+        printLog(LogLevels.VERBOSE, tag, message)
+    }
+
+    @JvmStatic
+    fun warning(tag: String, message: String?) {
+        printLog(LogLevels.WARNING, tag, message)
+    }
+
+    @JvmStatic
+    fun assertLog(tag: String, message: String?) {
+        printLog(LogLevels.ASSERT, tag, message)
     }
 
     @JvmStatic

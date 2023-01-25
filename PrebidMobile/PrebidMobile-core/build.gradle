@@ -21,6 +21,7 @@ android {
 
 dependencies {
     implementation project(":omsdk-android")
+    api project(':logger')
 
     implementation 'androidx.annotation:annotation:1.3.0'
 
