@@ -12,6 +12,7 @@ import com.medianet.android.adsdk.model.ConfigResponse
 import com.medianet.android.adsdk.network.NetworkComponentFactory
 import com.medianet.android.adsdk.network.ServerApiService
 import kotlinx.coroutines.*
+import com.app.logger.CustomLogger
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
@@ -42,13 +43,13 @@ object MediaNetAdSDK {
     private var publisherSdkInitListener: MSdkInitListener? = null
     private var prebidSdkInitializationListener: SdkInitializationListener = object : SdkInitializationListener  {
         override fun onSdkInit() {
-            Log.d(TAG, "SDK initialized successfully!")
+            CustomLogger.debug(TAG, "SDK initialized successfully!")
             // If we need to send event for SDK initialisation we can do here
             publisherSdkInitListener?.onInitSuccess()
         }
 
         override fun onSdkFailedToInit(error: InitError?) {
-            Log.e(TAG, "SDK initialization error: " + error?.error)
+            CustomLogger.error(TAG, "SDK initialization error: " + error?.error)
             val sdkInitError = Error.SDK_INIT_ERROR.apply {
                 errorMessage = error?.error.toString()
             }
