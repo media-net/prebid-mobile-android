@@ -78,7 +78,7 @@ object MediaNetAdSDK {
     private suspend fun initialiseSdkConfig(applicationContext: Context) {
         CustomLogger.debug(TAG, "fetching config from server")
         val configFromServer = getConfigFromServer(CID) //TODO - replace it with account ID provided by publisher
-        config = getSDKConfig(configFromServer)
+        config = getSDKConfig(configFromServer) ?: config
 
         //Disable SDK if kill switch is onn
         if (config == null || config?.shouldKillSDK == true) {
