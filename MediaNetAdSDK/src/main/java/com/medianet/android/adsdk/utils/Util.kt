@@ -1,8 +1,8 @@
-package com.medianet.android.adsdk
+package com.medianet.android.adsdk.utils
 
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
-import com.medianet.android.adsdk.nativead.*
+import com.medianet.android.adsdk.*
 import org.prebid.mobile.ContentObject
 import org.prebid.mobile.ContentObject.ProducerObject
 import org.prebid.mobile.DataObject
@@ -160,6 +160,14 @@ object Util {
     //To convert AdSize
     fun getPrebidAdSizeFromGAMAdSize(adSize: AdSize): org.prebid.mobile.AdSize {
         return org.prebid.mobile.AdSize(adSize.width, adSize.height)
+    }
+
+    inline fun mapAdSizeToMAdSize(size: org.prebid.mobile.AdSize) = MAdSize(height = size.height, width = size.width)
+
+    fun mapAdSizesToMAdSizes(adSizes: HashSet<org.prebid.mobile.AdSize>): List<MAdSize> {
+        return adSizes.map {
+            mapAdSizeToMAdSize(it)
+        }.toList()
     }
 
     /* Native Ads */

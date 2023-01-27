@@ -28,6 +28,7 @@ import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.listeners.MediaEventListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -47,6 +48,8 @@ public abstract class AdUnit {
     protected BidLoader bidLoader;
     @Nullable
     protected Object adObject;
+
+    private MediaEventListener mediaEventListener;
 
     AdUnit(@NonNull String configId, @NonNull AdFormat adType) {
         configuration.setConfigId(configId);
@@ -82,6 +85,10 @@ public abstract class AdUnit {
         if (bidLoader != null) {
             bidLoader.cancelRefresh();
         }
+    }
+
+    public void setMediaEventListener(MediaEventListener listsner) {
+        mediaEventListener = listsner;
     }
 
     public void fetchDemand(@NonNull final OnCompleteListener2 listener) {
@@ -142,7 +149,8 @@ public abstract class AdUnit {
             bidLoader = new BidLoader(
                     context,
                     configuration,
-                    createBidListener(listener)
+                    createBidListener(listener),
+                    mediaEventListener
             );
 
             if (configuration.getAutoRefreshDelay() > 0) {
@@ -273,6 +281,7 @@ public abstract class AdUnit {
                 HashMap<String, String> keywords = response.getTargeting();
                 Util.apply(keywords, adObject);
                 originalListener.onComplete(ResultCode.SUCCESS);
+                mediaEventListener.onRequestSentToGam();
             }
 
             @Override
