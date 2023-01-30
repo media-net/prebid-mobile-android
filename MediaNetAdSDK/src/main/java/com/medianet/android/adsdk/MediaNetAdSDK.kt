@@ -111,10 +111,10 @@ object MediaNetAdSDK {
     }
 
     private suspend fun updateSDKConfigDependencies(applicationContext: Context, config: Configuration) {
-        PrebidMobile.setPrebidServerAccountId(config.customerId)
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
-        //PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
-        //PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
+//        PrebidMobile.setPrebidServerAccountId(config.customerId)
+//        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
+        PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
         PrebidMobile.setTimeoutMillis(config.auctionTimeOutMillis.toInt())
         //Initialising Analytics
         initAnalytics(applicationContext, config)

@@ -59,7 +59,7 @@ object EventManager {
             sizes = sizes,
             eventType = eventType
         )
-        AnalyticsSDK.pushEvent(event)
+//        AnalyticsSDK.pushEvent(event)
     }
 
     fun clear() {
