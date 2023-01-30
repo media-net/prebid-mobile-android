@@ -22,7 +22,10 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import com.medianet.android.adsdk.*
+import com.medianet.android.adsdk.BannerAd
+import com.medianet.android.adsdk.Error
+import com.medianet.android.adsdk.GamEventListener
+import com.medianet.android.adsdk.MediaNetAdSDK
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 
@@ -37,7 +40,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
         val TAG = GamOriginalApiDisplayBanner300x250Activity::class.java.name
     }
 
-    private var adUnit: Ad? = null
+    private var adUnit: BannerAd? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +55,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
 
         // 1. Create BannerAdUnit
         adUnit = BannerAd(AD_UNIT_ID, WIDTH, HEIGHT)
-            .setAutoRefreshIntervalInSeconds(refreshTimeSeconds)
+        adUnit?.setAutoRefreshIntervalInSeconds(refreshTimeSeconds)
 
         // 2. Configure banner parameters (for video ads)
         /*val parameters = BannerBaseAdUnit.Parameters()
@@ -68,7 +71,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
 
         // 4. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
-        adUnit?.fetchDemand(adView, request, object: GamEventListener {
+        adUnit?.fetchDemandAndLoad(adView, request, object: GamEventListener {
             override fun onAdLoaded() {
                 Log.e("Nikhil", "onAdLoaded")
             }

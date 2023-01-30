@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -10,8 +11,10 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSDKVersion
         targetSdkVersion rootProject.targetSDKVersion
-        versionCode rootProject.prebidVersionCode
-        versionName rootProject.prebidVersionName
+        versionCode 0
+        versionName "0.0.1"
+        buildConfigField "int", "VERSION_CODE", "$versionCode"
+        buildConfigField "String", "VERSION_NAME", '"' + versionName + '"'
     }
 
     buildTypes {
@@ -34,12 +37,19 @@ dependencies {
     implementation project(':PrebidMobile')
     implementation project(':PrebidMobile-core')
     implementation project(':PrebidMobile-gamEventHandlers')
-    api 'com.google.android.gms:play-services-ads:21.3.0'
+    api "com.google.android.gms:play-services-ads:$play_services_ads"
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.7.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    implementation "androidx.core:core-ktx:$core_ktx"
+    implementation "androidx.appcompat:appcompat:$appcompat"
+    implementation "com.google.android.material:material:$material"
+    testImplementation "junit:junit:$junit"
+    androidTestImplementation "androidx.test.ext:junit:$ext_junit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core"
+
+    implementation project(':analytics')
+    //moshi parsing
+    implementation "com.squareup.moshi:moshi-kotlin-codegen:$moshi_impl"
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi_kapt")
+
+    implementation project(path: ':network')
 }
