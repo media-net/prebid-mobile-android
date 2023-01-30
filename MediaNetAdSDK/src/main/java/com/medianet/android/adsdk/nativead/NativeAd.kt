@@ -1,17 +1,16 @@
 package com.medianet.android.adsdk.nativead
 
-import com.medianet.android.adsdk.Ad
-import com.medianet.android.adsdk.AdType
-import com.medianet.android.adsdk.Util
-import com.medianet.android.adsdk.Util.getPrebidAssetFromNativeAdAsset
-import com.medianet.android.adsdk.Util.getPrebidEventTracker
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
+import com.medianet.android.adsdk.*
+import com.medianet.android.adsdk.utils.Util
+import com.medianet.android.adsdk.utils.Util.getPrebidAssetFromNativeAdAsset
+import com.medianet.android.adsdk.utils.Util.getPrebidEventTracker
 import org.prebid.mobile.*
 
-class NativeAd(adUnitId: String): Ad() {
+class NativeAd(adUnitId: String): Ad(NativeAdUnit("imp-prebid-banner-native-styles")) {
     // TODO Pass adUnitId to NativeAdUnit once it is configured
-    private var mNativeAdUnit: NativeAdUnit = NativeAdUnit("imp-prebid-banner-native-styles")
+    private var mNativeAdUnit: NativeAdUnit = adUnit as NativeAdUnit
 
-    override val adUnit: AdUnit = mNativeAdUnit
     override val adType: AdType = AdType.NATIVE
 
     fun setContextType(type: ContextType) {
@@ -88,5 +87,20 @@ class NativeAd(adUnitId: String): Ad() {
         OUTSIDE_CORE_CONTENT(3),
         RECOMMENDATION_WIDGET(4),
         CUSTOM(500)
+    }
+
+    fun fetchDemand(
+        adRequest: AdManagerAdRequest,
+        listener: GamEventListener
+    ) {
+        fetchDemand(adRequest, object : OnBidCompletionListener {
+            override fun onSuccess(keywordMap: Map<String, String>?) {
+                listener.onSuccess()
+            }
+
+            override fun onError(error: Error) {
+                listener.onError(error)
+            }
+        })
     }
 }

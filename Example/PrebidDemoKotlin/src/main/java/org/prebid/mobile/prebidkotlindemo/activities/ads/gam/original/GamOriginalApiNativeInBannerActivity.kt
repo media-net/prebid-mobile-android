@@ -49,7 +49,7 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
 
         // 4. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
-        nativeAdUnit?.fetchDemand(gamView, request, object : GamEventListener {
+        nativeAdUnit?.fetchDemand(request, object : GamEventListener {
             override fun onAdLoaded() {
                 Log.d("Tushar", "onAdLoaded")
             }

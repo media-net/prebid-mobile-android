@@ -2,6 +2,7 @@ package com.medianet.android.adsdk.utils
 
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
+import com.medianet.android.adsdk.*
 import com.medianet.android.adsdk.nativead.*
 import org.prebid.mobile.ContentObject
 import org.prebid.mobile.ContentObject.ProducerObject
@@ -259,7 +260,7 @@ object Util {
                     EventTracker.EventTrackingMethods.IMAGE -> EVENT_TRACKING_METHOD.IMAGE
                     EventTracker.EventTrackingMethods.JS -> EVENT_TRACKING_METHOD.JS
                     else -> EVENT_TRACKING_METHOD.CUSTOM
-            })
+                })
         }
         return methodsArray
     }
