@@ -25,19 +25,22 @@ data class ImageAsset(
         try {
             result.putOpt("required", if (isRequired) 1 else 0)
             result.putOpt("ext", assetExt)
-            val imageObject = JSONObject()
-            imageObject.putOpt("type", type?.id)
-            imageObject.put("w", width)
-            imageObject.put("wmin", minWidth)
-            imageObject.put("h", height)
-            imageObject.put("hmin", minHeight)
-            imageObject.putOpt("ext", imageExt)
-            if (mimes.isNotEmpty()) {
-                val mimesArray = JSONArray()
-                for (mime in mimes) {
-                    mimesArray.put(mime)
+
+            val imageObject = JSONObject().apply {
+                putOpt("type", type?.id)
+                put("w", width)
+                put("wmin", minWidth)
+                put("h", height)
+                put("hmin", minHeight)
+                putOpt("ext", imageExt)
+
+                mimes.takeIf { it.isNotEmpty() }?.let { mimesList ->
+                    val mimesArray = JSONArray()
+                    mimesList.forEach { mime ->
+                        mimesArray.put(mime)
+                    }
+                    putOpt("mimes", mimesArray)
                 }
-                imageObject.putOpt("mimes", mimesArray)
             }
             result.put("img", imageObject)
         } catch (exception: Exception) {

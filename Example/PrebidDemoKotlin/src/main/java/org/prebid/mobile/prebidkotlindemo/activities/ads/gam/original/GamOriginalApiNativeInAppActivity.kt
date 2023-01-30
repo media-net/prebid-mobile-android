@@ -61,10 +61,6 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
         val adRequest = AdManagerAdRequest.Builder().build()
 
         adUnit?.fetchDemand(adRequest, object : GamEventListener {
-            override fun onAdLoaded() {
-                Log.d("NativeInAppAd", "onAdLoaded")
-            }
-
             override fun onAdClicked() {
                 Log.d("NativeInAppAd", "onAdClicked")
             }
@@ -91,6 +87,10 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
             override fun onSuccess(keywordMap: Map<String, String>?) {
                 adLoader = createAdLoader(adWrapperView)
                 adLoader?.loadAd(adRequest)
+            }
+
+            override fun onError(error: Error) {
+                Log.e(TAG, "Error: code: ${error.errorCode}, message: ${error.errorMessage}")
             }
         })
     }
@@ -143,6 +143,7 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
 
                     override fun onNativeLoaded(ad: NativeInAppAd) {
                         // 6. Render native ad
+                        Log.d(TAG, "onNativeAdLoaded")
                         inflateNativeInAppAd(ad, wrapper)
                     }
 

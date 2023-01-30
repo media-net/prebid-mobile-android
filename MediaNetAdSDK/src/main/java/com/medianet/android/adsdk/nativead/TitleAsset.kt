@@ -13,9 +13,10 @@ data class TitleAsset (
         try {
             result.putOpt("required", if (isRequired) 1 else 0)
             result.putOpt("ext", assetExt)
-            val titleObject = JSONObject()
-            titleObject.putOpt("len", length)
-            titleObject.putOpt("ext", titleExt)
+            val titleObject = JSONObject().apply {
+                putOpt("len", length)
+                putOpt("ext", titleExt)
+            }
             result.put("title", titleObject)
         } catch (exception: Exception) {
             LogUtil.error("NativeTitleAsset", "Can't create json object: " + exception.message)

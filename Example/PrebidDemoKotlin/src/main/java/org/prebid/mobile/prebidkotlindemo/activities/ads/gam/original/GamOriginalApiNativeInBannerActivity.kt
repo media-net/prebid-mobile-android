@@ -17,6 +17,7 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
         const val AD_UNIT_ID = "/21808260008/unified_native_ad_unit"
         const val CONFIG_ID = "imp-prebid-banner-native-styles"
         const val STORED_RESPONSE = "response-prebid-banner-native-styles"
+        val TAG = GamOriginalApiNativeInBannerActivity::class.java.name
     }
 
     private var nativeAdUnit: NativeAd? = null
@@ -50,9 +51,6 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
         // 4. Make a bid request to Server
         val request = AdManagerAdRequest.Builder().build()
         nativeAdUnit?.fetchDemand(request, object : GamEventListener {
-            override fun onAdLoaded() {
-                Log.d("Tushar", "onAdLoaded")
-            }
 
             override fun onAdClicked() {
                 Log.d("Tushar", "onAdClicked")
@@ -76,6 +74,10 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
 
             override fun onSuccess(keywordMap: Map<String, String>?) {
                 gamView.loadAd(request)
+            }
+
+            override fun onError(error: Error) {
+                Log.e(TAG, "Error: code: ${error.errorCode}, message: ${error.errorMessage}")
             }
         })
     }

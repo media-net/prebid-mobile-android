@@ -25,15 +25,16 @@ data class DataAsset(
         CUSTOM(500)
     }
 
-    override fun getJsonObject(): JSONObject? {
+    override fun getJsonObject(): JSONObject {
         val result = JSONObject()
         try {
             result.putOpt("required", if (isRequired) 1 else 0)
             result.putOpt("ext", assetExt)
-            val dataObject = JSONObject()
-            dataObject.putOpt("type", type?.id)
-            dataObject.putOpt("len", length)
-            dataObject.putOpt("ext", dataExt)
+            val dataObject = JSONObject().apply {
+                putOpt("type", type?.id)
+                putOpt("len", length)
+                putOpt("ext", dataExt)
+            }
             result.put("data", dataObject)
         } catch (exception: Exception) {
             LogUtil.error("NativeTitleAsset", "Can't create json object: " + exception.message)

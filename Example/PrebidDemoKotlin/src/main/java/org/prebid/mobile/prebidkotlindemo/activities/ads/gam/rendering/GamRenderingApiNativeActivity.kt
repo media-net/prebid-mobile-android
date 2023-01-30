@@ -27,12 +27,13 @@ class GamRenderingApiNativeActivity : BaseAdActivity() {
         const val CONFIG_ID = "imp-prebid-banner-native-styles"
         const val STORED_RESPONSE = "response-prebid-banner-native-styles"
         const val CUSTOM_FORMAT_ID = "11934135"
+        val TAG = GamRenderingApiNativeActivity::class.java.name
     }
 
     private var adView: AdManagerAdView? = null
     private var unifiedNativeAd: com.google.android.gms.ads.nativead.NativeAd? = null
     private var adUnit: NativeAd? = null
-    private var adLoader: AdLoader? = null
+    private lateinit var adLoader: AdLoader
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,9 +50,6 @@ class GamRenderingApiNativeActivity : BaseAdActivity() {
         val adRequest = AdManagerAdRequest.Builder().build()
         adLoader = createAdLoader(adWrapperView)
         adUnit?.fetchDemand(adRequest, object : GamEventListener {
-            override fun onAdLoaded() {
-                Log.d("NativeAd", "onAdLoaded")
-            }
 
             override fun onAdClicked() {
                 Log.d("NativeAd", "onAdClicked")
@@ -74,7 +72,11 @@ class GamRenderingApiNativeActivity : BaseAdActivity() {
             }
 
             override fun onSuccess(keywordMap: Map<String, String>?) {
-                adLoader!!.loadAd(adRequest)
+                adLoader.loadAd(adRequest)
+            }
+
+            override fun onError(error: Error) {
+                Log.e(TAG, "Error: code: ${error.errorCode}, message: ${error.errorMessage}")
             }
         })
     }

@@ -5,8 +5,8 @@ import org.prebid.mobile.ResultCode
 
 interface OnBidCompletionListener {
     @MainThread
-    fun onSuccess(keywordMap: Map<String, String>? = null){}
+    fun onSuccess(keywordMap: Map<String, String>? = null)
 
     @MainThread
-    fun onError(error: Error){}
+    fun onError(error: Error)
 }
