@@ -2,7 +2,9 @@ package com.medianet.android.adsdk.rendering.banner
 
 import android.content.Context
 import android.widget.FrameLayout
+import com.app.logger.CustomLogger
 import com.google.android.gms.ads.AdSize
+import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.rendering.AdEventListener
 import com.medianet.android.adsdk.utils.Util
@@ -48,6 +50,11 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
             )
         }
     })
+
+    companion object{
+        const val SDK_ON_VACATION_TAG = "SDKonVacation"
+    }
+
     private var bannerAdListener: AdEventListener? = null
 
     fun setBannerAdListener(listener: AdEventListener) = apply {
@@ -86,6 +93,11 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
     }
 
     fun loadAd() {
+        if(MediaNetAdSDK.isSdkOnVacation()){
+            CustomLogger.error(SDK_ON_VACATION_TAG,"Your Contract with MediaNetAdSdk has ended")
+            return
+        }
+
         bannerView.loadAd()
     }
 

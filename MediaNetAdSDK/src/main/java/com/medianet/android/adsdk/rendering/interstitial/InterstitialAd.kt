@@ -2,7 +2,9 @@ package com.medianet.android.adsdk.rendering.interstitial
 
 import android.app.Activity
 import android.content.Context
+import com.app.logger.CustomLogger
 import com.medianet.android.adsdk.AdType
+import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.rendering.AdEventListener
 import com.medianet.android.adsdk.utils.Util.mapAdExceptionToError
@@ -54,6 +56,10 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
         }
     }
 
+    companion object{
+        const val SDK_ON_VACATION_TAG = "SDKonVacation"
+    }
+
     init {
         mInterstitialAdUnit = InterstitialAdUnit(context, "imp-prebid-display-interstitial-320-480", mapInterstitialAdFormat(adUnitFormats), gamInterstitialEventHandler, mediaEventListener)
     }
@@ -97,6 +103,11 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
     }
 
     fun loadAd() {
+
+        if(MediaNetAdSDK.isSdkOnVacation()){
+            CustomLogger.error(SDK_ON_VACATION_TAG,"Your Contract with MediaNetAdSdk has ended")
+            return
+        }
         mInterstitialAdUnit.loadAd()
     }
 
