@@ -111,11 +111,11 @@ object EventFactory {
         }
 
         projectEventParams.apply {
-            put(LOGGING_PER, 100.div(sdkConfig.projectEventPercentage).toString())
+            put(LOGGING_PER, sdkConfig.projectEventPercentage.takeIf { it > 0 }?.let { 100.div(it).toString() } ?: "0")
         }
 
         opportunityEventParams.apply {
-            put(LOGGING_PER, 100.div(sdkConfig.opportunityEventPercentage).toString())
+            put(LOGGING_PER, sdkConfig.opportunityEventPercentage.takeIf { it > 0 }?.let { 100.div(it).toString() } ?: "0")
         }
     }
 
