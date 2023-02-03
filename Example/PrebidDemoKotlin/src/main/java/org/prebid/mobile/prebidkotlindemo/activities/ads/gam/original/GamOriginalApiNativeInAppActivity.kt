@@ -91,6 +91,8 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
 
             override fun onError(error: Error) {
                 Log.e(TAG, "Error: code: ${error.errorCode}, message: ${error.errorMessage}")
+                adLoader = createAdLoader(adWrapperView)
+                adLoader?.loadAd(adRequest)
             }
         })
     }
