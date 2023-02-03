@@ -3,6 +3,8 @@ package com.medianet.android.adsdk.nativead
 import com.app.logger.CustomLogger
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.medianet.android.adsdk.*
+import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
+import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
 import com.medianet.android.adsdk.utils.Util
 import com.medianet.android.adsdk.utils.Util.getPrebidAssetFromNativeAdAsset
 import com.medianet.android.adsdk.utils.Util.getPrebidEventTracker
@@ -13,10 +15,6 @@ class NativeAd(adUnitId: String): Ad(NativeAdUnit("imp-prebid-banner-native-styl
     private var mNativeAdUnit: NativeAdUnit = adUnit as NativeAdUnit
 
     override val adType: AdType = AdType.NATIVE
-
-    companion object{
-        const val SDK_ON_VACATION_TAG = "SDKonVacation"
-    }
 
     fun setContextType(type: ContextType) {
         mNativeAdUnit.setContextType(Util.getPrebidContextType(type))
@@ -99,7 +97,7 @@ class NativeAd(adUnitId: String): Ad(NativeAdUnit("imp-prebid-banner-native-styl
         listener: GamEventListener
     ) {
         if(MediaNetAdSDK.isSdkOnVacation()){
-            CustomLogger.error(SDK_ON_VACATION_TAG,"Your Contract with MediaNetAdSdk has ended")
+            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
             return
         }
 

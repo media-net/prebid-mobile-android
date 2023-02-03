@@ -6,6 +6,8 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
+import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
+import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
 import com.medianet.android.adsdk.utils.Util
 import org.prebid.mobile.BannerAdUnit
 import org.prebid.mobile.addendum.AdViewUtils
@@ -19,10 +21,6 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerA
     // TODO Pass adUnitId to BannerAdUnit once it is configured
     private val bannerAdUnit: BannerAdUnit = adUnit as BannerAdUnit
     override val adType: AdType = AdType.BANNER
-
-    companion object{
-        const val SDK_ON_VACATION_TAG = "SDKonVacation"
-    }
 
 
     fun addAdditionalSize(size: AdSize) = apply {
@@ -39,7 +37,7 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerA
         listener: GamEventListener
     ) {
         if(MediaNetAdSDK.isSdkOnVacation()){
-            CustomLogger.error(SDK_ON_VACATION_TAG,"Your Contract with MediaNetAdSdk has ended")
+            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
             return
         }
 

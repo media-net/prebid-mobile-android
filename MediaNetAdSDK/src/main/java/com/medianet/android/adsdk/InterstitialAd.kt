@@ -6,6 +6,8 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
+import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
+import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
 import com.medianet.android.adsdk.utils.Util
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.InterstitialAdUnit
@@ -20,10 +22,6 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-di
 
     override val adType: AdType = AdType.INTERSTITIAL
 
-    companion object{
-        const val SDK_ON_VACATION_TAG = "SDKonVacation"
-    }
-
     fun fetchDemandAndLoad(
         context: Context,
         adRequest: AdManagerAdRequest,
@@ -31,7 +29,7 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-di
     ) {
 
         if(MediaNetAdSDK.isSdkOnVacation()){
-            CustomLogger.error(SDK_ON_VACATION_TAG,"Your Contract with MediaNetAdSdk has ended")
+            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
             return
         }
         fetchDemand(adRequest, object : OnBidCompletionListener{
