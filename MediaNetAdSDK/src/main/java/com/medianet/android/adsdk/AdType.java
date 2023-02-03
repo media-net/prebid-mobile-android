@@ -4,5 +4,6 @@ public enum AdType {
     BANNER,
     INTERSTITIAL,
     DISPLAY,
-    VIDEO
+    VIDEO,
+    NATIVE
 }
