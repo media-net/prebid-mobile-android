@@ -157,10 +157,17 @@ object Util {
         }.toList()
     }
 
-    fun parseConfigExpiryTime(headerValue: String?): Long? {
-        headerValue?.let {
-            return it.subSequence(8, 13).toString().toLongOrNull()
+    private fun parseConfigExpiryTime(headerValue: String?): Long? {
+        return headerValue?.split(",")?.find { it.contains("max-age") }?.split("=")?.get(1)?.trim()?.toLongOrNull()
+    }
+
+    fun calculateConfigExpiryTime(statusCode: Int?, headerValue: String?): Long? {
+        return when (statusCode) {
+            200 -> 10800 //10800 sec = 3 hours
+            422 -> 900L //900 sec = 15 min
+            500 -> 300L //300 sec = 5 min
+            502, 503, 504 -> 120L //120 sec = 2 min
+            else -> parseConfigExpiryTime(headerValue)
         }
-        return null
     }
 }
