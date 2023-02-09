@@ -8,10 +8,11 @@ import com.medianet.android.adsdk.events.Constants.EventName.AD_LOADED
 import com.medianet.android.adsdk.events.Constants.EventName.AD_REQUEST_TO_GAM
 import com.medianet.android.adsdk.events.Constants.EventName.BID_REQUEST
 import com.medianet.android.adsdk.events.Constants.EventName.TIME_OUT
+import com.medianet.android.adsdk.model.SdkConfiguration
 
 object EventManager {
 
-    fun init(config: MediaNetAdSDK.Configuration) {
+    fun init(config: SdkConfiguration) {
         EventFactory.updateConfiguration(config)
     }
 

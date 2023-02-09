@@ -3,6 +3,8 @@ package com.medianet.android.adsdk.utils
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.medianet.android.adsdk.*
+import com.medianet.android.adsdk.model.SdkConfiguration
+import com.medianet.android.adsdk.model.StoredConfigs.StoredSdkConfig
 import com.medianet.android.adsdk.nativead.*
 import org.prebid.mobile.ContentObject
 import org.prebid.mobile.ContentObject.ProducerObject
@@ -305,5 +307,25 @@ object Util {
 
     fun getPrebidEventTracker(eventTracker: EventTracker): NativeEventTracker {
         return NativeEventTracker(getPrebidEventType(eventTracker.type), getPrebidTrackingMethodTypeArray(eventTracker.methods))
+    }
+
+    fun storedConfigToSdkConfig(storedConfig: StoredSdkConfig): SdkConfiguration? {
+        // Data store will return default value of StoredSdkConfig initially n which configId is wmpty
+        if (storedConfig.customerId.isNullOrBlank()) return null
+        return SdkConfiguration(
+            customerId = storedConfig.customerId,
+            partnerId = storedConfig.partnerId,
+            domainName = storedConfig.domainName,
+            countryCode = storedConfig.countryCode,
+            auctionTimeOutMillis = storedConfig.auctionTimeOutMillis,
+            dummyCCrId = storedConfig.dummyCrId,
+            projectEventPercentage = storedConfig.projectEventPercentage,
+            opportunityEventPercentage = storedConfig.opportunityEventPercentage,
+            shouldKillSDK = storedConfig.shouldKillSDK,
+            bidRequestUrl = storedConfig.bidRequestUrl,
+            projectEventUrl = storedConfig.projectEventUrl,
+            opportunityEventUrl = storedConfig.opportunityEventUrl,
+            dpfToCrIdMap = storedConfig.dpfToCrIdMapMap
+        )
     }
 }

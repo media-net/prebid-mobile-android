@@ -2,6 +2,8 @@ package com.medianet.android.adsdk
 
 import android.content.Context
 import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
 import com.app.analytics.AnalyticsSDK
 import com.app.analytics.SamplingMap
 import com.app.analytics.providers.AnalyticsProviderFactory
@@ -13,6 +15,8 @@ import com.medianet.android.adsdk.network.NetworkComponentFactory
 import com.medianet.android.adsdk.network.ServerApiService
 import kotlinx.coroutines.*
 import com.app.logger.CustomLogger
+import com.medianet.android.adsdk.model.SdkConfiguration
+import com.medianet.android.adsdk.model.StoredConfigs.StoredSdkConfig
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
@@ -25,6 +29,7 @@ import com.medianet.android.adsdk.utils.Constants.KEY_UGD
 import com.medianet.android.adsdk.utils.Constants.VALUE_MOBILE
 import com.medianet.android.adsdk.utils.Constants.VALUE_US
 import com.medianet.android.adsdk.utils.Util
+import kotlinx.coroutines.flow.collectLatest
 
 object MediaNetAdSDK {
 
@@ -35,7 +40,7 @@ object MediaNetAdSDK {
     private const val CID = "8CU15Y85L" // Temp account Id for config call
     private var sdkOnVacation: Boolean = false
     val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-
+    const val DATA_STORE_FILE_NAME = "sdk_config.pb"
     private var logLevel: MLogLevel = MLogLevel.INFO
     // TODO - For some action we can check if test mode is on or not
     private var isTestMode: Boolean = false
@@ -58,7 +63,14 @@ object MediaNetAdSDK {
 
     }
     private var serverApiService: ServerApiService? = NetworkComponentFactory.getServerApiService(CONFIG_BASE_URL)
-    private var config: Configuration? = null
+    private var config: SdkConfiguration? = null
+
+    private val Context.configDataStore: DataStore<StoredSdkConfig> by dataStore(
+        fileName = DATA_STORE_FILE_NAME,
+        serializer = ConfigSerializer
+    )
+
+    private var configRepository: ConfigRepository? = null
 
     fun initPrebidSDK(
         applicationContext : Context,
@@ -67,8 +79,10 @@ object MediaNetAdSDK {
     ) {
         coroutineScope.launch {
             LogUtil.setBaseTag(TAG)
+            configRepository = ConfigRepository(applicationContext.configDataStore)
+            initObservers()
             val configFromServer = getConfigFromServer(CID) //TODO - replace it with account ID provided by publisher
-            config = getSDKConfig(configFromServer)
+            storeConfigToDataStore(configFromServer)
 
             //Disable SDK if kill switch is onn
             if (config == null || config?.shouldKillSDK == true) {
@@ -85,13 +99,33 @@ object MediaNetAdSDK {
         }
     }
 
-    private fun getSDKConfig(data: ConfigResponse?): MediaNetAdSDK.Configuration? {
+    private suspend fun storeConfigToDataStore(configFromServer: ConfigResponse?) {
+        val sdkConfig = getSDKConfig(configFromServer)
+        sdkConfig?.let {
+            configRepository?.updateSdkConfig(it)
+        }
+    }
+
+    private fun initObservers() {
+        initStoredSdkConfigObserver()
+    }
+
+    private fun initStoredSdkConfigObserver() {
+        coroutineScope.launch {
+            configRepository?.getConfigFlow()?.collectLatest { storedConfig ->
+                config = Util.storedConfigToSdkConfig(storedConfig)
+                Log.e("Nikhil", "$config")
+            }
+        }
+    }
+
+    private fun getSDKConfig(data: ConfigResponse?): SdkConfiguration? {
         data?.let {
             val crIdMap = mutableMapOf<String, String>()
             it.crIds.map { item ->
                 crIdMap.put(item.dfpAdUnitId, item.crId)
             }
-            return Configuration(
+            return SdkConfiguration(
                 customerId = data.pub.cId,
                 partnerId = data.pub.partnerId,
                 domainName = data.targeting.domainName,
@@ -110,7 +144,7 @@ object MediaNetAdSDK {
         return null
     }
 
-    private suspend fun updateSDKConfigDependencies(applicationContext: Context, config: Configuration) {
+    private suspend fun updateSDKConfigDependencies(applicationContext: Context, config: SdkConfiguration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
 //        PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
@@ -190,7 +224,7 @@ object MediaNetAdSDK {
 
     fun setSubjectToGDPR(enable: Boolean) = apply { TargetingParams.setSubjectToGDPR(enable) }
 
-    private fun initAnalytics(applicationContext: Context, sdkConfig: Configuration) {
+    private fun initAnalytics(applicationContext: Context, sdkConfig: SdkConfiguration) {
         EventManager.init(sdkConfig)
         val samplingMap = SamplingMap()
         samplingMap.put(LoggingEvents.PROJECT.type, sdkConfig.projectEventPercentage)
@@ -216,6 +250,7 @@ object MediaNetAdSDK {
         config = null
         serverApiService = null
         EventManager.clear()
+        configRepository = null
     }
 
     fun isSubjectToGDPR(): Boolean? {
@@ -224,29 +259,5 @@ object MediaNetAdSDK {
 
     fun setGDPRConsentString(consentString: String?) = apply {
         TargetingParams.setGDPRConsentString(consentString)
-    }
-
-    data class Configuration(
-        val customerId: String,
-        val partnerId: String,
-        val domainName: String,
-        val countryCode: String,
-        val auctionTimeOutMillis: Long,
-        val dpfToCrIdMap: MutableMap<String, String>,
-        val dummyCCrId: String,
-        val eventsBufferInterval: Long = 0,
-        val projectEventPercentage: Int,
-        val opportunityEventPercentage: Int,
-        val shouldKillSDK: Boolean,
-        val bidRequestUrl: String,
-        val projectEventUrl: String,
-        val opportunityEventUrl: String,
-        val sdkVersion: String = BuildConfig.VERSION_NAME
-    ) {
-
-        fun getCrId(dfpAdId: String): String {
-            val id =  dpfToCrIdMap[dfpAdId] ?: dummyCCrId
-            return id
-        }
     }
 }

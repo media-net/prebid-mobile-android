@@ -26,10 +26,11 @@ import com.medianet.android.adsdk.events.Constants.Keys.PROJECT_TYPE
 import com.medianet.android.adsdk.events.Constants.Keys.SDK_VERSION
 import com.medianet.android.adsdk.events.Constants.Keys.TO_CONSIDER
 import com.medianet.android.adsdk.events.Constants.Keys.UGD
+import com.medianet.android.adsdk.model.SdkConfiguration
 
 object EventFactory {
 
-    private var sdkConfig: MediaNetAdSDK.Configuration?  = null
+    private var sdkConfig: SdkConfiguration?  = null
     private val commonParams = mutableMapOf<String, String>()
     private val projectEventParams = mutableMapOf<String, String>()
     private val opportunityEventParams = mutableMapOf<String, String>()
@@ -98,7 +99,7 @@ object EventFactory {
         return sb.toString()
     }
 
-    fun updateConfiguration(sdkConfig: MediaNetAdSDK.Configuration) {
+    fun updateConfiguration(sdkConfig: SdkConfiguration) {
         commonParams.apply {
             put(CUSTOMER_ID, sdkConfig.customerId)
             put(PARTNER_ID, sdkConfig.partnerId)
