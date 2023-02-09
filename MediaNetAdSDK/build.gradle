@@ -51,5 +51,8 @@ dependencies {
     implementation "com.squareup.moshi:moshi-kotlin-codegen:$moshi_impl"
     kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi_kapt")
 
+    //work manager
+    implementation "androidx.work:work-runtime-ktx:$work_runtime_ktx"
+
     implementation project(path: ':network')
 }

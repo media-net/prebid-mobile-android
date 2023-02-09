@@ -1,29 +1,20 @@
 package com.medianet.android.adsdk
 
 import android.content.Context
-import android.util.Log
 import com.app.analytics.AnalyticsSDK
 import com.app.analytics.SamplingMap
 import com.app.analytics.providers.AnalyticsProviderFactory
-import com.app.network.RetryPolicy
-import com.app.network.wrapper.safeApiCall
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.model.ConfigResponse
-import com.medianet.android.adsdk.network.NetworkComponentFactory
-import com.medianet.android.adsdk.network.ServerApiService
 import kotlinx.coroutines.*
 import com.app.logger.CustomLogger
+import com.medianet.android.adsdk.network.*
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.api.exceptions.InitError
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener
-import com.medianet.android.adsdk.utils.Constants.KEY_CC
-import com.medianet.android.adsdk.utils.Constants.KEY_DN
-import com.medianet.android.adsdk.utils.Constants.KEY_UGD
-import com.medianet.android.adsdk.utils.Constants.VALUE_MOBILE
-import com.medianet.android.adsdk.utils.Constants.VALUE_US
 import com.medianet.android.adsdk.utils.Util
 
 object MediaNetAdSDK {
@@ -57,7 +48,8 @@ object MediaNetAdSDK {
         }
 
     }
-    private var serverApiService: ServerApiService? = NetworkComponentFactory.getServerApiService(CONFIG_BASE_URL)
+    private val serverApiService: ServerApiService by lazy { NetworkComponentFactory.getServerApiService(CONFIG_BASE_URL) }
+    private val configRepo: IConfigRepo = ConfigRepoImpl(serverApiService)
     private var config: Configuration? = null
 
     fun initPrebidSDK(
@@ -75,13 +67,20 @@ object MediaNetAdSDK {
         }
     }
 
-    private suspend fun initialiseSdkConfig(applicationContext: Context) {
+    internal suspend fun initialiseSdkConfig(applicationContext: Context) {
         CustomLogger.debug(TAG, "fetching config from server")
         val configFromServer = getConfigFromServer(CID) //TODO - replace it with account ID provided by publisher
         config = getSDKConfig(configFromServer) ?: config
 
+        //Stopping the SDK initialisation process if config is null (can be due to API Failure)
+        // scheduling the fetch config
+        if(config == null) {
+            initConfigExpiryTimer(applicationContext, 120L)
+            return
+        }
+
         //Disable SDK if kill switch is onn
-        if (config == null || config?.shouldKillSDK == true) {
+        if (config?.shouldKillSDK == true) {
             sdkOnVacation = true
             return
         }
@@ -92,10 +91,9 @@ object MediaNetAdSDK {
     }
 
     private suspend fun initConfigExpiryTimer(applicationContext: Context, expiry: Long?) = withContext(Dispatchers.IO) {
-        expiry?.let {
-            CustomLogger.debug(TAG, "refreshing config after $it seconds")
-            delay(it * 1000)
-            initialiseSdkConfig(applicationContext)
+        expiry?.let { expiryInSeconds ->
+            CustomLogger.debug(TAG, "refreshing config after $expiryInSeconds seconds")
+            SDKConfigSyncWorker.scheduleConfigFetch(applicationContext, expiryInSeconds)
         }
     }
 
@@ -136,24 +134,7 @@ object MediaNetAdSDK {
     }
 
     private suspend fun getConfigFromServer(accountId: String): ConfigResponse? {
-        var configExpiry: Long? = null
-        val configParams = mapOf(
-            KEY_CC to VALUE_US,
-            KEY_DN to BuildConfig.LIBRARY_PACKAGE_NAME,
-            KEY_UGD to VALUE_MOBILE
-        )
-        val configResult = safeApiCall(
-            apiCall = {
-                serverApiService?.getSdkConfig(accountId, configParams)
-            },
-            successTransform = {
-                configExpiry = Util.calculateConfigExpiryTime(it?.code(), it?.headers()?.get("Cache-Control"))
-                it?.body()?.apply {
-                    globalConfig.configExpiryInSec = configExpiry
-                }
-            },
-            retryPolicy = RetryPolicy(maxTries = 0)
-        )
+        val configResult = configRepo.getSDKConfig(accountId)
         return if (configResult.isSuccess) {
             configResult.successValue()
         } else {
@@ -233,7 +214,7 @@ object MediaNetAdSDK {
         AnalyticsSDK.clear()
         coroutineScope.coroutineContext.cancelChildren()
         config = null
-        serverApiService = null
+        SDKConfigSyncWorker.cancelSDKConfigSync(PrebidMobile.getApplicationContext())
         EventManager.clear()
     }
 
