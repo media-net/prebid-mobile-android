@@ -1,10 +1,13 @@
 package com.medianet.android.adsdk
 
 import android.content.Context
+import com.app.logger.CustomLogger
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
+import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
+import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
 import com.medianet.android.adsdk.utils.Util
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.InterstitialAdUnit
@@ -25,6 +28,10 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-di
         listener: GamEventListener
     ) {
 
+        if(MediaNetAdSDK.isSdkOnVacation()){
+            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
+            return
+        }
         fetchDemand(adRequest, object : OnBidCompletionListener{
             override fun onSuccess(keywordMap: Map<String, String>?) {
                 listener.onSuccess()
