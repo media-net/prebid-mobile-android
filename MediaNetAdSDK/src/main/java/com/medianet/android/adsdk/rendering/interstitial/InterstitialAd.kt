@@ -2,9 +2,13 @@ package com.medianet.android.adsdk.rendering.interstitial
 
 import android.app.Activity
 import android.content.Context
+import com.app.logger.CustomLogger
 import com.medianet.android.adsdk.AdType
+import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.rendering.AdEventListener
+import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
+import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
 import com.medianet.android.adsdk.utils.Util.mapAdExceptionToError
 import com.medianet.android.adsdk.utils.Util.mapInterstitialAdFormat
 import org.prebid.mobile.AdSize
@@ -97,6 +101,11 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
     }
 
     fun loadAd() {
+
+        if(MediaNetAdSDK.isSdkOnVacation()){
+            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
+            return
+        }
         mInterstitialAdUnit.loadAd()
     }
 

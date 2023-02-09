@@ -165,7 +165,7 @@ object Util {
         return org.prebid.mobile.AdSize(adSize.width, adSize.height)
     }
 
-    inline fun mapAdSizeToMAdSize(size: org.prebid.mobile.AdSize) = MAdSize(height = size.height, width = size.width)
+    private fun mapAdSizeToMAdSize(size: org.prebid.mobile.AdSize) = MAdSize(height = size.height, width = size.width)
 
     fun mapAdSizesToMAdSizes(adSizes: HashSet<org.prebid.mobile.AdSize>): List<MAdSize> {
         return adSizes.map {
@@ -307,6 +307,18 @@ object Util {
 
     fun getPrebidEventTracker(eventTracker: EventTracker): NativeEventTracker {
         return NativeEventTracker(getPrebidEventType(eventTracker.type), getPrebidTrackingMethodTypeArray(eventTracker.methods))
+    }
+
+    private fun parseConfigExpiryTime(headerValue: String?): Long? {
+        return headerValue?.split(",")?.find { it.contains("max-age") }?.split("=")?.get(1)?.trim()?.toLongOrNull()
+    }
+
+
+    fun calculateConfigExpiryTime(statusCode: Int?, headerValue: String?): Long {
+        return parseConfigExpiryTime(headerValue) ?: when (statusCode) {
+            500 -> 300L //300 sec = 5 min
+            else -> 120L // 120 sec = 2 min (For error codes 502, 503, 504)
+        }
     }
 
     fun storedConfigToSdkConfig(storedConfig: StoredSdkConfig): SdkConfiguration? {
