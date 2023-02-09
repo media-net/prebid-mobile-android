@@ -6,7 +6,6 @@ import com.app.logger.CustomLogger
 import com.app.network.RetryPolicy
 import com.app.network.wrapper.safeApiCall
 import com.medianet.android.adsdk.BuildConfig
-import com.medianet.android.adsdk.ConfigRepository
 import com.medianet.android.adsdk.model.ConfigResponse
 import com.medianet.android.adsdk.model.SdkConfiguration
 import com.medianet.android.adsdk.model.StoredConfigs
@@ -25,7 +24,7 @@ import java.io.IOException
 class ConfigRepoImpl(private val serverApiService: ServerApiService?, private val configDataStore: DataStore<StoredConfigs.StoredSdkConfig>): IConfigRepo {
 
     companion object {
-        private val TAG = ConfigRepository::class.java.name
+        private val TAG = ConfigRepoImpl::class.java.name
     }
 
     private val sdkConfigFlow: Flow<SdkConfiguration?> = configDataStore.data
