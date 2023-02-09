@@ -41,7 +41,7 @@ class SDKConfigSyncWorker(context: Context, params: WorkerParameters): Coroutine
     override suspend fun doWork() = withContext(Dispatchers.IO) {
         try {
             CustomLogger.debug(LOG_TAG, "refreshing config by fetching it from server")
-            MediaNetAdSDK.initialiseSdkConfig(applicationContext)
+            MediaNetAdSDK.fetchConfigFromServer(applicationContext)
             Result.success()
         }catch (e: Exception){
             Result.failure()

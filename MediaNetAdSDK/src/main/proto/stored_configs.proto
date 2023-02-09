@@ -27,7 +27,7 @@ message StoredSdkConfig {
   string countryCode = 4;
   int64 auctionTimeOutMillis = 5;
   string dummyCrId = 6;
-  int64 eventsBufferInte = 7;
+  int64 configExpiryMillis = 7;
   int32 projectEventPercentage = 8;
   int32 opportunityEventPercentage = 9;
   bool shouldKillSDK = 10;
@@ -36,4 +36,6 @@ message StoredSdkConfig {
   string opportunityEventUrl = 13;
   string sdkVersion = 14;
   map<string, string> dpfToCrIdMap = 15;
+  int64 timeStamp = 16;
+
 }

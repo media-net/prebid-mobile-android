@@ -3,6 +3,7 @@ package com.medianet.android.adsdk.utils
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.medianet.android.adsdk.*
+import com.medianet.android.adsdk.model.ConfigResponse
 import com.medianet.android.adsdk.model.SdkConfiguration
 import com.medianet.android.adsdk.model.StoredConfigs.StoredSdkConfig
 import com.medianet.android.adsdk.nativead.*

@@ -16,10 +16,14 @@ data class SdkConfiguration(
     val bidRequestUrl: String,
     val projectEventUrl: String,
     val opportunityEventUrl: String,
+    val configExpiryMillis: Long = -1,
+    val timeStamp: Long = System.currentTimeMillis(),
     val sdkVersion: String = BuildConfig.VERSION_NAME
 ) {
-
     fun getCrId(dfpAdId: String): String {
         return dpfToCrIdMap[dfpAdId] ?: dummyCCrId
     }
+
+    fun isConfigExpired() = ((System.currentTimeMillis() - timeStamp) >= configExpiryMillis)
+
 }
