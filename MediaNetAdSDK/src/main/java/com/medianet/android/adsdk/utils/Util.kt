@@ -3,15 +3,29 @@ package com.medianet.android.adsdk.utils
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.medianet.android.adsdk.*
+import com.medianet.android.adsdk.nativead.*
 import org.prebid.mobile.ContentObject
 import org.prebid.mobile.ContentObject.ProducerObject
 import org.prebid.mobile.DataObject
 import org.prebid.mobile.DataObject.SegmentObject
+import org.prebid.mobile.NativeAdUnit.CONTEXTSUBTYPE
+import org.prebid.mobile.NativeAdUnit.CONTEXT_TYPE
+import org.prebid.mobile.NativeAdUnit.PLACEMENTTYPE
+import org.prebid.mobile.NativeAsset
+import org.prebid.mobile.NativeDataAsset
+import org.prebid.mobile.NativeDataAsset.DATA_TYPE
+import org.prebid.mobile.NativeEventTracker
+import org.prebid.mobile.NativeEventTracker.EVENT_TRACKING_METHOD
+import org.prebid.mobile.NativeEventTracker.EVENT_TYPE
+import org.prebid.mobile.NativeImageAsset
+import org.prebid.mobile.NativeImageAsset.IMAGE_TYPE
+import org.prebid.mobile.NativeTitleAsset
 import org.prebid.mobile.PrebidMobile.LogLevel
 import org.prebid.mobile.ResultCode
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.exceptions.AdException
 import java.util.*
+import kotlin.collections.ArrayList
 
 object Util {
 
@@ -155,6 +169,142 @@ object Util {
         return adSizes.map {
             mapAdSizeToMAdSize(it)
         }.toList()
+    }
+
+    /* Native Ads */
+    fun getPrebidContextType(contextType: NativeAd.ContextType): CONTEXT_TYPE {
+        return when (contextType) {
+            NativeAd.ContextType.CUSTOM -> CONTEXT_TYPE.CUSTOM
+            NativeAd.ContextType.PRODUCT -> CONTEXT_TYPE.PRODUCT
+            NativeAd.ContextType.SOCIAL_CENTRIC -> CONTEXT_TYPE.SOCIAL_CENTRIC
+            NativeAd.ContextType.CONTENT_CENTRIC -> CONTEXT_TYPE.CONTENT_CENTRIC
+            else -> CONTEXT_TYPE.CUSTOM
+        }
+    }
+
+    fun getPrebidContextSubType(contextSubType: NativeAd.ContextSubType): CONTEXTSUBTYPE {
+        return when(contextSubType) {
+            NativeAd.ContextSubType.ARTICLE -> CONTEXTSUBTYPE.ARTICAL
+            NativeAd.ContextSubType.AUDIO -> CONTEXTSUBTYPE.AUDIO
+            NativeAd.ContextSubType.APPLICATION_STORE -> CONTEXTSUBTYPE.APPLICATION_STORE
+            NativeAd.ContextSubType.CHAT_IM -> CONTEXTSUBTYPE.CHAT_IM
+            NativeAd.ContextSubType.CUSTOM -> CONTEXTSUBTYPE.CUSTOM
+            NativeAd.ContextSubType.EMAIL -> CONTEXTSUBTYPE.EMAIL
+            NativeAd.ContextSubType.GENERAL -> CONTEXTSUBTYPE.GENERAL
+            NativeAd.ContextSubType.GENERAL_SOCIAL -> CONTEXTSUBTYPE.GENERAL_SOCIAL
+            NativeAd.ContextSubType.IMAGE -> CONTEXTSUBTYPE.IMAGE
+            NativeAd.ContextSubType.SELLING -> CONTEXTSUBTYPE.SELLING
+            NativeAd.ContextSubType.PRODUCT_REVIEW_SITES -> CONTEXTSUBTYPE.PRODUCT_REVIEW_SITES
+            NativeAd.ContextSubType.USER_GENERATED -> CONTEXTSUBTYPE.USER_GENERATED
+            NativeAd.ContextSubType.VIDEO -> CONTEXTSUBTYPE.VIDEO
+            else -> CONTEXTSUBTYPE.CUSTOM
+        }
+    }
+
+    fun getPrebidPlacementType(placementType: NativeAd.PlacementType): PLACEMENTTYPE {
+        return when(placementType) {
+            NativeAd.PlacementType.CUSTOM -> PLACEMENTTYPE.CUSTOM
+            NativeAd.PlacementType.CONTENT_ATOMIC_UNIT -> PLACEMENTTYPE.CONTENT_ATOMIC_UNIT
+            NativeAd.PlacementType.CONTENT_FEED -> PLACEMENTTYPE.CONTENT_FEED
+            NativeAd.PlacementType.OUTSIDE_CORE_CONTENT -> PLACEMENTTYPE.OUTSIDE_CORE_CONTENT
+            NativeAd.PlacementType.RECOMMENDATION_WIDGET -> PLACEMENTTYPE.RECOMMENDATION_WIDGET
+            else -> PLACEMENTTYPE.CUSTOM
+        }
+    }
+
+    private fun getPrebidImageType(imageType: ImageAsset.ImageType): IMAGE_TYPE {
+        return when(imageType) {
+            ImageAsset.ImageType.ICON -> IMAGE_TYPE.ICON
+            ImageAsset.ImageType.MAIN -> IMAGE_TYPE.MAIN
+            ImageAsset.ImageType.CUSTOM -> IMAGE_TYPE.CUSTOM
+            else -> IMAGE_TYPE.CUSTOM
+        }
+    }
+
+    private fun getPrebidDataType(dataType: DataAsset.DataType): DATA_TYPE {
+        return when(dataType) {
+            DataAsset.DataType.DESC -> DATA_TYPE.DESC
+            DataAsset.DataType.DESC2 -> DATA_TYPE.DESC2
+            DataAsset.DataType.CTA_TEXT -> DATA_TYPE.CTATEXT
+            DataAsset.DataType.SPONSORED -> DATA_TYPE.SPONSORED
+            DataAsset.DataType.CUSTOM -> DATA_TYPE.CUSTOM
+            DataAsset.DataType.ADDRESS -> DATA_TYPE.ADDRESS
+            DataAsset.DataType.DISPLAY_URL -> DATA_TYPE.DESPLAYURL
+            DataAsset.DataType.DOWNLOADS -> DATA_TYPE.DOWNLOADS
+            DataAsset.DataType.LIKES -> DATA_TYPE.LIKES
+            DataAsset.DataType.PRICE -> DATA_TYPE.PRICE
+            DataAsset.DataType.PHONE -> DATA_TYPE.PHONE
+            DataAsset.DataType.RATING -> DATA_TYPE.RATING
+            DataAsset.DataType.SALE_PRICE -> DATA_TYPE.SALEPRICE
+            else -> DATA_TYPE.CUSTOM
+        }
+    }
+
+    private fun getPrebidEventType(eventType: EventTracker.EventType): EVENT_TYPE {
+        return when(eventType) {
+            EventTracker.EventType.CUSTOM -> EVENT_TYPE.CUSTOM
+            EventTracker.EventType.IMPRESSION -> EVENT_TYPE.IMPRESSION
+            EventTracker.EventType.VIEWABLE_MRC100 -> EVENT_TYPE.VIEWABLE_MRC100
+            EventTracker.EventType.VIEWABLE_MRC50 -> EVENT_TYPE.VIEWABLE_MRC50
+            EventTracker.EventType.VIEWABLE_VIDEO50 -> EVENT_TYPE.VIEWABLE_VIDEO50
+            else -> EVENT_TYPE.CUSTOM
+        }
+    }
+
+    private fun getPrebidTrackingMethodTypeArray(methods: ArrayList<EventTracker.EventTrackingMethods>): ArrayList<EVENT_TRACKING_METHOD> {
+        val methodsArray = arrayListOf<EVENT_TRACKING_METHOD>()
+        for (methodType in methods) {
+            methodsArray.add(
+                when (methodType) {
+                    EventTracker.EventTrackingMethods.CUSTOM -> EVENT_TRACKING_METHOD.CUSTOM
+                    EventTracker.EventTrackingMethods.IMAGE -> EVENT_TRACKING_METHOD.IMAGE
+                    EventTracker.EventTrackingMethods.JS -> EVENT_TRACKING_METHOD.JS
+                    else -> EVENT_TRACKING_METHOD.CUSTOM
+            })
+        }
+        return methodsArray
+    }
+
+    fun getPrebidAssetFromNativeAdAsset(asset: NativeAdAsset): NativeAsset? {
+        return when (asset) {
+            is TitleAsset -> {
+                val titleAsset = NativeTitleAsset()
+                titleAsset.setLength(asset.length)
+                titleAsset.isRequired = asset.isRequired
+                titleAsset.assetExt = asset.assetExt
+                titleAsset.titleExt = asset.titleExt
+                titleAsset
+            }
+
+            is ImageAsset -> {
+                val imageAsset = NativeImageAsset(asset.width, asset.height, asset.minWidth, asset.minHeight)
+                imageAsset.imageType = asset.type?.let { getPrebidImageType(it) }
+                imageAsset.isRequired = asset.isRequired
+                imageAsset.imageExt = asset.imageExt
+                imageAsset.assetExt = asset.assetExt
+                for (mime in asset.mimes) {
+                    imageAsset.addMime(mime)
+                }
+                imageAsset
+            }
+
+            is DataAsset -> {
+                val dataAsset = NativeDataAsset()
+                dataAsset.len = asset.length
+                dataAsset.isRequired = asset.isRequired
+                dataAsset.dataType = asset.type?.let { getPrebidDataType(it) }
+                dataAsset.dataExt = asset.dataExt
+                dataAsset.assetExt = asset.assetExt
+                dataAsset
+            }
+            else -> {
+                null
+            }
+        }
+    }
+
+    fun getPrebidEventTracker(eventTracker: EventTracker): NativeEventTracker {
+        return NativeEventTracker(getPrebidEventType(eventTracker.type), getPrebidTrackingMethodTypeArray(eventTracker.methods))
     }
 
     private fun parseConfigExpiryTime(headerValue: String?): Long? {
