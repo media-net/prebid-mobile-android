@@ -18,8 +18,9 @@ class RetrofitBuilder<T>(
         Moshi.Builder().build()
     private val okHttpClient by lazy { OkHttpClient.Builder() }
     private val retrofit by lazy {
+        val correctBaseUrl = if (baseUrl.endsWith("/")) baseUrl else baseUrl.plus("/")
         val builder = Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(correctBaseUrl)
             .client(okHttpClient.build())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
         if (needScalarsFactory) {
