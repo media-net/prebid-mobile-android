@@ -23,13 +23,15 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
 
     private val bannerEventHandler = GamBannerEventHandler(context, adUnitId, getPrebidAdSizeFromGAMAdSize(adSize))
     // TODO Pass adUnitId to BannerAdUnit once it is configured
-    private val bannerView = BannerView(context, "divid", bannerEventHandler, object : MediaEventListener{
-        override fun onBidRequest() {
-            EventManager.sendBidRequestEvent(
-                dfpDivId = adUnitId,
-                sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
-            )
-        }
+    private val bannerView = BannerView(
+        context, "divid", bannerEventHandler,
+        object : MediaEventListener {
+            override fun onBidRequest() {
+                EventManager.sendBidRequestEvent(
+                    dfpDivId = adUnitId,
+                    sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+                )
+            }
 
             override fun onBidRequestTimeout() {
                 EventManager.sendTimeoutEvent(
