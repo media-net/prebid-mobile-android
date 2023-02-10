@@ -31,6 +31,8 @@ buildscript {
         moshi_impl = '1.12.0'
         moshi_kapt = '1.14.0'
         glide = '4.14.2'
+        datastore = '1.0.0'
+        protobuf = '3.21.12'
     }
     repositories {
         google()
