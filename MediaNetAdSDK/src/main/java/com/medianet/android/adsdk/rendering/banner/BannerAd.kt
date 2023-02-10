@@ -23,41 +23,44 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
 
     private val bannerEventHandler = GamBannerEventHandler(context, adUnitId, getPrebidAdSizeFromGAMAdSize(adSize))
     // TODO Pass adUnitId to BannerAdUnit once it is configured
-    private val bannerView = BannerView(context, "imp-prebid-banner-320-50", bannerEventHandler, object : MediaEventListener{
-        override fun onBidRequest() {
-            EventManager.sendBidRequestEvent(
-                dfpDivId = adUnitId,
-                sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
-            )
-        }
+    private val bannerView = BannerView(
+        context, "imp-prebid-banner-320-50", bannerEventHandler,
+        object : MediaEventListener {
+            override fun onBidRequest() {
+                EventManager.sendBidRequestEvent(
+                    dfpDivId = adUnitId,
+                    sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+                )
+            }
 
-        override fun onBidRequestTimeout() {
-            EventManager.sendTimeoutEvent(
-                dfpDivId = adUnitId,
-                sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
-            )
-        }
+            override fun onBidRequestTimeout() {
+                EventManager.sendTimeoutEvent(
+                    dfpDivId = adUnitId,
+                    sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+                )
+            }
 
-        override fun onRequestSentToGam() {
-            EventManager.sendAdRequestToGamEvent(
-                dfpDivId = adUnitId,
-                sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
-            )
-        }
+            override fun onRequestSentToGam() {
+                EventManager.sendAdRequestToGamEvent(
+                    dfpDivId = adUnitId,
+                    sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+                )
+            }
 
-        override fun onAdLoaded() {
-            EventManager.sendAdLoadedEvent(
-                dfpDivId = adUnitId,
-                sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
-            )
+            override fun onAdLoaded() {
+                EventManager.sendAdLoadedEvent(
+                    dfpDivId = adUnitId,
+                    sizes = Util.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+                )
+            }
         }
-    })
+    )
 
     private var bannerAdListener: AdEventListener? = null
 
     fun setBannerAdListener(listener: AdEventListener) = apply {
         bannerAdListener = listener
-        bannerView.setBannerListener(object: BannerViewListener {
+        bannerView.setBannerListener(object : BannerViewListener {
             override fun onAdLoaded(view: BannerView?) {
                 bannerAdListener?.onAdLoaded()
                 bannerView.mediaEventListener?.onAdLoaded()
@@ -78,7 +81,6 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
             override fun onAdClosed(bannerView: BannerView?) {
                 bannerAdListener?.onAdClosed()
             }
-
         })
     }
 
@@ -86,12 +88,12 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
         return bannerView
     }
 
-    fun setAutoRefreshInterval(delay: Int)  = apply {
+    fun setAutoRefreshInterval(delay: Int) = apply {
         bannerView.setAutoRefreshDelay(delay)
     }
 
     fun loadAd() {
-        if(MediaNetAdSDK.isSdkOnVacation()){
+        if (MediaNetAdSDK.isSdkOnVacation()) {
             CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
             return
         }
@@ -107,5 +109,5 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
         bannerView.stopRefresh()
     }
 
-    //TODO - we have not added method to add additional sizes??
+    // TODO - we have not added method to add additional sizes??
 }

@@ -3,10 +3,10 @@ package com.medianet.android.adsdk.nativead
 import org.json.JSONObject
 import org.prebid.mobile.LogUtil
 
-data class TitleAsset (
+data class TitleAsset(
     var length: Int = 0,
     var titleExt: Any? = null,
-): NativeAdAsset(AssetType.TITLE) {
+) : NativeAdAsset(AssetType.TITLE) {
 
     override fun getJsonObject(): JSONObject {
         val result = JSONObject()

@@ -18,5 +18,4 @@ object CrashlyticsFactory {
     fun getSources(): List<ICrashlytics> {
         return crashlyticsSources
     }
-
 }

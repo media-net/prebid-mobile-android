@@ -12,7 +12,7 @@ data class ImageAsset(
     var type: ImageType? = null,
     var imageExt: Any? = null,
     var mimes: ArrayList<String> = ArrayList()
-): NativeAdAsset(AssetType.IMAGE) {
+) : NativeAdAsset(AssetType.IMAGE) {
 
     enum class ImageType(var id: Int) {
         ICON(1),

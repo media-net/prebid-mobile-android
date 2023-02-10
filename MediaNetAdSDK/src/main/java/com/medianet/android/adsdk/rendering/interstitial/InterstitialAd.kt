@@ -17,11 +17,11 @@ import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
-import java.util.*
+import java.util.EnumSet
 
 class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: EnumSet<AdType>) {
 
-    constructor(context: Context, adUnitId: String): this(context, adUnitId, EnumSet.of(AdType.DISPLAY))
+    constructor(context: Context, adUnitId: String) : this(context, adUnitId, EnumSet.of(AdType.DISPLAY))
 
     private val gamInterstitialEventHandler = GamInterstitialEventHandler(context as Activity?, adUnitId)
     // TODO Pass adUnitId to InterstitialAdUnit once it is configured
@@ -64,7 +64,7 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
 
     fun setInterstitialAdListener(listener: AdEventListener) {
         interstitialAdListener = listener
-        mInterstitialAdUnit.setInterstitialAdUnitListener(object: InterstitialAdUnitListener {
+        mInterstitialAdUnit.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
                 interstitialAdListener?.onAdLoaded()
                 mediaEventListener.onAdLoaded()
@@ -88,7 +88,6 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
             override fun onAdClosed(interstitialAdUnit: InterstitialAdUnit?) {
                 interstitialAdListener?.onAdClosed()
             }
-
         })
     }
 
@@ -102,7 +101,7 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
 
     fun loadAd() {
 
-        if(MediaNetAdSDK.isSdkOnVacation()){
+        if (MediaNetAdSDK.isSdkOnVacation()) {
             CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
             return
         }

@@ -7,11 +7,12 @@ import com.app.analytics.providers.cached.db.IAnalyticsEventRepository
 class TimedSyncStrategy(
     private var context: Context,
     private val eventRepository: IAnalyticsEventRepository,
-    pushService: PushEventToServerService)
-    : EventSyncStrategy(pushService) {
+    pushService: PushEventToServerService
+) :
+    EventSyncStrategy(pushService) {
 
     override fun initialise() {
-        //TODO - we need to figure out how to pass repo and push service to worker
+        // TODO - we need to figure out how to pass repo and push service to worker
         EventDBSyncWorker.scheduleAnalyticsSync(context)
     }
 

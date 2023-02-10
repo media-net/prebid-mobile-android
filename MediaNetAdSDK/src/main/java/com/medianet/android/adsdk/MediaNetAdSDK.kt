@@ -4,25 +4,34 @@ import android.content.Context
 import com.app.analytics.AnalyticsSDK
 import com.app.analytics.SamplingMap
 import com.app.analytics.providers.AnalyticsProviderFactory
+import com.app.logger.CustomLogger
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.model.ConfigResponse
-import kotlinx.coroutines.*
-import com.app.logger.CustomLogger
-import com.medianet.android.adsdk.network.*
+import com.medianet.android.adsdk.network.ConfigRepoImpl
+import com.medianet.android.adsdk.network.IConfigRepo
+import com.medianet.android.adsdk.network.NetworkComponentFactory
+import com.medianet.android.adsdk.network.SDKConfigSyncWorker
+import com.medianet.android.adsdk.network.ServerApiService
+import com.medianet.android.adsdk.utils.Util
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.api.exceptions.InitError
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener
-import com.medianet.android.adsdk.utils.Util
 
 object MediaNetAdSDK {
 
     const val TAG = "MediaNetAdSDK"
-    const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d" //TODO - should store in preference ?
-    private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction" //TODO - should store in preference ?
-    private const val CONFIG_BASE_URL = "http://ems-adserving-stage-1.traefik.internal.media.net/" //TODO - should store in preference ?
+    const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d" // TODO - should store in preference ?
+    private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction" // TODO - should store in preference ?
+    private const val CONFIG_BASE_URL = "http://ems-adserving-stage-1.traefik.internal.media.net/" // TODO - should store in preference ?
     private const val CID = "8CU5Z4D53" // Temp account Id for config call
     private var sdkOnVacation: Boolean = false
     val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -32,7 +41,7 @@ object MediaNetAdSDK {
     private var isTestMode: Boolean = false
 
     private var publisherSdkInitListener: MSdkInitListener? = null
-    private var prebidSdkInitializationListener: SdkInitializationListener = object : SdkInitializationListener  {
+    private var prebidSdkInitializationListener: SdkInitializationListener = object : SdkInitializationListener {
         override fun onSdkInit() {
             CustomLogger.debug(TAG, "SDK initialized successfully!")
             // If we need to send event for SDK initialisation we can do here
@@ -46,14 +55,13 @@ object MediaNetAdSDK {
             }
             publisherSdkInitListener?.onInitFailed(sdkInitError)
         }
-
     }
     private val serverApiService: ServerApiService by lazy { NetworkComponentFactory.getServerApiService(CONFIG_BASE_URL) }
     private val configRepo: IConfigRepo = ConfigRepoImpl(serverApiService)
     private var config: Configuration? = null
 
     fun initPrebidSDK(
-        applicationContext : Context,
+        applicationContext: Context,
         accountId: String,
         sdkInitListener: MSdkInitListener? = null
     ) {
@@ -62,24 +70,24 @@ object MediaNetAdSDK {
             initialiseSdkConfig(applicationContext)
             publisherSdkInitListener = sdkInitListener
             PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
-            //TODO - that need to be come from customer
+            // TODO - that need to be come from customer
             TargetingParams.setSubjectToGDPR(true)
         }
     }
 
     internal suspend fun initialiseSdkConfig(applicationContext: Context) {
         CustomLogger.debug(TAG, "fetching config from server")
-        val configFromServer = getConfigFromServer(CID) //TODO - replace it with account ID provided by publisher
+        val configFromServer = getConfigFromServer(CID) // TODO - replace it with account ID provided by publisher
         config = getSDKConfig(configFromServer) ?: config
 
-        //Stopping the SDK initialisation process if config is null (can be due to API Failure)
+        // Stopping the SDK initialisation process if config is null (can be due to API Failure)
         // scheduling the fetch config
-        if(config == null) {
+        if (config == null) {
             initConfigExpiryTimer(applicationContext, 120L)
             return
         }
 
-        //Disable SDK if kill switch is onn
+        // Disable SDK if kill switch is onn
         if (config?.shouldKillSDK == true) {
             sdkOnVacation = true
             return
@@ -125,11 +133,11 @@ object MediaNetAdSDK {
 
     private fun updateSDKConfigDependencies(applicationContext: Context, config: Configuration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) // PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
 //        PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
 //        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
         PrebidMobile.setTimeoutMillis(config.auctionTimeOutMillis.toInt())
-        //Initialising Analytics
+        // Initialising Analytics
         initAnalytics(applicationContext, config)
     }
 
@@ -152,9 +160,9 @@ object MediaNetAdSDK {
     fun setTimeoutMillis(timeoutMillis: Long) = apply { PrebidMobile.setTimeoutMillis(timeoutMillis.toInt()) }
     fun getTimeOutMillis() = PrebidMobile.getTimeoutMillis()
 
-    //TODO - should expose PrebidMobile.setCustomHeaders()
+    // TODO - should expose PrebidMobile.setCustomHeaders()
 
-    //TODO - should expose PrebidMobile.getApplicationContext()
+    // TODO - should expose PrebidMobile.getApplicationContext()
     fun enableTestMode() = apply {
         isTestMode = true
         PrebidMobile.setPbsDebug(true)
@@ -164,7 +172,7 @@ object MediaNetAdSDK {
         PrebidMobile.setPbsDebug(false)
     }
     fun isDebugMode(): Boolean {
-        //return isTestMode
+        // return isTestMode
         return PrebidMobile.getPbsDebug()
     }
 
@@ -174,7 +182,7 @@ object MediaNetAdSDK {
         }
     }
 
-    //TODO - should expose PrebidMobile.addStoredBidResponse()
+    // TODO - should expose PrebidMobile.addStoredBidResponse()
 
     fun setLogLevel(level: MLogLevel) = apply {
         logLevel = level
@@ -201,7 +209,7 @@ object MediaNetAdSDK {
             .enableEventSampling(false, samplingMap)
             .build()
 
-        //TODO we get interval minute from config, need to update code for this use case, currently we only sync immediately
+        // TODO we get interval minute from config, need to update code for this use case, currently we only sync immediately
         val analyticsProvider = AnalyticsProviderFactory.getCachedProvider(applicationContext, sdkConfig.projectEventUrl, 0)
         AnalyticsSDK.init(applicationContext, configuration, providers = listOf(analyticsProvider))
     }
@@ -209,7 +217,7 @@ object MediaNetAdSDK {
     // This method is being used by every Ad class before any functioning
     fun isSdkOnVacation() = sdkOnVacation
 
-    //TODO - when to call this
+    // TODO - when to call this
     fun clear() {
         AnalyticsSDK.clear()
         coroutineScope.coroutineContext.cancelChildren()
@@ -246,7 +254,7 @@ object MediaNetAdSDK {
     ) {
 
         fun getCrId(dfpAdId: String): String {
-            val id =  dpfToCrIdMap[dfpAdId] ?: dummyCCrId
+            val id = dpfToCrIdMap[dfpAdId] ?: dummyCCrId
             return id
         }
     }

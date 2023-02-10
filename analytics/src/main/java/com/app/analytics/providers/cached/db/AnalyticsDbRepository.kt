@@ -2,13 +2,13 @@ package com.app.analytics.providers.cached.db
 
 import androidx.lifecycle.LiveData
 
-class AnalyticsDbRepository(private val  eventDao: AnalyticsEventDao): IAnalyticsEventRepository {
+class AnalyticsDbRepository(private val eventDao: AnalyticsEventDao) : IAnalyticsEventRepository {
     override fun getFirstEvent(): LiveData<EventDBEntity> {
         return eventDao.getTopEvent()
     }
 
     override suspend fun getAll(): List<EventDBEntity> {
-       return eventDao.getAllEvents()
+        return eventDao.getAllEvents()
     }
 
     override suspend fun insert(event: EventDBEntity) {
@@ -20,7 +20,7 @@ class AnalyticsDbRepository(private val  eventDao: AnalyticsEventDao): IAnalytic
     }
 
     override suspend fun delete(event: EventDBEntity) {
-       return eventDao.deleteEvent(event)
+        return eventDao.deleteEvent(event)
     }
 
     override suspend fun delete(events: List<EventDBEntity>) {

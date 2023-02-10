@@ -1,7 +1,15 @@
 package com.app.analytics.providers.cached.sync_strategy
 
 import android.content.Context
-import androidx.work.*
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.CoroutineWorker
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
 import com.app.analytics.DbComponentFactory
 import com.app.analytics.NetworkComponentFactory
 import com.app.analytics.providers.cached.db.EventDBEntity
@@ -11,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
-class EventDBSyncWorker (
+class EventDBSyncWorker(
     context: Context,
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
@@ -32,7 +40,7 @@ class EventDBSyncWorker (
             CustomLogger.debug(TAG, "scheduling worker for event sync")
             if (syncIntervalInMinutes < PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS) {
                 CustomLogger.debug(TAG, "given sync interval is too small, minimal sync interval should be 15 min")
-            } else  {
+            } else {
                 interval = syncIntervalInMinutes
             }
 

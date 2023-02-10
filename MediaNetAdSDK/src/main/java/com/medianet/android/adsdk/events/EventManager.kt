@@ -51,7 +51,6 @@ object EventManager {
         )
     }
 
-
     private fun sendEvent(eventName: String, eventType: LoggingEvents, dfpDivId: String, sizes: List<MAdSize>?) {
         val event = EventFactory.getEvent(
             eventName = eventName,

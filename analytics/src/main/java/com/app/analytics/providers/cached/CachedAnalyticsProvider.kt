@@ -1,8 +1,8 @@
 package com.app.analytics.providers.cached
 
 import android.content.Context
-import com.app.analytics.PushEventToServerService
 import com.app.analytics.Event
+import com.app.analytics.PushEventToServerService
 import com.app.analytics.providers.AnalyticsProvider
 import com.app.analytics.providers.cached.db.IAnalyticsEventRepository
 import com.app.analytics.providers.cached.sync_strategy.EventSyncStrategy
@@ -34,12 +34,11 @@ class CachedAnalyticsProvider(
     override fun initialise() {
         syncStrategy = if (syncIntervalInMinutes > 15) {
             TimedSyncStrategy(context, eventRepository, pushService)
-        } else  {
+        } else {
             ImmediateSyncStrategy(context, eventRepository, pushService)
         }
         syncStrategy?.initialise()
     }
-
 
     override suspend fun pushEvent(event: Event): Boolean {
         CustomLogger.debug(TAG, "pushing event to db: ${event.name}")

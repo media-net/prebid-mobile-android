@@ -2,7 +2,7 @@ package com.medianet.android.adsdk
 
 import com.medianet.android.adsdk.nativead.NativeInAppAd
 
-interface NativeAdListener{
+interface NativeAdListener {
     /**
      * A successful Native ad is returned
      *

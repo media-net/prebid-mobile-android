@@ -12,7 +12,7 @@ import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 abstract class Ad(val adUnit: AdUnit) {
 
     abstract val adType: AdType
-    companion object{
+    companion object {
         private const val ADSIZE_ADJUSTMENT_ERROR_TAG = "AdSizeAdjustmentError"
     }
 
@@ -53,7 +53,8 @@ abstract class Ad(val adUnit: AdUnit) {
         @IntRange(
             from = (PrebidMobile.AUTO_REFRESH_DELAY_MIN / 1000).toLong(),
             to = (PrebidMobile.AUTO_REFRESH_DELAY_MAX / 1000).toLong()
-        ) seconds: Int) = apply {
+        ) seconds: Int
+    ) = apply {
         adUnit.setAutoRefreshInterval(seconds)
     }
 
@@ -66,11 +67,11 @@ abstract class Ad(val adUnit: AdUnit) {
     fun removeContextData(key: String) = apply { adUnit.removeContextData(key) }
     fun clearContextData() = apply { adUnit.clearContextData() }
 
-    //TODO - prebid does not expose it, should we expose it?
+    // TODO - prebid does not expose it, should we expose it?
     fun getContextData() = adUnit.configuration.contextDataDictionary
 
     fun getPrebidAdSlot() = adUnit.pbAdSlot
-    fun setPrebidAdSlot(slot: String) = apply { adUnit.pbAdSlot =  slot }
+    fun setPrebidAdSlot(slot: String) = apply { adUnit.pbAdSlot = slot }
 
     fun sendAdLoadedEvent() {
         EventManager.sendAdLoadedEvent(
@@ -81,16 +82,16 @@ abstract class Ad(val adUnit: AdUnit) {
 
     protected fun fetchDemand(adRequest: AdManagerAdRequest, listener: OnBidCompletionListener) {
         adUnit.fetchDemand(adRequest) {
-        resultCode ->
-                when(resultCode) {
-                    ResultCode.SUCCESS -> {
-                        listener.onSuccess(null)
-                    }
-                    else -> {
-                        val error =  Util.mapResultCodeToError(resultCode)
-                        listener.onError(error)
-                    }
+            resultCode ->
+            when (resultCode) {
+                ResultCode.SUCCESS -> {
+                    listener.onSuccess(null)
                 }
+                else -> {
+                    val error = Util.mapResultCodeToError(resultCode)
+                    listener.onError(error)
+                }
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ object NetworkComponentFactory {
         networkInterceptor = if (BuildConfig.DEBUG) HttpLoggingInterceptor() else null
     }
 
-    fun getPushToServerService(baseUrl: String, networkConfig: RetrofitParams? = null): PushEventToServerService  {
+    fun getPushToServerService(baseUrl: String, networkConfig: RetrofitParams? = null): PushEventToServerService {
         if (this::pushToServerService.isInitialized.not()) {
             pushToServerService = RetrofitBuilder(
                 baseUrl = baseUrl,
@@ -23,5 +23,4 @@ object NetworkComponentFactory {
 
         return pushToServerService
     }
-
 }

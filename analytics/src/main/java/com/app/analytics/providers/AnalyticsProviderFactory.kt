@@ -11,7 +11,6 @@ object AnalyticsProviderFactory {
 
     private val providers: MutableSet<AnalyticsProvider> = mutableSetOf()
 
-
     fun addProvider(provider: AnalyticsProvider): Boolean {
         return providers.add(provider)
     }

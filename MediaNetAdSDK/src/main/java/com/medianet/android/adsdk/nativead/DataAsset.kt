@@ -7,7 +7,7 @@ data class DataAsset(
     var type: DataType? = null,
     var length: Int = 0,
     var dataExt: Any? = null
-): NativeAdAsset(AssetType.DATA) {
+) : NativeAdAsset(AssetType.DATA) {
 
     enum class DataType(var id: Int) {
         SPONSORED(1),

@@ -13,7 +13,7 @@ import com.medianet.android.adsdk.utils.Constants.VALUE_MOBILE
 import com.medianet.android.adsdk.utils.Constants.VALUE_US
 import com.medianet.android.adsdk.utils.Util
 
-class ConfigRepoImpl(private val serverApiService: ServerApiService?): IConfigRepo {
+class ConfigRepoImpl(private val serverApiService: ServerApiService?) : IConfigRepo {
     override suspend fun getSDKConfig(
         cid: String
     ): Either<IFailure, ConfigResponse?> {

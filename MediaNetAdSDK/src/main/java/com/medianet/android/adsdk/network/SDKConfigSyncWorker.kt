@@ -1,14 +1,20 @@
 package com.medianet.android.adsdk.network
 
 import android.content.Context
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.CoroutineWorker
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
 import com.app.logger.CustomLogger
 import com.medianet.android.adsdk.MediaNetAdSDK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
-class SDKConfigSyncWorker(context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
+class SDKConfigSyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
     companion object {
         private const val WORKER_TAG = "CONFIG_SYNC_WORKER_TAG"
@@ -18,7 +24,7 @@ class SDKConfigSyncWorker(context: Context, params: WorkerParameters): Coroutine
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        fun scheduleConfigFetch(context: Context, expiry: Long){
+        fun scheduleConfigFetch(context: Context, expiry: Long) {
             val sdkConfigSyncWorker = OneTimeWorkRequestBuilder<SDKConfigSyncWorker>()
                 .setConstraints(constraints)
                 .setInitialDelay(expiry, TimeUnit.SECONDS)
@@ -43,7 +49,7 @@ class SDKConfigSyncWorker(context: Context, params: WorkerParameters): Coroutine
             CustomLogger.debug(LOG_TAG, "refreshing config by fetching it from server")
             MediaNetAdSDK.initialiseSdkConfig(applicationContext)
             Result.success()
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure()
         }
     }

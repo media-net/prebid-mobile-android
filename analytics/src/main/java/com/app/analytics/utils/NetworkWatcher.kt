@@ -97,12 +97,11 @@ object NetworkWatcher {
         }
     }
 
-
     fun isConnectedToInternet(): Boolean {
         val command = "ping -c 1 google.com"
         var isConnected = false
         try {
-            isConnected =  Runtime.getRuntime().exec(command).waitFor() == 0
+            isConnected = Runtime.getRuntime().exec(command).waitFor() == 0
         } catch (e: Exception) { }
 
         return isConnected

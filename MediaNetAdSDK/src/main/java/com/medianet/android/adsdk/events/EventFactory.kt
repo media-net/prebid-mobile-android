@@ -29,7 +29,7 @@ import com.medianet.android.adsdk.events.Constants.Keys.UGD
 
 object EventFactory {
 
-    private var sdkConfig: MediaNetAdSDK.Configuration?  = null
+    private var sdkConfig: MediaNetAdSDK.Configuration? = null
     private val commonParams = mutableMapOf<String, String>()
     private val projectEventParams = mutableMapOf<String, String>()
     private val opportunityEventParams = mutableMapOf<String, String>()
@@ -79,7 +79,7 @@ object EventFactory {
             }
         }
 
-        return Event (
+        return Event(
             name = eventName,
             type = eventType.type,
             params = params,

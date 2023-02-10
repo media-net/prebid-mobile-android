@@ -3,14 +3,14 @@ package com.medianet.android.adsdk.events
 object Constants {
 
     object EventName {
-        const val TIME_OUT = "CLIENT_SIDE_TIME_OUT" //PE
-        const val BID_REQUEST = "BID_REQUEST_TO_SERVER" //PE
-        const val AD_REQUEST_TO_GAM = "AD_REQUEST_TO_GAM"  //AP
-        const val AD_LOADED = "AD_LOADED_EVENT" //PE
+        const val TIME_OUT = "CLIENT_SIDE_TIME_OUT" // PE
+        const val BID_REQUEST = "BID_REQUEST_TO_SERVER" // PE
+        const val AD_REQUEST_TO_GAM = "AD_REQUEST_TO_GAM" // AP
+        const val AD_LOADED = "AD_LOADED_EVENT" // PE
     }
 
     object Keys {
-        //default params
+        // default params
         const val CUSTOMER_ID = "cid"
         const val DOMAIN_NAME = "dn"
         const val ITYPE = "itype"
@@ -28,7 +28,7 @@ object Constants {
         const val LOG_ID = "logid"
         const val TO_CONSIDER = "toconsider"
 
-        //custom params PE
+        // custom params PE
         const val EVT_ID = "evtid"
         const val PROJECT_TYPE = "project"
         const val EVENT_NAME = "event"
@@ -39,5 +39,4 @@ object Constants {
 
         const val AP_LOG_ID = "aplog"
     }
-
 }
