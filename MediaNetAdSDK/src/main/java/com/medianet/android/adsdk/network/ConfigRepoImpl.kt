@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
-class ConfigRepoImpl(private val serverApiService: ServerApiService?, private val configDataStore: DataStore<StoredConfigs.StoredSdkConfig>) : IConfigRepo {
+class ConfigRepoImpl(private val serverApiService: ServerApiService?, private val configDataStore: DataStore<StoredConfigs.StoredSdkConfig>): IConfigRepo {
 
     companion object {
         private val TAG = ConfigRepoImpl::class.java.name
@@ -40,6 +40,7 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
         .map {
             Util.storedConfigToSdkConfig(it)
         }
+
 
     override suspend fun getSDKConfig(
         cid: String
@@ -88,6 +89,7 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
             CustomLogger.debug(TAG, "scheduling config fetch after 2 min")
             SDKConfigSyncWorker.scheduleConfigFetch(context, 120L)
         }
+
     }
 
     private suspend fun updateSdkConfig(serverConfig: ConfigResponse) {

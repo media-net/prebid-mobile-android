@@ -6,22 +6,13 @@ import androidx.datastore.dataStore
 import com.app.analytics.AnalyticsSDK
 import com.app.analytics.SamplingMap
 import com.app.analytics.providers.AnalyticsProviderFactory
-import com.app.logger.CustomLogger
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.model.SdkConfiguration
 import com.medianet.android.adsdk.model.StoredConfigs
-import com.medianet.android.adsdk.network.ConfigRepoImpl
-import com.medianet.android.adsdk.network.IConfigRepo
-import com.medianet.android.adsdk.network.NetworkComponentFactory
-import com.medianet.android.adsdk.network.SDKConfigSyncWorker
-import com.medianet.android.adsdk.network.ServerApiService
+import com.medianet.android.adsdk.network.*
 import com.medianet.android.adsdk.utils.Util
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
@@ -32,9 +23,9 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener
 object MediaNetAdSDK {
 
     const val TAG = "MediaNetAdSDK"
-    const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d" // TODO - should store in preference ?
-    private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction" // TODO - should store in preference ?
-    private const val CONFIG_BASE_URL = "http://ems-adserving-stage-1.traefik.internal.media.net/" // TODO - should store in preference ?
+    const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d" //TODO - should store in preference ?
+    private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction" //TODO - should store in preference ?
+    private const val CONFIG_BASE_URL = "http://ems-adserving-stage-1.traefik.internal.media.net/" //TODO - should store in preference ?
     private const val CID = "8CU5Z4D53" // Temp account Id for config call
     private var sdkOnVacation: Boolean = false
     val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -44,7 +35,7 @@ object MediaNetAdSDK {
     private var isTestMode: Boolean = false
 
     private var publisherSdkInitListener: MSdkInitListener? = null
-    private var prebidSdkInitializationListener: SdkInitializationListener = object : SdkInitializationListener {
+    private var prebidSdkInitializationListener: SdkInitializationListener = object : SdkInitializationListener  {
         override fun onSdkInit() {
             CustomLogger.debug(TAG, "SDK initialized successfully!")
             // If we need to send event for SDK initialisation we can do here
@@ -68,7 +59,7 @@ object MediaNetAdSDK {
     private var configRepo: IConfigRepo? = null
 
     fun init(
-        applicationContext: Context,
+        applicationContext : Context,
         accountId: String,
         sdkInitListener: MSdkInitListener? = null
     ) {
@@ -78,7 +69,7 @@ object MediaNetAdSDK {
             initialiseSdkConfig(applicationContext)
             publisherSdkInitListener = sdkInitListener
             PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
-            // TODO - that need to be come from customer
+            //TODO - that need to be come from customer
             TargetingParams.setSubjectToGDPR(true)
         }
     }
@@ -93,7 +84,7 @@ object MediaNetAdSDK {
                 fetchConfigFromServer(applicationContext)
             }
 
-            // Disable SDK if kill switch is onn
+            //Disable SDK if kill switch is onn
             if (config?.shouldKillSDK == true) {
                 CustomLogger.debug(TAG, "config kill switch is onn so disabling SDK functionality")
                 sdkOnVacation = true
@@ -119,6 +110,7 @@ object MediaNetAdSDK {
         }
     }
 
+
     private fun updateSDKConfigDependencies(applicationContext: Context, config: SdkConfiguration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) // PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
@@ -128,6 +120,7 @@ object MediaNetAdSDK {
         // Initialising Analytics
         initAnalytics(applicationContext, config)
     }
+
 
     // TODO - publisherAccountId is better name?
     fun getAccountId() = PrebidMobile.getPrebidServerAccountId()

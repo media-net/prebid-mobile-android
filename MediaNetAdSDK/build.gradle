@@ -58,8 +58,8 @@ dependencies {
 
     implementation project(path: ':network')
 
-    implementation "androidx.datastore:datastore:$datastore"
-    implementation "com.google.protobuf:protobuf-javalite:$protobuf"
+    implementation "androidx.datastore:datastore:1.1.0-alpha01"
+    implementation "com.google.protobuf:protobuf-javalite:3.19.2"
 }
 
 protobuf {

@@ -3,6 +3,7 @@ package com.medianet.android.adsdk.events
 import com.app.analytics.AnalyticsSDK
 import com.medianet.android.adsdk.LoggingEvents
 import com.medianet.android.adsdk.MAdSize
+import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.events.Constants.EventName.AD_LOADED
 import com.medianet.android.adsdk.events.Constants.EventName.AD_REQUEST_TO_GAM
 import com.medianet.android.adsdk.events.Constants.EventName.BID_REQUEST

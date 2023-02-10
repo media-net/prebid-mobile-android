@@ -25,4 +25,5 @@ data class SdkConfiguration(
     }
 
     fun isConfigExpired() = ((System.currentTimeMillis() - timeStamp) >= configExpiryMillis)
+
 }
