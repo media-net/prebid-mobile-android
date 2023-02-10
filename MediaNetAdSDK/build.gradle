@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id "com.google.protobuf" version "0.8.17"
 }
 
 android {
@@ -56,4 +57,23 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:$work_runtime_ktx"
 
     implementation project(path: ':network')
+
+    implementation "androidx.datastore:datastore:1.1.0-alpha01"
+    implementation "com.google.protobuf:protobuf-javalite:3.19.2"
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.11.0"
+    }
+
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option 'lite'
+                }
+            }
+        }
+    }
 }

@@ -1,21 +1,25 @@
 package com.medianet.android.adsdk
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
 import com.app.analytics.AnalyticsSDK
 import com.app.analytics.SamplingMap
 import com.app.analytics.providers.AnalyticsProviderFactory
-import com.medianet.android.adsdk.events.EventManager
-import com.medianet.android.adsdk.model.ConfigResponse
-import kotlinx.coroutines.*
 import com.app.logger.CustomLogger
+import com.medianet.android.adsdk.events.EventManager
+import com.medianet.android.adsdk.model.SdkConfiguration
+import com.medianet.android.adsdk.model.StoredConfigs
 import com.medianet.android.adsdk.network.*
+import com.medianet.android.adsdk.utils.Util
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collectLatest
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.api.exceptions.InitError
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener
-import com.medianet.android.adsdk.utils.Util
 
 object MediaNetAdSDK {
 
@@ -26,7 +30,7 @@ object MediaNetAdSDK {
     private const val CID = "8CU5Z4D53" // Temp account Id for config call
     private var sdkOnVacation: Boolean = false
     val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-
+    const val DATA_STORE_FILE_NAME = "sdk_config.pb"
     private var logLevel: MLogLevel = MLogLevel.INFO
     // TODO - For some action we can check if test mode is on or not
     private var isTestMode: Boolean = false
@@ -49,14 +53,19 @@ object MediaNetAdSDK {
 
     }
     private val serverApiService: ServerApiService by lazy { NetworkComponentFactory.getServerApiService(CONFIG_BASE_URL) }
-    private val configRepo: IConfigRepo = ConfigRepoImpl(serverApiService)
-    private var config: Configuration? = null
+    private var config: SdkConfiguration? = null
+    private val Context.configDataStore: DataStore<StoredConfigs.StoredSdkConfig> by dataStore(
+        fileName = DATA_STORE_FILE_NAME,
+        serializer = ConfigSerializer
+    )
+    private var configRepo: IConfigRepo? = null
 
     fun initPrebidSDK(
         applicationContext : Context,
         accountId: String,
         sdkInitListener: MSdkInitListener? = null
     ) {
+        configRepo = ConfigRepoImpl(serverApiService, applicationContext.configDataStore)
         coroutineScope.launch {
             LogUtil.setBaseTag(TAG)
             initialiseSdkConfig(applicationContext)
@@ -68,62 +77,43 @@ object MediaNetAdSDK {
     }
 
     internal suspend fun initialiseSdkConfig(applicationContext: Context) {
-        CustomLogger.debug(TAG, "fetching config from server")
-        val configFromServer = getConfigFromServer(CID) //TODO - replace it with account ID provided by publisher
-        config = getSDKConfig(configFromServer) ?: config
+        configRepo?.getSDKConfigFlow()?.collectLatest { sdkConfig ->
+            config = sdkConfig
 
-        //Stopping the SDK initialisation process if config is null (can be due to API Failure)
-        // scheduling the fetch config
-        if(config == null) {
-            initConfigExpiryTimer(applicationContext, 120L)
-            return
-        }
+            // We get null config when no config is stored in data store, so scheduling the fetch config from server
+            if (config == null || config?.isConfigExpired() == true) {
+                CustomLogger.debug(TAG, "fetching fresh config from server")
+                fetchConfigFromServer(applicationContext)
+            }
 
-        //Disable SDK if kill switch is onn
-        if (config?.shouldKillSDK == true) {
-            sdkOnVacation = true
-            return
-        }
-        config?.let {
-            updateSDKConfigDependencies(applicationContext, it)
-            initConfigExpiryTimer(applicationContext, it.configExpiry)
+            //Disable SDK if kill switch is onn
+            if (config?.shouldKillSDK == true) {
+                CustomLogger.debug(TAG, "config kill switch is onn so disabling SDK functionality")
+                sdkOnVacation = true
+                return@collectLatest
+            }
+            config?.let {
+                updateSDKConfigDependencies(applicationContext, it)
+                initConfigExpiryTimer(applicationContext, it.configExpiryMillis)
+            }
         }
     }
 
-    private suspend fun initConfigExpiryTimer(applicationContext: Context, expiry: Long?) = withContext(Dispatchers.IO) {
+    fun fetchConfigFromServer(context: Context) {
+        coroutineScope.launch {
+            configRepo?.refreshSdkConfig(CID, context)
+        }
+    }
+
+    private fun initConfigExpiryTimer(applicationContext: Context, expiry: Long?) {
         expiry?.let { expiryInSeconds ->
             CustomLogger.debug(TAG, "refreshing config after $expiryInSeconds seconds")
             SDKConfigSyncWorker.scheduleConfigFetch(applicationContext, expiryInSeconds)
         }
     }
 
-    private fun getSDKConfig(data: ConfigResponse?): MediaNetAdSDK.Configuration? {
-        data?.let {
-            val crIdMap = mutableMapOf<String, String>()
-            it.crIds.map { item ->
-                crIdMap.put(item.dfpAdUnitId, item.crId)
-            }
-            return Configuration(
-                customerId = data.pub.cId,
-                partnerId = data.pub.partnerId,
-                domainName = data.targeting.domainName,
-                countryCode = data.targeting.countryCode,
-                auctionTimeOutMillis = it.timeout.auctionTimeout.toLong(),
-                projectEventPercentage = it.logPercentage.projectEvent.toInt(),
-                opportunityEventPercentage = it.logPercentage.opportunityEvent.toInt(),
-                shouldKillSDK = it.publisherConfig.killSwitch,
-                bidRequestUrl = it.urls.auctionLayerUrl,
-                projectEventUrl = it.urls.projectEventUrl,
-                opportunityEventUrl = it.urls.opportunityEventUrl,
-                dpfToCrIdMap = crIdMap,
-                dummyCCrId = data.dummyCrId.crId,
-                configExpiry = data.globalConfig.configExpiryInSec
-            )
-        }
-        return null
-    }
 
-    private fun updateSDKConfigDependencies(applicationContext: Context, config: Configuration) {
+    private fun updateSDKConfigDependencies(applicationContext: Context, config: SdkConfiguration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
 //        PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
@@ -133,15 +123,6 @@ object MediaNetAdSDK {
         initAnalytics(applicationContext, config)
     }
 
-    private suspend fun getConfigFromServer(accountId: String): ConfigResponse? {
-        val configResult = configRepo.getSDKConfig(accountId)
-        return if (configResult.isSuccess) {
-            configResult.successValue()
-        } else {
-            CustomLogger.error(TAG, "config call fails: ${configResult.errorValue()?.errorModel?.errorMessage}")
-            null
-        }
-    }
 
     // TODO - publisherAccountId is better name?
     fun getAccountId() = PrebidMobile.getPrebidServerAccountId()
@@ -190,7 +171,7 @@ object MediaNetAdSDK {
 
     fun setSubjectToGDPR(enable: Boolean) = apply { TargetingParams.setSubjectToGDPR(enable) }
 
-    private fun initAnalytics(applicationContext: Context, sdkConfig: Configuration) {
+    private fun initAnalytics(applicationContext: Context, sdkConfig: SdkConfiguration) {
         EventManager.init(sdkConfig)
         val samplingMap = SamplingMap()
         samplingMap.put(LoggingEvents.PROJECT.type, sdkConfig.projectEventPercentage)
@@ -224,30 +205,5 @@ object MediaNetAdSDK {
 
     fun setGDPRConsentString(consentString: String?) = apply {
         TargetingParams.setGDPRConsentString(consentString)
-    }
-
-    data class Configuration(
-        val customerId: String,
-        val partnerId: String,
-        val domainName: String,
-        val countryCode: String,
-        val auctionTimeOutMillis: Long,
-        val dpfToCrIdMap: MutableMap<String, String>,
-        val dummyCCrId: String,
-        val eventsBufferInterval: Long = 0,
-        val projectEventPercentage: Int,
-        val opportunityEventPercentage: Int,
-        val shouldKillSDK: Boolean,
-        val bidRequestUrl: String,
-        val projectEventUrl: String,
-        val opportunityEventUrl: String,
-        val sdkVersion: String = BuildConfig.VERSION_NAME,
-        val configExpiry: Long? = null
-    ) {
-
-        fun getCrId(dfpAdId: String): String {
-            val id =  dpfToCrIdMap[dfpAdId] ?: dummyCCrId
-            return id
-        }
     }
 }
