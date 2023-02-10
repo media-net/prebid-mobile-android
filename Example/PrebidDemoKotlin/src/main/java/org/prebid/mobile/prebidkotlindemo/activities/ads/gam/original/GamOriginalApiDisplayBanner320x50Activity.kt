@@ -16,61 +16,91 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 
 import android.os.Bundle
+import android.util.Log
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
+import com.google.android.gms.ads.admanager.AdManagerAdView
+import com.medianet.android.adsdk.BannerAd
+import com.medianet.android.adsdk.Error
+import com.medianet.android.adsdk.GamEventListener
+import com.medianet.android.adsdk.MediaNetAdSDK
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
 
     companion object {
-        const val AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_banner"
+        const val AD_UNIT_ID = "/45361917/prebidsdkad"
         const val CONFIG_ID = "imp-prebid-banner-320-50"
         const val STORED_RESPONSE = "response-prebid-banner-320-50"
         const val WIDTH = 320
         const val HEIGHT = 50
     }
 
-    //private var adUnit: BannerAdUnit? = null
+    private var adUnit: BannerAd? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-       /* PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
-        TargetingParams.setSubjectToGDPR(true)*/
-        //createAd()
+        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
+        createAd()
     }
 
-   /* private fun createAd() {
+    private fun createAd() {
+        adUnit = BannerAd(AD_UNIT_ID, WIDTH, HEIGHT)
+        adUnit?.setAutoRefreshIntervalInSeconds(refreshTimeSeconds)
+
         val adView = AdManagerAdView(this)
         adView.adUnitId = AD_UNIT_ID
         adView.setAdSizes(AdSize(WIDTH, HEIGHT))
-        adView.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                super.onAdLoaded()
-                AdViewUtils.findPrebidCreativeSize(adView, object : AdViewUtils.PbFindSizeListener {
-                    override fun success(width: Int, height: Int) {
-                        adView.setAdSizes(AdSize(width, height))
-                    }
 
-                    override fun failure(error: PbFindSizeError) {}
-                })
-
-            }
-        }
         adWrapperView.addView(adView)
 
         val request = AdManagerAdRequest.Builder().build()
-        adUnit = BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT)
-        adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
-        adUnit?.fetchDemand(request) {
-            adView.loadAd(request)
-        }
-    }*/
+        adUnit?.fetchDemandAndLoad(adView, request, object: GamEventListener {
+            override fun onAdLoaded() {
+                Log.d("Tushar", "onAdLoaded")
+            }
 
+            override fun onAdClicked() {
+                Log.d("Tushar", "onAdClicked")
+            }
+
+            override fun onAdClosed() {
+                Log.d("Tushar", "onAdClosed")
+            }
+
+            override fun onAdFailedToLoad(error: Error) {
+                Log.d("Tushar", "onAdFailedToLoad")
+            }
+
+            override fun onAdOpened() {
+                Log.d("Tushar", "onAdOpened")
+            }
+
+            override fun onAdImpression() {
+                Log.d("Tushar", "onAdImpression")
+            }
+
+            override fun onEvent(key: String, value: String) {
+                Log.d("Tushar", "onEvent")
+            }
+
+            override fun onSuccess(keywordMap: Map<String, String>?) {
+                Log.d("Tushar", "onSuccess")
+            }
+
+            override fun onError(error: Error) {
+                Log.d("Tushar", "Error: code: ${error.errorCode}, message: ${error.errorMessage}")
+            }
+
+        })
+    }
 
     override fun onDestroy() {
         super.onDestroy()
-        //adUnit?.stopAutoRefresh()
+        adUnit?.stopAutoRefresh()
     }
 
 }
