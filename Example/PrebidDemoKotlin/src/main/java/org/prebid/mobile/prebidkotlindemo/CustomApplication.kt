@@ -29,7 +29,7 @@ class CustomApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        MediaNetAdSDK.initPrebidSDK(this, accountId = TEMP_ACCOUNT_ID)
+        MediaNetAdSDK.init(this, accountId = TEMP_ACCOUNT_ID)
         Settings.init(this)
     }
 

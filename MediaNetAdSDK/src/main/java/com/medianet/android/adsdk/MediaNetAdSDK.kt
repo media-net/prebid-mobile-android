@@ -60,7 +60,7 @@ object MediaNetAdSDK {
     )
     private var configRepo: IConfigRepo? = null
 
-    fun initPrebidSDK(
+    fun init(
         applicationContext : Context,
         accountId: String,
         sdkInitListener: MSdkInitListener? = null
