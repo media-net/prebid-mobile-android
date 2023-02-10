@@ -1,10 +1,13 @@
 package com.medianet.android.adsdk
 
+import com.app.logger.CustomLogger
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
+import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
+import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
 import com.medianet.android.adsdk.utils.Util
 import org.prebid.mobile.BannerAdUnit
 import org.prebid.mobile.addendum.AdViewUtils
@@ -33,6 +36,11 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerA
         adRequest: AdManagerAdRequest,
         listener: GamEventListener
     ) {
+        if(MediaNetAdSDK.isSdkOnVacation()){
+            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
+            return
+        }
+
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 // Update ad view

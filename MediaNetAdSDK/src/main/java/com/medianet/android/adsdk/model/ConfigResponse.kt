@@ -40,7 +40,10 @@ data class Crid(
 @JsonClass(generateAdapter = true)
 data class GlobalConfig(
     @Json(name = "buff_sync_sec")
-    val bufferSyncSeconds: Int
+    val bufferSyncSeconds: Int,
+
+    @Transient
+    var configExpiryInSec: Long? = null
 )
 
 @JsonClass(generateAdapter = true)
