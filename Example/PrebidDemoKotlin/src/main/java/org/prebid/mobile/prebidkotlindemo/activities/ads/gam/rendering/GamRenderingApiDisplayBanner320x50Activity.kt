@@ -27,7 +27,7 @@ import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
 
     companion object {
-        const val AD_UNIT_ID = "/21808260008/prebid_oxb_320x50_banner"
+        const val AD_UNIT_ID = "/45361917/prebidsdkad"
         const val CONFIG_ID = "imp-prebid-banner-320-50"
         const val STORED_RESPONSE = "response-prebid-banner-320-50"
         const val WIDTH = 320
