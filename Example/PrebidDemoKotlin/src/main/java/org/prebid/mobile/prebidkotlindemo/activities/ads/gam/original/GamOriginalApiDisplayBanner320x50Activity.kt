@@ -34,6 +34,7 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-banner-320-50"
         const val WIDTH = 320
         const val HEIGHT = 50
+        val TAG = GamOriginalApiDisplayBanner320x50Activity::class.java.name
     }
 
     private var adUnit: BannerAd? = null
@@ -60,39 +61,39 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
         val request = AdManagerAdRequest.Builder().build()
         adUnit?.fetchDemandAndLoad(adView, request, object: GamEventListener {
             override fun onAdLoaded() {
-                Log.d("Tushar", "onAdLoaded")
+                Log.d(TAG, "onAdLoaded")
             }
 
             override fun onAdClicked() {
-                Log.d("Tushar", "onAdClicked")
+                Log.d(TAG, "onAdClicked")
             }
 
             override fun onAdClosed() {
-                Log.d("Tushar", "onAdClosed")
+                Log.d(TAG, "onAdClosed")
             }
 
             override fun onAdFailedToLoad(error: Error) {
-                Log.d("Tushar", "onAdFailedToLoad")
+                Log.d(TAG, "onAdFailedToLoad")
             }
 
             override fun onAdOpened() {
-                Log.d("Tushar", "onAdOpened")
+                Log.d(TAG, "onAdOpened")
             }
 
             override fun onAdImpression() {
-                Log.d("Tushar", "onAdImpression")
+                Log.d(TAG, "onAdImpression")
             }
 
             override fun onEvent(key: String, value: String) {
-                Log.d("Tushar", "onEvent")
+                Log.d(TAG, "onEvent")
             }
 
             override fun onSuccess(keywordMap: Map<String, String>?) {
-                Log.d("Tushar", "onSuccess")
+                Log.d(TAG, "onSuccess")
             }
 
             override fun onError(error: Error) {
-                Log.d("Tushar", "Error: code: ${error.errorCode}, message: ${error.errorMessage}")
+                Log.d(TAG, "Error: code: ${error.errorCode}, message: ${error.errorMessage}")
             }
 
         })
