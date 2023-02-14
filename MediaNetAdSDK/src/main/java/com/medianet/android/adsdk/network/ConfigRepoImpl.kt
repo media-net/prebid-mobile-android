@@ -21,6 +21,9 @@ import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
+/**
+* Repository class for fetching SDK Config
+*/
 class ConfigRepoImpl(private val serverApiService: ServerApiService?, private val configDataStore: DataStore<StoredConfigs.StoredSdkConfig>): IConfigRepo {
 
     companion object {
@@ -41,7 +44,9 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
             Util.storedConfigToSdkConfig(it)
         }
 
-
+    /**
+     * fetches the last sdk config emitted by flow
+     */
     override suspend fun getSDKConfig(
         cid: String
     ): SdkConfiguration? {
@@ -52,6 +57,9 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
         return sdkConfigFlow
     }
 
+    /**
+     * clears sdk config stored in the datastore
+     */
     override suspend fun clearSdkConfig() {
         configDataStore.updateData { config ->
             config.toBuilder().apply {
@@ -60,6 +68,10 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
         }
     }
 
+
+    /**
+     * fetches config from server
+     */
     override suspend fun refreshSdkConfig(cid: String, context: Context) {
         val configParams = mapOf(
             KEY_CC to VALUE_US,
@@ -92,6 +104,10 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
 
     }
 
+
+    /**
+     * updates the config in the data store
+     */
     private suspend fun updateSdkConfig(serverConfig: ConfigResponse) {
         CustomLogger.debug(TAG, "updating sdk config from server in datastore")
         val crIdMap = mutableMapOf<String, String>()

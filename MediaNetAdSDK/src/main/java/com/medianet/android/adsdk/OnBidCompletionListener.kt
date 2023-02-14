@@ -3,6 +3,9 @@ package com.medianet.android.adsdk
 import androidx.annotation.MainThread
 import org.prebid.mobile.ResultCode
 
+/**
+ * Listener interface to listen to Bid Auction Result
+ */
 interface OnBidCompletionListener {
     @MainThread
     fun onSuccess(keywordMap: Map<String, String>? = null)

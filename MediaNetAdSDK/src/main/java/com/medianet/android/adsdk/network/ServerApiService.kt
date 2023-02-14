@@ -7,6 +7,9 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
+/**
+ * Service Interface to make HTTP call to the endpoint
+ */
 interface ServerApiService {
     @GET(CONFIG_CALL_ENDPOINT)
     suspend fun getSdkConfig(@Path("cid") cid: String, @QueryMap queryMap: Map<String, String>): Response<ConfigResponse>

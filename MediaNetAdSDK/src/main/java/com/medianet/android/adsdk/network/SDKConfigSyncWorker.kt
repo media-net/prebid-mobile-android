@@ -8,6 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
+/**
+ * Worker Class to sync SDK Config from server to datastore
+ * as per config cache expiry
+ */
 class SDKConfigSyncWorker(context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
 
     companion object {
@@ -18,6 +22,9 @@ class SDKConfigSyncWorker(context: Context, params: WorkerParameters): Coroutine
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
+        /**
+         * schedules config fetch from server as per expiry time which is in seconds
+         */
         fun scheduleConfigFetch(context: Context, expiry: Long){
             val sdkConfigSyncWorker = OneTimeWorkRequestBuilder<SDKConfigSyncWorker>()
                 .setConstraints(constraints)
@@ -33,6 +40,9 @@ class SDKConfigSyncWorker(context: Context, params: WorkerParameters): Coroutine
             )
         }
 
+        /**
+         * cancels all works scheduled by the worker
+         */
         fun cancelSDKConfigSync(context: Context) {
             WorkManager.getInstance(context).cancelAllWorkByTag(WORKER_TAG)
         }

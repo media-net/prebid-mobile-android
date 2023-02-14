@@ -9,6 +9,9 @@ import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.ResultCode
 import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 
+/**
+ * Base Ad Class for Banner, Interstitial and Native Ads
+ */
 abstract class Ad(val adUnit: AdUnit) {
 
     abstract val adType: AdType
@@ -49,6 +52,9 @@ abstract class Ad(val adUnit: AdUnit) {
 
     fun getConfigId() = adUnit.configuration.configId
 
+    /**
+     * sets refresh interval for ad
+     */
     fun setAutoRefreshIntervalInSeconds(
         @IntRange(
             from = (PrebidMobile.AUTO_REFRESH_DELAY_MIN / 1000).toLong(),
@@ -57,13 +63,34 @@ abstract class Ad(val adUnit: AdUnit) {
         adUnit.setAutoRefreshInterval(seconds)
     }
 
+    /**
+     * cancels auto refresh of ad
+     */
     fun stopAutoRefresh() = adUnit.stopAutoRefresh()
+
+    /**
+     * resumes auto refresh of ad
+     */
     fun resumeAutoRefresh() = adUnit.resumeAutoRefresh()
 
+    // MARK: - adunit context data aka inventory data (imp[].ext.context.data)
+
+    /**
+     * This method obtains the context data keyword & value for adunit context targeting
+     * if the key already exists the value will be appended to the list. No duplicates will be added
+     */
     fun addContextData(key: String, values: Set<String>) = apply {
         adUnit.updateContextData(key, values)
     }
+
+    /**
+     * This method allows to remove specific context data keyword & values set from adunit context targeting
+     */
     fun removeContextData(key: String) = apply { adUnit.removeContextData(key) }
+
+    /**
+     * This method allows to remove all context data set from adunit context targeting
+     */
     fun clearContextData() = apply { adUnit.clearContextData() }
 
     //TODO - prebid does not expose it, should we expose it?
@@ -72,6 +99,9 @@ abstract class Ad(val adUnit: AdUnit) {
     fun getPrebidAdSlot() = adUnit.pbAdSlot
     fun setPrebidAdSlot(slot: String) = apply { adUnit.pbAdSlot =  slot }
 
+    /**
+     * This method sends Event Of Ad Loaded to Analytics
+     */
     fun sendAdLoadedEvent() {
         EventManager.sendAdLoadedEvent(
             dfpDivId = adUnit.configuration.configId,
@@ -79,6 +109,9 @@ abstract class Ad(val adUnit: AdUnit) {
         )
     }
 
+    /**
+     * This method initiates the Bid Auction call
+     */
     protected fun fetchDemand(adRequest: AdManagerAdRequest, listener: OnBidCompletionListener) {
         adUnit.fetchDemand(adRequest) {
         resultCode ->

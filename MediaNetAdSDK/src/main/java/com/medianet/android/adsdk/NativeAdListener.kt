@@ -2,6 +2,9 @@ package com.medianet.android.adsdk
 
 import com.medianet.android.adsdk.nativead.NativeInAppAd
 
+/**
+ * Listener interface to listen to native ad events
+ */
 interface NativeAdListener{
     /**
      * A successful Native ad is returned

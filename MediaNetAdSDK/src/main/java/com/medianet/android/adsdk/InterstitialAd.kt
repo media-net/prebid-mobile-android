@@ -12,6 +12,9 @@ import com.medianet.android.adsdk.utils.Util
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.InterstitialAdUnit
 
+/**
+ * Interstitial Ad Class for original type
+ */
 class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-display-interstitial-320-480")) {
     // TODO Pass adUnitId to InterstitialAdUnit once it is configured
     private var mInterstitialAdUnit: InterstitialAdUnit = adUnit as InterstitialAdUnit
@@ -22,6 +25,9 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-di
 
     override val adType: AdType = AdType.INTERSTITIAL
 
+    /**
+     * starts the bid auction call
+     */
     fun fetchDemandAndLoad(
         context: Context,
         adRequest: AdManagerAdRequest,
@@ -44,6 +50,9 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-di
         })
     }
 
+    /**
+     * this method loads the ad and provides the interstitial ad object for further use
+     */
     private fun loadAd(context: Context, adUnitId: String, adRequest: AdManagerAdRequest, adLoadCallback: GamEventListener) {
         AdManagerInterstitialAd.load(
             context,

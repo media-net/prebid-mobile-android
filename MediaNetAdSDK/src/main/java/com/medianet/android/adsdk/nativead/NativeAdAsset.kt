@@ -2,6 +2,9 @@ package com.medianet.android.adsdk.nativead
 
 import org.json.JSONObject
 
+/**
+ * Base class to be implemented by all native ad assets
+ */
 abstract class NativeAdAsset(private var type: AssetType?) {
 
     var assetExt: Any? = null

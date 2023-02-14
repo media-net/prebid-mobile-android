@@ -19,6 +19,9 @@ import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
 import java.util.*
 
+/**
+ * Interstitial Ad Class for rendering type
+ */
 class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: EnumSet<AdType>) {
 
     constructor(context: Context, adUnitId: String): this(context, adUnitId, EnumSet.of(AdType.DISPLAY))
@@ -62,6 +65,9 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
         mInterstitialAdUnit = InterstitialAdUnit(context, "imp-prebid-display-interstitial-320-480", mapInterstitialAdFormat(adUnitFormats), gamInterstitialEventHandler, mediaEventListener)
     }
 
+    /**
+     * listener that listens to the ad events once the bid auction completes
+     */
     fun setInterstitialAdListener(listener: AdEventListener) {
         interstitialAdListener = listener
         mInterstitialAdUnit.setInterstitialAdUnitListener(object: InterstitialAdUnitListener {
@@ -92,14 +98,25 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
         })
     }
 
+    /**
+     * sets minimum size percentage for the ad
+     * that in turn will be sent in the request for bid auction call
+     * @param minSizePercentage
+     */
     fun setMinSizePercentage(minSizePercentage: AdSize?) {
         mInterstitialAdUnit.setMinSizePercentage(minSizePercentage)
     }
 
+    /**
+     * displays interstitial ad on the screen
+     */
     fun show() {
         mInterstitialAdUnit.show()
     }
 
+    /**
+     * initiates the ad loading by doing bid auction call
+     */
     fun loadAd() {
 
         if(MediaNetAdSDK.isSdkOnVacation()){
@@ -109,6 +126,9 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
         mInterstitialAdUnit.loadAd()
     }
 
+    /**
+     * destroys the interstitial ad unit
+     */
     fun destroy() {
         mInterstitialAdUnit.destroy()
     }

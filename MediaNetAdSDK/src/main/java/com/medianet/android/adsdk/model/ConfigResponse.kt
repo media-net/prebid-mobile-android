@@ -4,6 +4,9 @@ import androidx.annotation.Keep
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+/**
+ *  Response Model Class for SDK Config fetch
+ */
 @Keep
 @JsonClass(generateAdapter = true)
 data class ConfigResponse(

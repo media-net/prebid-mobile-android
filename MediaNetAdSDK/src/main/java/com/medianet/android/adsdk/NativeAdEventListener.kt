@@ -2,6 +2,9 @@ package com.medianet.android.adsdk
 
 import androidx.annotation.WorkerThread
 
+/**
+ * Listener interface to listen to native ad events
+ */
 interface NativeAdEventListener {
     /**
      * Callback method for Ad's click event

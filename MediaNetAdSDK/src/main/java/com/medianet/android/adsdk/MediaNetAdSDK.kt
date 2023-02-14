@@ -21,6 +21,7 @@ import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.api.exceptions.InitError
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener
 
+/*Point Of Contact for initializing the SDK and setting various parameters while working with it */
 object MediaNetAdSDK {
 
     const val TAG = "MediaNetAdSDK"
@@ -60,6 +61,7 @@ object MediaNetAdSDK {
     )
     private var configRepo: IConfigRepo? = null
 
+    // initializes the SDK along with the fetch and validation of SDKConfig
     fun init(
         applicationContext : Context,
         accountId: String,
@@ -76,6 +78,7 @@ object MediaNetAdSDK {
         }
     }
 
+    // fetches sdk config for account ID
     internal suspend fun initialiseSdkConfig(applicationContext: Context) {
         configRepo?.getSDKConfigFlow()?.collectLatest { sdkConfig ->
             config = sdkConfig
@@ -99,12 +102,14 @@ object MediaNetAdSDK {
         }
     }
 
+    //fetches config from server
     fun fetchConfigFromServer(context: Context) {
         coroutineScope.launch {
             configRepo?.refreshSdkConfig(CID, context)
         }
     }
 
+    // schedules config fetch after config store expires
     private fun initConfigExpiryTimer(applicationContext: Context, expiry: Long?) {
         expiry?.let { expiryInSeconds ->
             CustomLogger.debug(TAG, "refreshing config after $expiryInSeconds seconds")
@@ -112,7 +117,7 @@ object MediaNetAdSDK {
         }
     }
 
-
+    // extracts data from config that will be required for auction call
     private fun updateSDKConfigDependencies(applicationContext: Context, config: SdkConfiguration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
@@ -171,6 +176,7 @@ object MediaNetAdSDK {
 
     fun setSubjectToGDPR(enable: Boolean) = apply { TargetingParams.setSubjectToGDPR(enable) }
 
+    // initializes Analytics SDK to be used across the MediaNetAdSDK
     private fun initAnalytics(applicationContext: Context, sdkConfig: SdkConfiguration) {
         EventManager.init(sdkConfig)
         val samplingMap = SamplingMap()

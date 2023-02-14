@@ -10,12 +10,18 @@ import com.medianet.android.adsdk.events.Constants.EventName.BID_REQUEST
 import com.medianet.android.adsdk.events.Constants.EventName.TIME_OUT
 import com.medianet.android.adsdk.model.SdkConfiguration
 
+/**
+ * Manager Class that handles Events transmission to Analytics SDK
+ */
 object EventManager {
 
     fun init(config: SdkConfiguration) {
         EventFactory.updateConfiguration(config)
     }
 
+    /**
+     * sends Bid Request Event to Analytics when Bid Auction Call is made
+     */
     fun sendBidRequestEvent(dfpDivId: String, sizes: List<MAdSize>?) {
         sendEvent(
             eventName = BID_REQUEST,
@@ -25,6 +31,9 @@ object EventManager {
         )
     }
 
+    /**
+     * sends Timeout Event to Analytics when Bid Request Auction Call times out
+     */
     fun sendTimeoutEvent(dfpDivId: String, sizes: List<MAdSize>?) {
         sendEvent(
             eventName = TIME_OUT,
@@ -34,6 +43,9 @@ object EventManager {
         )
     }
 
+    /**
+     * sends event to analytics when adRequest is sent to GAM after the auction
+     */
     fun sendAdRequestToGamEvent(dfpDivId: String, sizes: List<MAdSize>?) {
         sendEvent(
             eventName = AD_REQUEST_TO_GAM,
@@ -43,6 +55,9 @@ object EventManager {
         )
     }
 
+    /**
+     * sends event to Analytics when ad is successfully loaded
+     */
     fun sendAdLoadedEvent(dfpDivId: String, sizes: List<MAdSize>?) {
         sendEvent(
             eventName = AD_LOADED,
@@ -52,7 +67,9 @@ object EventManager {
         )
     }
 
-
+    /**
+     * base method to get created event and send to analytics SDK
+     */
     private fun sendEvent(eventName: String, eventType: LoggingEvents, dfpDivId: String, sizes: List<MAdSize>?) {
         val event = EventFactory.getEvent(
             eventName = eventName,

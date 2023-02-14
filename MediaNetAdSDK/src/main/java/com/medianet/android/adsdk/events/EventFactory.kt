@@ -28,6 +28,9 @@ import com.medianet.android.adsdk.events.Constants.Keys.TO_CONSIDER
 import com.medianet.android.adsdk.events.Constants.Keys.UGD
 import com.medianet.android.adsdk.model.SdkConfiguration
 
+/**
+ * Factory class to create different types of Events
+ */
 object EventFactory {
 
     private var sdkConfig: SdkConfiguration?  = null
@@ -47,6 +50,9 @@ object EventFactory {
         }
     }
 
+    /**
+     * creates and returns event object based on the function params
+     */
     fun getEvent(
         eventName: String,
         dfpDivId: String,
@@ -88,6 +94,9 @@ object EventFactory {
         )
     }
 
+    /**
+     * converts list of MAdSize Objects to a plain string (Eg: 320X420|200X100)
+     */
     private fun getSizeString(sizes: List<MAdSize>): String {
         val sb = StringBuilder()
         sizes.forEachIndexed { index, size ->
@@ -99,6 +108,9 @@ object EventFactory {
         return sb.toString()
     }
 
+    /**
+     * updates the common params sent in the events when sdk config gets updated
+     */
     fun updateConfiguration(sdkConfig: SdkConfiguration) {
         commonParams.apply {
             put(CUSTOMER_ID, sdkConfig.customerId)
