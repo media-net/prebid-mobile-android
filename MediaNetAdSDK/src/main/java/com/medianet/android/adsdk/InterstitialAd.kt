@@ -12,8 +12,8 @@ import com.medianet.android.adsdk.utils.Util
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.InterstitialAdUnit
 
-class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-display-interstitial-320-480")) {
-    // TODO Pass adUnitId to InterstitialAdUnit once it is configured
+class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit(adUnitId)) {
+
     private var mInterstitialAdUnit: InterstitialAdUnit = adUnit as InterstitialAdUnit
 
     constructor(adUnitId: String, minWidthPerc: Int, minHeightPerc: Int) : this(adUnitId) {

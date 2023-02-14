@@ -10,8 +10,8 @@ import com.medianet.android.adsdk.utils.Util.getPrebidAssetFromNativeAdAsset
 import com.medianet.android.adsdk.utils.Util.getPrebidEventTracker
 import org.prebid.mobile.*
 
-class NativeAd(adUnitId: String): Ad(NativeAdUnit("imp-prebid-banner-native-styles")) {
-    // TODO Pass adUnitId to NativeAdUnit once it is configured
+class NativeAd(adUnitId: String): Ad(NativeAdUnit(adUnitId)) {
+
     private var mNativeAdUnit: NativeAdUnit = adUnit as NativeAdUnit
 
     override val adType: AdType = AdType.NATIVE

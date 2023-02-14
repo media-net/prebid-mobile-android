@@ -22,8 +22,8 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
     constructor(context: Context, adUnitId: String, width: Int, height: Int) : this(context, adUnitId, AdSize(width, height))
 
     private val bannerEventHandler = GamBannerEventHandler(context, adUnitId, getPrebidAdSizeFromGAMAdSize(adSize))
-    // TODO Pass adUnitId to BannerAdUnit once it is configured
-    private val bannerView = BannerView(context, "divid", bannerEventHandler, object : MediaEventListener{
+
+    private val bannerView = BannerView(context, adUnitId, bannerEventHandler, object : MediaEventListener{
         override fun onBidRequest() {
             EventManager.sendBidRequestEvent(
                 dfpDivId = adUnitId,
@@ -107,5 +107,4 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
         bannerView.stopRefresh()
     }
 
-    //TODO - we have not added method to add additional sizes??
 }

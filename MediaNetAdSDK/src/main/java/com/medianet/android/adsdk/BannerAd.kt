@@ -14,11 +14,10 @@ import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 
 
-class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerAdUnit("divid", adSize.width, adSize.height)) {
+class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerAdUnit(adUnitId, adSize.width, adSize.height)) {
 
     constructor(adUnitId: String, width: Int, height: Int) : this(adUnitId, AdSize(width, height))
 
-    // TODO Pass adUnitId to BannerAdUnit once it is configured
     private val bannerAdUnit: BannerAdUnit = adUnit as BannerAdUnit
     override val adType: AdType = AdType.BANNER
 

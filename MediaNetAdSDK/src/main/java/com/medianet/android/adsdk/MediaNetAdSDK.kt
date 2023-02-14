@@ -29,11 +29,9 @@ object MediaNetAdSDK {
     private const val CONFIG_BASE_URL = "http://ems-adserving-stage-1.traefik.internal.media.net/" //TODO - should store in preference ?
     private const val CID = "8CU5Z4D53" // Temp account Id for config call
     private var sdkOnVacation: Boolean = false
-    val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    const val DATA_STORE_FILE_NAME = "sdk_config.pb"
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private const val DATA_STORE_FILE_NAME = "sdk_config.pb"
     private var logLevel: MLogLevel = MLogLevel.INFO
-    // TODO - For some action we can check if test mode is on or not
-    private var isTestMode: Boolean = false
 
     private var publisherSdkInitListener: MSdkInitListener? = null
     private var prebidSdkInitializationListener: SdkInitializationListener = object : SdkInitializationListener  {
@@ -71,12 +69,10 @@ object MediaNetAdSDK {
             initialiseSdkConfig(applicationContext)
             publisherSdkInitListener = sdkInitListener
             PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
-            //TODO - that need to be come from customer
-            TargetingParams.setSubjectToGDPR(true)
         }
     }
 
-    internal suspend fun initialiseSdkConfig(applicationContext: Context) {
+    private suspend fun initialiseSdkConfig(applicationContext: Context) {
         configRepo?.getSDKConfigFlow()?.collectLatest { sdkConfig ->
             config = sdkConfig
 
@@ -112,7 +108,6 @@ object MediaNetAdSDK {
         }
     }
 
-
     private fun updateSDKConfigDependencies(applicationContext: Context, config: SdkConfiguration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
@@ -123,29 +118,25 @@ object MediaNetAdSDK {
         initAnalytics(applicationContext, config)
     }
 
-
-    // TODO - publisherAccountId is better name?
     fun getAccountId() = PrebidMobile.getPrebidServerAccountId()
-    fun setAccountId(accountId: String) = apply { PrebidMobile.setPrebidServerAccountId(accountId) }
 
     fun getPrebidServerHost() = HOST_URL
 
     fun setTimeoutMillis(timeoutMillis: Long) = apply { PrebidMobile.setTimeoutMillis(timeoutMillis.toInt()) }
+
     fun getTimeOutMillis() = PrebidMobile.getTimeoutMillis()
 
     //TODO - should expose PrebidMobile.setCustomHeaders()
 
-    //TODO - should expose PrebidMobile.getApplicationContext()
     fun enableTestMode() = apply {
-        isTestMode = true
         PrebidMobile.setPbsDebug(true)
     }
+
     fun disableTestMode() = apply {
-        isTestMode = false
         PrebidMobile.setPbsDebug(false)
     }
+
     fun isDebugMode(): Boolean {
-        //return isTestMode
         return PrebidMobile.getPbsDebug()
     }
 
@@ -154,8 +145,18 @@ object MediaNetAdSDK {
             PrebidMobile.setStoredAuctionResponse(storedResponse)
         }
     }
-
-    //TODO - should expose PrebidMobile.addStoredBidResponse()
+    
+    fun addStoredBidResponse(bidder: String, responseId: String) {
+        PrebidMobile.addStoredBidResponse(bidder, responseId)
+    }
+    
+    fun getStoredBidResponses(): Map<String, String> {
+        return PrebidMobile.getStoredBidResponses()
+    }
+    
+    fun clearStoredBidResponses() {
+        PrebidMobile.clearStoredBidResponses()
+    }
 
     fun setLogLevel(level: MLogLevel) = apply {
         logLevel = level
@@ -164,7 +165,7 @@ object MediaNetAdSDK {
 
     fun getLogLevel() = logLevel
 
-    fun isCompatibleWithGoogleMobileAds(version: String) = PrebidMobile.checkGoogleMobileAdsCompatibility(version)
+    fun isCompatibleWithGoogleMobileAds(version: String): Boolean = PrebidMobile.checkGoogleMobileAdsCompatibility(version)
 
     fun shouldShareGeoLocation(share: Boolean) = apply { PrebidMobile.setShareGeoLocation(share) }
     fun isSharingGeoLocation() = PrebidMobile.isShareGeoLocation()
