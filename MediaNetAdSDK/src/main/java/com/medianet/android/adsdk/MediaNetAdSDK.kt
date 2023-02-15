@@ -82,7 +82,7 @@ object MediaNetAdSDK {
             publisherSdkInitListener = sdkInitListener
             PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
             //TODO - that need to be come from customer
-            TargetingParams.setSubjectToGDPR(true)
+            setSubjectToGDPR(true)
         }
     }
 
