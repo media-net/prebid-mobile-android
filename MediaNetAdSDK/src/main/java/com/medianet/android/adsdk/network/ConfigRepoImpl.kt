@@ -46,6 +46,8 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
 
     /**
      * fetches the last sdk config emitted by flow
+     * @param cid is the config ID of publisher
+     * @return the sdk config data
      */
     override suspend fun getSDKConfig(
         cid: String
@@ -71,6 +73,8 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
 
     /**
      * fetches config from server
+     * @param cid is the config ID of publisher
+     * @param context specifies the context of application where MediaNetAdSdk has been integrated
      */
     override suspend fun refreshSdkConfig(cid: String, context: Context) {
         val configParams = mapOf(
@@ -107,6 +111,7 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
 
     /**
      * updates the config in the data store
+     * @param serverConfig is the config response from server fetch
      */
     private suspend fun updateSdkConfig(serverConfig: ConfigResponse) {
         CustomLogger.debug(TAG, "updating sdk config from server in datastore")

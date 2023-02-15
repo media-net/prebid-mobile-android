@@ -21,6 +21,8 @@ object EventManager {
 
     /**
      * sends Bid Request Event to Analytics when Bid Auction Call is made
+     * @param dfpDivId is the adUnit's configuration config ID
+     * @param sizes are the sizes set for the ad slot
      */
     fun sendBidRequestEvent(dfpDivId: String, sizes: List<MAdSize>?) {
         sendEvent(
@@ -33,6 +35,8 @@ object EventManager {
 
     /**
      * sends Timeout Event to Analytics when Bid Request Auction Call times out
+     * @param dfpDivId is the adUnit's configuration config ID
+     * @param sizes are the sizes set for the ad slot
      */
     fun sendTimeoutEvent(dfpDivId: String, sizes: List<MAdSize>?) {
         sendEvent(
@@ -45,6 +49,8 @@ object EventManager {
 
     /**
      * sends event to analytics when adRequest is sent to GAM after the auction
+     * @param dfpDivId is the adUnit's configuration config ID
+     * @param sizes are the sizes set for the ad slot
      */
     fun sendAdRequestToGamEvent(dfpDivId: String, sizes: List<MAdSize>?) {
         sendEvent(
@@ -57,6 +63,8 @@ object EventManager {
 
     /**
      * sends event to Analytics when ad is successfully loaded
+     * @param dfpDivId is the adUnit's configuration config ID
+     * @param sizes are the sizes set for the ad slot
      */
     fun sendAdLoadedEvent(dfpDivId: String, sizes: List<MAdSize>?) {
         sendEvent(
@@ -69,6 +77,10 @@ object EventManager {
 
     /**
      * base method to get created event and send to analytics SDK
+     * @param eventName is the unique name for the event
+     * @param eventType is type of event like PROJECT(PE) or OPPORTUNITY(AP)
+     * @param dfpDivId is the adUnit's configuration config ID
+     * @param sizes are the sizes set for the ad slot
      */
     private fun sendEvent(eventName: String, eventType: LoggingEvents, dfpDivId: String, sizes: List<MAdSize>?) {
         val event = EventFactory.getEvent(

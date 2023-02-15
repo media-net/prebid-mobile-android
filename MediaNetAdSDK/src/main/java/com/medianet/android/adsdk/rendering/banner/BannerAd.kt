@@ -25,7 +25,7 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
     constructor(context: Context, adUnitId: String, width: Int, height: Int) : this(context, adUnitId, AdSize(width, height))
 
     private val bannerEventHandler = GamBannerEventHandler(context, adUnitId, getPrebidAdSizeFromGAMAdSize(adSize))
-    // TODO Pass adUnitId to BannerAdUnit once it is configured
+    //TODO Pass adUnitId to BannerAdUnit once it is configured
     private val bannerView = BannerView(context, "divid", bannerEventHandler, object : MediaEventListener{
         override fun onBidRequest() {
             EventManager.sendBidRequestEvent(
@@ -60,6 +60,7 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
 
     /**
      * Listener to listen to the ad events once the bid auction is completed
+     * @param listener
      */
     fun setBannerAdListener(listener: AdEventListener) = apply {
         bannerAdListener = listener
@@ -97,6 +98,7 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
 
     /**
      * sets the interval in which the ad needs to be refreshed
+     * @param delay is the interval time in seconds
      */
     fun setAutoRefreshInterval(delay: Int)  = apply {
         bannerView.setAutoRefreshDelay(delay)

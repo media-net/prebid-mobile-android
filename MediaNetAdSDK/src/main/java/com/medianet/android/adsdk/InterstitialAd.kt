@@ -27,6 +27,9 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-di
 
     /**
      * starts the bid auction call
+     * @param context specifies context of view on which ad loads
+     * @param adRequest is the ad request for ad manager
+     * @param listener listens to GAM events
      */
     fun fetchDemandAndLoad(
         context: Context,
@@ -52,6 +55,10 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-di
 
     /**
      * this method loads the ad and provides the interstitial ad object for further use
+     * @param context specifies context of view on which ad loads
+     * @param adUnitId specifies Id of the adUnit containers where we show ads
+     * @param adRequest is the ad request for ad manager
+     * @param adLoadCallback listens to GAM events
      */
     private fun loadAd(context: Context, adUnitId: String, adRequest: AdManagerAdRequest, adLoadCallback: GamEventListener) {
         AdManagerInterstitialAd.load(

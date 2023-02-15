@@ -24,6 +24,8 @@ class SDKConfigSyncWorker(context: Context, params: WorkerParameters): Coroutine
 
         /**
          * schedules config fetch from server as per expiry time which is in seconds
+         * @param context specifies the context of application where MediaNetAdSdk has been integrated
+         * @param expiry is the time in seconds after which config fetch from server will be scheduled
          */
         fun scheduleConfigFetch(context: Context, expiry: Long){
             val sdkConfigSyncWorker = OneTimeWorkRequestBuilder<SDKConfigSyncWorker>()
@@ -42,6 +44,7 @@ class SDKConfigSyncWorker(context: Context, params: WorkerParameters): Coroutine
 
         /**
          * cancels all works scheduled by the worker
+         * @param context specifies the context of application where MediaNetAdSdk has been integrated
          */
         fun cancelSDKConfigSync(context: Context) {
             WorkManager.getInstance(context).cancelAllWorkByTag(WORKER_TAG)

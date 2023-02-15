@@ -27,6 +27,7 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerA
 
     /**
      * this method allows us to add multiple sizes to the ad
+     * @param size specifies the size for ad slot through AdSize Object
      */
     fun addAdditionalSize(size: AdSize) = apply {
         bannerAdUnit.addAdditionalSize(size.width, size.height)
@@ -34,6 +35,8 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerA
 
     /**
      * this method allows us to add multiple sizes to the ad
+     * @param width specifies the width for ad slot
+     * @param height specifies the height for ad slot
      */
     fun addAdditionalSize(width: Int, height: Int) = apply {
         bannerAdUnit.addAdditionalSize(width, height)
@@ -41,6 +44,9 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerA
 
     /**
      * starts the bid auction call and loads the ad into the adView
+     * @param adView is the view where ad loads
+     * @param adRequest is the ad request for ad manager
+     * @param listener listens to GAM events
      */
     fun fetchDemandAndLoad(
         adView: AdManagerAdView,

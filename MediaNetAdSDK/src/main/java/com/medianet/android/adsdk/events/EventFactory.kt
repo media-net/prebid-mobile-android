@@ -52,6 +52,10 @@ object EventFactory {
 
     /**
      * creates and returns event object based on the function params
+     * @param eventName is the unique name of the event
+     * @param dfpDivId is the adUnit's configuration config ID
+     * @param sizes are the sizes set for the ad slot
+     * @return the created event object
      */
     fun getEvent(
         eventName: String,
@@ -95,7 +99,9 @@ object EventFactory {
     }
 
     /**
-     * converts list of MAdSize Objects to a plain string (Eg: 320X420|200X100)
+     * converts list of MAdSize Objects to a plain string
+     * @param sizes list of MAdSize Objects
+     * @return converted string result (Eg: 320X420|200X100)
      */
     private fun getSizeString(sizes: List<MAdSize>): String {
         val sb = StringBuilder()
@@ -110,6 +116,7 @@ object EventFactory {
 
     /**
      * updates the common params sent in the events when sdk config gets updated
+     * @param sdkConfig sdk config data for the publisher account Id
      */
     fun updateConfiguration(sdkConfig: SdkConfiguration) {
         commonParams.apply {

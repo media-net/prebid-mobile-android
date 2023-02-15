@@ -54,6 +54,7 @@ abstract class Ad(val adUnit: AdUnit) {
 
     /**
      * sets refresh interval for ad
+     * @param seconds is the interval time in seconds to be passed and has a range from 30 to 120 seconds
      */
     fun setAutoRefreshIntervalInSeconds(
         @IntRange(
@@ -78,6 +79,8 @@ abstract class Ad(val adUnit: AdUnit) {
     /**
      * This method obtains the context data keyword & value for adunit context targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added
+     * @param key is for the key of dictionary(hashmap)
+     * @param values is the set of strings for the particular key
      */
     fun addContextData(key: String, values: Set<String>) = apply {
         adUnit.updateContextData(key, values)
@@ -85,6 +88,7 @@ abstract class Ad(val adUnit: AdUnit) {
 
     /**
      * This method allows to remove specific context data keyword & values set from adunit context targeting
+     * @param key is the key of dictionary(hashmap)
      */
     fun removeContextData(key: String) = apply { adUnit.removeContextData(key) }
 
@@ -111,6 +115,8 @@ abstract class Ad(val adUnit: AdUnit) {
 
     /**
      * This method initiates the Bid Auction call
+     * @param adRequest is the ad request for ad manager
+     * @param listener listens to bid auction call result
      */
     protected fun fetchDemand(adRequest: AdManagerAdRequest, listener: OnBidCompletionListener) {
         adUnit.fetchDemand(adRequest) {

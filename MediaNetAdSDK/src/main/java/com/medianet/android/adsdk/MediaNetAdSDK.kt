@@ -21,7 +21,10 @@ import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.api.exceptions.InitError
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener
 
-/*Point Of Contact for initializing the SDK and setting various parameters while working with it */
+/**
+ * Point Of Contact for initializing the SDK
+ * and setting various parameters while working with it
+ */
 object MediaNetAdSDK {
 
     const val TAG = "MediaNetAdSDK"
@@ -61,7 +64,12 @@ object MediaNetAdSDK {
     )
     private var configRepo: IConfigRepo? = null
 
-    // initializes the SDK along with the fetch and validation of SDKConfig
+    /**
+     * initializes the SDK along with the fetch and validation of SDKConfig
+     * @param applicationContext is the context of application where the SDK has been integrated
+     * @param accountId is the publisher account ID
+     * @param sdkInitListener listens to the SDK Initialization Result
+     */
     fun init(
         applicationContext : Context,
         accountId: String,
@@ -78,7 +86,10 @@ object MediaNetAdSDK {
         }
     }
 
-    // fetches sdk config for account ID
+    /**
+     * fetches sdk config for account ID
+     * @param applicationContext is the context of application where the SDK has been integrated
+      */
     internal suspend fun initialiseSdkConfig(applicationContext: Context) {
         configRepo?.getSDKConfigFlow()?.collectLatest { sdkConfig ->
             config = sdkConfig
@@ -102,14 +113,21 @@ object MediaNetAdSDK {
         }
     }
 
-    //fetches config from server
+    /**
+     * fetches config from server
+     * @param context is the context of application where the SDK has been integrated
+     */
     fun fetchConfigFromServer(context: Context) {
         coroutineScope.launch {
             configRepo?.refreshSdkConfig(CID, context)
         }
     }
 
-    // schedules config fetch after config store expires
+    /**
+     * schedules config fetch after config store expires
+     * @param applicationContext is the context of application where the SDK has been integrated
+     * @param expiry is the time in seconds after which config will be expired and config should be fetched from server
+      */
     private fun initConfigExpiryTimer(applicationContext: Context, expiry: Long?) {
         expiry?.let { expiryInSeconds ->
             CustomLogger.debug(TAG, "refreshing config after $expiryInSeconds seconds")
@@ -117,7 +135,12 @@ object MediaNetAdSDK {
         }
     }
 
-    // extracts data from config that will be required for auction call
+    /**
+     * extracts data from config that will be required for auction call
+     * @param applicationContext is the context of application where the SDK has been integrated
+     * @param config is the sdk config which is mapped from SDK Config Response
+      */
+
     private fun updateSDKConfigDependencies(applicationContext: Context, config: SdkConfiguration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
@@ -154,6 +177,10 @@ object MediaNetAdSDK {
         return PrebidMobile.getPbsDebug()
     }
 
+    /**
+     * sets stored auction response
+     * @param storedAuctionResponse
+     */
     fun setStoredAuctionResponse(storedAuctionResponse: String? = null) = apply {
         storedAuctionResponse?.let { storedResponse ->
             PrebidMobile.setStoredAuctionResponse(storedResponse)
@@ -169,14 +196,36 @@ object MediaNetAdSDK {
 
     fun getLogLevel() = logLevel
 
-    fun isCompatibleWithGoogleMobileAds(version: String) = PrebidMobile.checkGoogleMobileAdsCompatibility(version)
+    /**
+     * checks whether the google play service ads library version used in your application
+     * matches with the version of google play service ads used in our SDK
+     * @param version - MobileAds.getVersion().toString()
+     */
+    fun isCompatibleWithGoogleMobileAds(version: String): Boolean = PrebidMobile.checkGoogleMobileAdsCompatibility(version)
 
+    /**
+     * will share the users geo location in the ad request input if true is passed and vice versa
+     * @param share is the boolean to decide whether geo location should be shared or not
+     */
     fun shouldShareGeoLocation(share: Boolean) = apply { PrebidMobile.setShareGeoLocation(share) }
+
+    /**
+     * tells whether geo location of the user is being shared in the ad request input
+     */
     fun isSharingGeoLocation() = PrebidMobile.isShareGeoLocation()
 
+    /**
+     * Sets subject to GDPR for MediaNetAdSdk. It uses custom static field, not IAB. <br><br>
+     * @param enable allows the ability to provide consent
+     * Must be called only after MediaNetAdSdk.init(applicationContext, accountId, sdkInitListener).
+     */
     fun setSubjectToGDPR(enable: Boolean) = apply { TargetingParams.setSubjectToGDPR(enable) }
 
-    // initializes Analytics SDK to be used across the MediaNetAdSDK
+    /**
+     * initializes Analytics SDK to be used across the MediaNetAdSDK
+     * @param applicationContext is the context of application where the SDK has been integrated
+     * @param sdkConfig is the sdk config which is mapped from SDK Config Response
+      */
     private fun initAnalytics(applicationContext: Context, sdkConfig: SdkConfiguration) {
         EventManager.init(sdkConfig)
         val samplingMap = SamplingMap()
@@ -193,7 +242,9 @@ object MediaNetAdSDK {
         AnalyticsSDK.init(applicationContext, configuration, providers = listOf(analyticsProvider))
     }
 
-    // This method is being used by every Ad class before any functioning
+    /**
+     * This method is being used by every Ad class before any functioning
+      */
     fun isSdkOnVacation() = sdkOnVacation
 
     //TODO - when to call this
@@ -205,10 +256,23 @@ object MediaNetAdSDK {
         EventManager.clear()
     }
 
+    /**
+     * Gets any given subject to GDPR in that order. <br>
+     * 1) MediaNetAdSdk subject to GDPR custom value, if present. <br>
+     * 2) IAB subject to GDPR TCF 2.0. <br>
+     * Otherwise, null.
+     *
+     * Must be called only after MediaNetAdSdk.init(applicationContext, accountId, sdkInitListener)
+     */
     fun isSubjectToGDPR(): Boolean? {
         return TargetingParams.isSubjectToGDPR()
     }
 
+    /**
+     * Sets GDPR consent for MediaNetAdSdk. It uses custom static field, not IAB.
+     * @param consentString for GDPR
+     * Must be called only after MediaNetAdSdk.init(applicationContext, accountId, sdkInitListener)
+     */
     fun setGDPRConsentString(consentString: String?) = apply {
         TargetingParams.setGDPRConsentString(consentString)
     }
