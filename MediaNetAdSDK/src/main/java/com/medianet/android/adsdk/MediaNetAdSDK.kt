@@ -78,11 +78,11 @@ object MediaNetAdSDK {
         configRepo = ConfigRepoImpl(serverApiService, applicationContext.configDataStore)
         coroutineScope.launch {
             LogUtil.setBaseTag(TAG)
-            initialiseSdkConfig(applicationContext)
-            publisherSdkInitListener = sdkInitListener
             PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
             //TODO - that need to be come from customer
             setSubjectToGDPR(true)
+            publisherSdkInitListener = sdkInitListener
+            initialiseSdkConfig(applicationContext)
         }
     }
 

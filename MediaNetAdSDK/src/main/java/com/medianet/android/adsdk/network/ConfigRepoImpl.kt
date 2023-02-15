@@ -96,7 +96,7 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
         )
 
         if (serverConfigResult.isSuccess) {
-            CustomLogger.error(TAG, "config fetch from server is successful")
+            CustomLogger.debug(TAG, "config fetch from server is successful")
             serverConfigResult.successValue()?.let {
                 updateSdkConfig(it)
             }
