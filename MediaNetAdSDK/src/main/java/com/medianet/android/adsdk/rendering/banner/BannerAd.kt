@@ -59,7 +59,7 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
     private var bannerAdListener: AdEventListener? = null
 
     /**
-     * Listener to listen to the ad events once the bid auction is completed
+     * Listener to listen to the ad events once the bid request is completed
      * @param listener
      */
     fun setBannerAdListener(listener: AdEventListener) = apply {
@@ -105,7 +105,7 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
     }
 
     /**
-     * initiates the ad loading by doing bid auction call
+     * initiates the ad loading by doing bid request call
      */
     fun loadAd() {
         if(MediaNetAdSDK.isSdkOnVacation()){

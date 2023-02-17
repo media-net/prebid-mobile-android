@@ -66,7 +66,7 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
     }
 
     /**
-     * listener that listens to the ad events once the bid auction completes
+     * listener that listens to the ad events once the bid request completes
      * @param listener
      */
     fun setInterstitialAdListener(listener: AdEventListener) {
@@ -101,7 +101,7 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
 
     /**
      * sets minimum size percentage for the ad
-     * that in turn will be sent in the request for bid auction call
+     * that in turn will be sent in the request for bid request call
      * @param minSizePercentage
      */
     fun setMinSizePercentage(minSizePercentage: AdSize?) {
@@ -116,7 +116,7 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
     }
 
     /**
-     * initiates the ad loading by doing bid auction call
+     * initiates the ad loading by doing bid request call
      */
     fun loadAd() {
 

@@ -74,10 +74,8 @@ abstract class Ad(val adUnit: AdUnit) {
      */
     fun resumeAutoRefresh() = adUnit.resumeAutoRefresh()
 
-    // MARK: - adunit context data aka inventory data (imp[].ext.context.data)
-
     /**
-     * This method obtains the context data keyword & value for adunit context targeting
+     * obtains the context data keyword & value for adunit context targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added
      * @param key is for the key of dictionary(hashmap)
      * @param values is the set of strings for the particular key
@@ -87,13 +85,13 @@ abstract class Ad(val adUnit: AdUnit) {
     }
 
     /**
-     * This method allows to remove specific context data keyword & values set from adunit context targeting
+     * allows to remove specific context data keyword & values set from adunit context targeting
      * @param key is the key of dictionary(hashmap)
      */
     fun removeContextData(key: String) = apply { adUnit.removeContextData(key) }
 
     /**
-     * This method allows to remove all context data set from adunit context targeting
+     * allows to remove all context data set from adunit context targeting
      */
     fun clearContextData() = apply { adUnit.clearContextData() }
 
@@ -104,7 +102,7 @@ abstract class Ad(val adUnit: AdUnit) {
     fun setPrebidAdSlot(slot: String) = apply { adUnit.pbAdSlot =  slot }
 
     /**
-     * This method sends Event Of Ad Loaded to Analytics
+     * sends Event Of Ad Loaded to Analytics
      */
     fun sendAdLoadedEvent() {
         EventManager.sendAdLoadedEvent(
@@ -114,9 +112,9 @@ abstract class Ad(val adUnit: AdUnit) {
     }
 
     /**
-     * This method initiates the Bid Auction call
+     * initiates the Bid Request call
      * @param adRequest is the ad request for ad manager
-     * @param listener listens to bid auction call result
+     * @param listener listens to bid request call result
      */
     protected fun fetchDemand(adRequest: AdManagerAdRequest, listener: OnBidCompletionListener) {
         adUnit.fetchDemand(adRequest) {

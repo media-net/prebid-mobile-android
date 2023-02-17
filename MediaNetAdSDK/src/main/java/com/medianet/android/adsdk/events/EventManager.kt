@@ -20,7 +20,7 @@ object EventManager {
     }
 
     /**
-     * sends Bid Request Event to Analytics when Bid Auction Call is made
+     * sends Bid Request Event to Analytics when Bid Request Call is made
      * @param dfpDivId is the adUnit's configuration config ID
      * @param sizes are the sizes set for the ad slot
      */
@@ -34,7 +34,7 @@ object EventManager {
     }
 
     /**
-     * sends Timeout Event to Analytics when Bid Request Auction Call times out
+     * sends Timeout Event to Analytics when Bid Request Request Call times out
      * @param dfpDivId is the adUnit's configuration config ID
      * @param sizes are the sizes set for the ad slot
      */
@@ -48,7 +48,7 @@ object EventManager {
     }
 
     /**
-     * sends event to analytics when adRequest is sent to GAM after the auction
+     * sends event to analytics when adRequest is sent to GAM after the Bid Request
      * @param dfpDivId is the adUnit's configuration config ID
      * @param sizes are the sizes set for the ad slot
      */

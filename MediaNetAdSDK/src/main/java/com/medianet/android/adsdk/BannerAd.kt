@@ -14,7 +14,8 @@ import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 
 /**
- * Banner Ad Class for original type
+ * Banner Ad Class for original type of loading where bid request call is made
+ * and modified adRequest is returned to the user
  */
 class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerAdUnit("divid", adSize.width, adSize.height)) {
 
@@ -26,7 +27,7 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerA
 
 
     /**
-     * this method allows us to add multiple sizes to the ad
+     * allows us to add multiple sizes to the ad
      * @param size specifies the size for ad slot through AdSize Object
      */
     fun addAdditionalSize(size: AdSize) = apply {
@@ -34,7 +35,7 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerA
     }
 
     /**
-     * this method allows us to add multiple sizes to the ad
+     * allows us to add multiple sizes to the ad
      * @param width specifies the width for ad slot
      * @param height specifies the height for ad slot
      */
@@ -43,7 +44,7 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerA
     }
 
     /**
-     * starts the bid auction call and loads the ad into the adView
+     * starts the bid request call and loads the ad into the adView
      * @param adView is the view where ad loads
      * @param adRequest is the ad request for ad manager
      * @param listener listens to GAM events

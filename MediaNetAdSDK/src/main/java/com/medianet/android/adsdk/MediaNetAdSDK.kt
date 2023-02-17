@@ -87,7 +87,8 @@ object MediaNetAdSDK {
     }
 
     /**
-     * fetches sdk config for account ID
+     * fetches sdk config for account ID from data store if present and not expired
+     * if not, fetches it from server remotely
      * @param applicationContext is the context of application where the SDK has been integrated
       */
     internal suspend fun initialiseSdkConfig(applicationContext: Context) {
@@ -136,7 +137,7 @@ object MediaNetAdSDK {
     }
 
     /**
-     * extracts data from config that will be required for auction call
+     * initializes dependencies like server host, account id, bid request url, connection timeout time, analytics etc.  from config fetched from server
      * @param applicationContext is the context of application where the SDK has been integrated
      * @param config is the sdk config which is mapped from SDK Config Response
       */
@@ -243,7 +244,8 @@ object MediaNetAdSDK {
     }
 
     /**
-     * This method is being used by every Ad class before any functioning
+     * indicates the working/availability of SDK.
+     * if true then SDK will not function from there on.
       */
     fun isSdkOnVacation() = sdkOnVacation
 

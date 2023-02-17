@@ -26,7 +26,7 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-di
     override val adType: AdType = AdType.INTERSTITIAL
 
     /**
-     * starts the bid auction call
+     * starts the bid request call
      * @param context specifies context of view on which ad loads
      * @param adRequest is the ad request for ad manager
      * @param listener listens to GAM events
