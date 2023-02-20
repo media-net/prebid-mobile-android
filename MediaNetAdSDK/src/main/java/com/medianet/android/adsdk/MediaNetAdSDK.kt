@@ -143,7 +143,6 @@ object MediaNetAdSDK {
      * @param applicationContext is the context of application where the SDK has been integrated
      * @param config is the sdk config which is mapped from SDK Config Response
       */
-
     private fun updateSDKConfigDependencies(applicationContext: Context, config: SdkConfiguration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
@@ -159,8 +158,12 @@ object MediaNetAdSDK {
     fun getAccountId() = PrebidMobile.getPrebidServerAccountId()
     fun setAccountId(accountId: String) = apply { PrebidMobile.setPrebidServerAccountId(accountId) }
 
-    fun getPrebidServerHost() = HOST_URL
+    fun getMediaNetServerHost() = HOST_URL
 
+    /**
+     * sets in milliseconds, will return control to the ad server SDK to fetch an ad once the expiration period is achieved.
+     * because MediaNetSdk SDK solicits bids from server in one payload, setting timeout too low can stymie all demand resulting in a potential negative revenue impact.
+     */
     fun setTimeoutMillis(timeoutMillis: Long) = apply { PrebidMobile.setTimeoutMillis(timeoutMillis.toInt()) }
     fun getTimeOutMillis() = PrebidMobile.getTimeoutMillis()
 
