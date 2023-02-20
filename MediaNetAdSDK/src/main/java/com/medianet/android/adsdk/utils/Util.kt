@@ -338,7 +338,8 @@ object Util {
             bidRequestUrl = storedConfig.bidRequestUrl,
             projectEventUrl = storedConfig.projectEventUrl,
             opportunityEventUrl = storedConfig.opportunityEventUrl,
-            dpfToCrIdMap = storedConfig.dpfToCrIdMapMap
+            dpfToCrIdMap = storedConfig.dpfToCrIdMapMap,
+            configExpiryMillis = storedConfig.configExpiryMillis
         )
     }
 }

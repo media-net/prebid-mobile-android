@@ -3,6 +3,9 @@ package com.medianet.android.adsdk.nativead
 import org.json.JSONObject
 import org.prebid.mobile.LogUtil
 
+/**
+ * asset class for different types of data to be present in native bid response
+ */
 data class DataAsset(
     var type: DataType? = null,
     var length: Int = 0,
