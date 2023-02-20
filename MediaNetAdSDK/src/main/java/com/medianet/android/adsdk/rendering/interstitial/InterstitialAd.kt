@@ -20,7 +20,7 @@ import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
 import java.util.*
 
 /**
- * Interstitial Ad Class for rendering type
+ * interstitial ad class for rendering type
  */
 class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: EnumSet<AdType>) {
 
@@ -66,7 +66,7 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
     }
 
     /**
-     * listener that listens to the ad events once the bid request completes
+     * listens to the ad events once the bid request completes
      * @param listener
      */
     fun setInterstitialAdListener(listener: AdEventListener) {

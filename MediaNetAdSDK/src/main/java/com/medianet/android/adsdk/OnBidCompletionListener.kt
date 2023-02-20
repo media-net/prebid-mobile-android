@@ -4,7 +4,7 @@ import androidx.annotation.MainThread
 import org.prebid.mobile.ResultCode
 
 /**
- * Listener interface to listen to Bid Request Call Result
+ * listener interface to listen to bid request call result
  */
 interface OnBidCompletionListener {
     @MainThread

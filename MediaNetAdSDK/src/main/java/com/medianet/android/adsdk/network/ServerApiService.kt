@@ -8,7 +8,7 @@ import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
 /**
- * Service Interface to make HTTP call to the endpoint
+ * service interface to make http call to the endpoint
  */
 interface ServerApiService {
     @GET(CONFIG_CALL_ENDPOINT)

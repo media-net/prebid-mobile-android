@@ -29,7 +29,7 @@ import com.medianet.android.adsdk.events.Constants.Keys.UGD
 import com.medianet.android.adsdk.model.SdkConfiguration
 
 /**
- * Factory class to create different types of Events
+ * factory class to create different types of events
  */
 object EventFactory {
 
@@ -53,7 +53,7 @@ object EventFactory {
     /**
      * creates and returns event object based on the function params
      * @param eventName is the unique name of the event
-     * @param dfpDivId is the adUnit's configuration config ID
+     * @param dfpDivId is the adUnit's configuration config id
      * @param sizes are the sizes set for the ad slot
      * @return the created event object
      */
@@ -100,7 +100,7 @@ object EventFactory {
 
     /**
      * converts list of MAdSize Objects to a plain string
-     * @param sizes list of MAdSize Objects
+     * @param sizes list of MAdSize objects
      * @return converted string result (Eg: 320X420|200X100)
      */
     private fun getSizeString(sizes: List<MAdSize>): String {

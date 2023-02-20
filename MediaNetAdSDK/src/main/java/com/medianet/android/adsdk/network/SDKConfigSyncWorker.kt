@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
 /**
- * Worker Class to sync SDK Config from server to datastore
+ * worker class to sync sdk config from server to datastore
  * as per config cache expiry
  */
 class SDKConfigSyncWorker(context: Context, params: WorkerParameters): CoroutineWorker(context, params) {

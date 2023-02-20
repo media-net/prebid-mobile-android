@@ -4,7 +4,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 
 /**
- * Util class to load images
+ * util class to load images
  */
 object ImageUtil {
 

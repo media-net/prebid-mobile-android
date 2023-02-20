@@ -5,7 +5,7 @@ import com.medianet.android.adsdk.model.SdkConfiguration
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Repository Interface for SDK Config
+ * repository interface for sdk config
  */
 interface IConfigRepo {
     suspend fun getSDKConfig(cid: String): SdkConfiguration?

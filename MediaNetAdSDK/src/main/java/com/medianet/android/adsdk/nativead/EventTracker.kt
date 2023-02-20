@@ -1,7 +1,7 @@
 package com.medianet.android.adsdk.nativead
 
 /**
- * Tracker that tracks the ad based on various things like impressions etc
+ * tracker that tracks the ad based on various things like impressions etc
  */
 data class EventTracker(
     var type: EventType,

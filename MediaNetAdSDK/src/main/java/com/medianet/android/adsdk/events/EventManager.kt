@@ -11,7 +11,7 @@ import com.medianet.android.adsdk.events.Constants.EventName.TIME_OUT
 import com.medianet.android.adsdk.model.SdkConfiguration
 
 /**
- * Manager Class that handles Events transmission to Analytics SDK
+ * manager class that handles events transmission to analytics sdk
  */
 object EventManager {
 
@@ -20,7 +20,7 @@ object EventManager {
     }
 
     /**
-     * sends Bid Request Event to Analytics when Bid Request Call is made
+     * sends bid request event to analytics when bid request call is made
      * @param dfpDivId is the adUnit's configuration config ID
      * @param sizes are the sizes set for the ad slot
      */
@@ -34,7 +34,7 @@ object EventManager {
     }
 
     /**
-     * sends Timeout Event to Analytics when Bid Request Request Call times out
+     * sends timeout event to analytics when bid request call times out
      * @param dfpDivId is the adUnit's configuration config ID
      * @param sizes are the sizes set for the ad slot
      */
@@ -48,8 +48,8 @@ object EventManager {
     }
 
     /**
-     * sends event to analytics when adRequest is sent to GAM after the Bid Request
-     * @param dfpDivId is the adUnit's configuration config ID
+     * sends event to analytics when adRequest is sent to GAM after the bid request
+     * @param dfpDivId is the adUnit's configuration config id
      * @param sizes are the sizes set for the ad slot
      */
     fun sendAdRequestToGamEvent(dfpDivId: String, sizes: List<MAdSize>?) {
@@ -62,8 +62,8 @@ object EventManager {
     }
 
     /**
-     * sends event to Analytics when ad is successfully loaded
-     * @param dfpDivId is the adUnit's configuration config ID
+     * sends event to analytics when ad is successfully loaded
+     * @param dfpDivId is the adUnit's configuration config id
      * @param sizes are the sizes set for the ad slot
      */
     fun sendAdLoadedEvent(dfpDivId: String, sizes: List<MAdSize>?) {
@@ -76,7 +76,7 @@ object EventManager {
     }
 
     /**
-     * base method to get created event and send to analytics SDK
+     * base method to get created event and send to analytics sdk
      * @param eventName is the unique name for the event
      * @param eventType is type of event like PROJECT(PE) or OPPORTUNITY(AP)
      * @param dfpDivId is the adUnit's configuration config ID

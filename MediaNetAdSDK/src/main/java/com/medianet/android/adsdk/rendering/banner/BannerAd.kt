@@ -18,7 +18,7 @@ import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 
 /**
- * Banner Ad Class for rendering type
+ * banner ad class for rendering type
  */
 class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
 
@@ -59,7 +59,7 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
     private var bannerAdListener: AdEventListener? = null
 
     /**
-     * Listener to listen to the ad events once the bid request is completed
+     * listens to the ad events once the bid request is completed
      * @param listener
      */
     fun setBannerAdListener(listener: AdEventListener) = apply {
@@ -90,7 +90,7 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
     }
 
     /**
-     * returns the Banner View UI
+     * returns the banner view UI
      */
     fun getView(): FrameLayout {
         return bannerView

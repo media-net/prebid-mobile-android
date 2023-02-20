@@ -10,7 +10,7 @@ import org.prebid.mobile.ResultCode
 import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 
 /**
- * Base Ad Class for Banner, Interstitial and Native Ads
+ * base ad class for banner, interstitial and native ads
  */
 abstract class Ad(val adUnit: AdUnit) {
 
@@ -112,7 +112,7 @@ abstract class Ad(val adUnit: AdUnit) {
     }
 
     /**
-     * initiates the Bid Request call
+     * initiates the bid request call
      * @param adRequest is the ad request for ad manager
      * @param listener listens to bid request call result
      */

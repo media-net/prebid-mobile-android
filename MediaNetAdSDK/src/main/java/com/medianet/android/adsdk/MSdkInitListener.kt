@@ -1,7 +1,7 @@
 package com.medianet.android.adsdk
 
 /**
- * Listener Interface to listen to SDK Initialisation
+ * listener interface to listen to sdk initialisation
  */
 interface MSdkInitListener {
     fun onInitSuccess()

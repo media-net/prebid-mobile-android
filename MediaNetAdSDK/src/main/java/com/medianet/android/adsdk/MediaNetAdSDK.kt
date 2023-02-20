@@ -22,7 +22,7 @@ import org.prebid.mobile.api.exceptions.InitError
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener
 
 /**
- * Point Of Contact for initializing the SDK
+ * point of contact for initializing the sdk
  * and setting various parameters while working with it
  */
 object MediaNetAdSDK {
@@ -66,9 +66,9 @@ object MediaNetAdSDK {
 
     /**
      * initializes the SDK along with the fetch and validation of SDKConfig
-     * @param applicationContext is the context of application where the SDK has been integrated
-     * @param accountId is the publisher account ID
-     * @param sdkInitListener listens to the SDK Initialization Result
+     * @param applicationContext is the context of application where the sdk has been integrated
+     * @param accountId is the publisher account id
+     * @param sdkInitListener listens to the sdk initialization result
      */
     fun init(
         applicationContext : Context,
@@ -87,9 +87,9 @@ object MediaNetAdSDK {
     }
 
     /**
-     * fetches sdk config for account ID from data store if present and not expired
+     * fetches sdk config for account id from data store if present and not expired
      * if not, fetches it from server remotely
-     * @param applicationContext is the context of application where the SDK has been integrated
+     * @param applicationContext is the context of application where the sdk has been integrated
       */
     private fun initialiseSdkConfig(applicationContext: Context) {
         coroutineScope.launch {
@@ -102,7 +102,7 @@ object MediaNetAdSDK {
                     fetchConfigFromServer(applicationContext)
                 }
 
-                //Disable SDK if kill switch is onn
+                //Disable sdk if kill switch is on
                 if (config?.shouldKillSDK == true) {
                     CustomLogger.debug(TAG, "config kill switch is onn so disabling SDK functionality")
                     sdkOnVacation = true
@@ -118,7 +118,7 @@ object MediaNetAdSDK {
 
     /**
      * fetches config from server
-     * @param context is the context of application where the SDK has been integrated
+     * @param context is the context of application where the sdk has been integrated
      */
     fun fetchConfigFromServer(context: Context) {
         coroutineScope.launch {
@@ -128,7 +128,7 @@ object MediaNetAdSDK {
 
     /**
      * schedules config fetch after config store expires
-     * @param applicationContext is the context of application where the SDK has been integrated
+     * @param applicationContext is the context of application where the sdk has been integrated
      * @param expiry is the time in seconds after which config will be expired and config should be fetched from server
       */
     private fun initConfigExpiryTimer(applicationContext: Context, expiry: Long?) {
@@ -140,7 +140,7 @@ object MediaNetAdSDK {
 
     /**
      * initializes dependencies like server host, account id, bid request url, connection timeout time, analytics etc.  from config fetched from server
-     * @param applicationContext is the context of application where the SDK has been integrated
+     * @param applicationContext is the context of application where the sdk has been integrated
      * @param config is the sdk config which is mapped from SDK Config Response
       */
     private fun updateSDKConfigDependencies(applicationContext: Context, config: SdkConfiguration) {
@@ -161,8 +161,8 @@ object MediaNetAdSDK {
     fun getMediaNetServerHost() = HOST_URL
 
     /**
-     * sets in milliseconds, will return control to the ad server SDK to fetch an ad once the expiration period is achieved.
-     * because MediaNetSdk SDK solicits bids from server in one payload, setting timeout too low can stymie all demand resulting in a potential negative revenue impact.
+     * sets in milliseconds, will return control to the ad server sdk to fetch an ad once the expiration period is achieved.
+     * because MediaNetSdk sdk solicits bids from server in one payload, setting timeout too low can stymie all demand resulting in a potential negative revenue impact.
      */
     fun setTimeoutMillis(timeoutMillis: Long) = apply { PrebidMobile.setTimeoutMillis(timeoutMillis.toInt()) }
     fun getTimeOutMillis() = PrebidMobile.getTimeoutMillis()
@@ -206,7 +206,7 @@ object MediaNetAdSDK {
 
     /**
      * checks whether the google play service ads library version used in your application
-     * matches with the version of google play service ads used in our SDK
+     * matches with the version of google play service ads used in our sdk
      * @param version - MobileAds.getVersion().toString()
      */
     fun isCompatibleWithGoogleMobileAds(version: String): Boolean = PrebidMobile.checkGoogleMobileAdsCompatibility(version)
@@ -223,15 +223,15 @@ object MediaNetAdSDK {
     fun isSharingGeoLocation() = PrebidMobile.isShareGeoLocation()
 
     /**
-     * Sets subject to GDPR for MediaNetAdSdk. It uses custom static field, not IAB. <br><br>
+     * sets subject to GDPR for MediaNetAdSdk. It uses custom static field, not IAB. <br><br>
      * @param enable allows the ability to provide consent
-     * Must be called only after MediaNetAdSdk.init(applicationContext, accountId, sdkInitListener).
+     * must be called only after MediaNetAdSdk.init(applicationContext, accountId, sdkInitListener).
      */
     fun setSubjectToGDPR(enable: Boolean) = apply { TargetingParams.setSubjectToGDPR(enable) }
 
     /**
-     * initializes Analytics SDK to be used across the MediaNetAdSDK
-     * @param applicationContext is the context of application where the SDK has been integrated
+     * initializes analytics sdk to be used across the MediaNetAdSDK
+     * @param applicationContext is the context of application where the sdk has been integrated
      * @param sdkConfig is the sdk config which is mapped from SDK Config Response
       */
     private fun initAnalytics(applicationContext: Context, sdkConfig: SdkConfiguration) {
@@ -251,8 +251,8 @@ object MediaNetAdSDK {
     }
 
     /**
-     * indicates the working/availability of SDK.
-     * if true then SDK will not function from there on.
+     * indicates the working/availability of sdk.
+     * if true then sdk will not function from there on.
       */
     fun isSdkOnVacation() = sdkOnVacation
 
@@ -266,21 +266,21 @@ object MediaNetAdSDK {
     }
 
     /**
-     * Gets any given subject to GDPR in that order. <br>
+     * gets any given subject to GDPR in that order. <br>
      * 1) MediaNetAdSdk subject to GDPR custom value, if present. <br>
      * 2) IAB subject to GDPR TCF 2.0. <br>
      * Otherwise, null.
      *
-     * Must be called only after MediaNetAdSdk.init(applicationContext, accountId, sdkInitListener)
+     * must be called only after MediaNetAdSdk.init(applicationContext, accountId, sdkInitListener)
      */
     fun isSubjectToGDPR(): Boolean? {
         return TargetingParams.isSubjectToGDPR()
     }
 
     /**
-     * Sets GDPR consent for MediaNetAdSdk. It uses custom static field, not IAB.
+     * sets GDPR consent for MediaNetAdSdk. It uses custom static field, not IAB.
      * @param consentString for GDPR
-     * Must be called only after MediaNetAdSdk.init(applicationContext, accountId, sdkInitListener)
+     * must be called only after MediaNetAdSdk.init(applicationContext, accountId, sdkInitListener)
      */
     fun setGDPRConsentString(consentString: String?) = apply {
         TargetingParams.setGDPRConsentString(consentString)

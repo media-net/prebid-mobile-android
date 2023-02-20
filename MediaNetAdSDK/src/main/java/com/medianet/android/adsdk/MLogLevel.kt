@@ -1,7 +1,7 @@
 package com.medianet.android.adsdk
 
 /**
- * Enum class for various level in Log Messaging
+ * enum class for various level in log messaging
  */
 enum class MLogLevel {
     NONE, DEBUG, WARN, ERROR, INFO

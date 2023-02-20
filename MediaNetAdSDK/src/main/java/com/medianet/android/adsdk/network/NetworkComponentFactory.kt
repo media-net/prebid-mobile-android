@@ -5,7 +5,7 @@ import com.app.network.builder.RetrofitParams
 import okhttp3.logging.HttpLoggingInterceptor
 
 /**
- * Factory Class for retrieving API Service Instances
+ * factory class for retrieving api service instances
  */
 object NetworkComponentFactory {
     private lateinit var serverApiService: ServerApiService
@@ -16,10 +16,10 @@ object NetworkComponentFactory {
     }
 
     /**
-     * returns API Service Instance along with retrofit interface to HTTP calls
+     * returns api service instance along with retrofit interface to http calls
      * @param baseUrl is the base url in the http call
      * @param networkConfig are the config parameters to be added to the RetrofitBuilder
-     * @return service instance to make an API call
+     * @return service instance to make an api call
      */
     fun getServerApiService(baseUrl: String, networkConfig: RetrofitParams? = null): ServerApiService {
         if (this::serverApiService.isInitialized.not()) {

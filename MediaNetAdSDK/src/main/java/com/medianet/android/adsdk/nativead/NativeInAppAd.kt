@@ -6,7 +6,7 @@ import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.PrebidNativeAdEventListener
 
 /**
- * Native Ad class that is provided for inflation on UI
+ * native ad class that is provided for inflation on UI
  * once the native ad is loaded
  */
 class NativeInAppAd(private val prebidNativeAd: PrebidNativeAd) {

@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 /**
- *  Response Model Class for SDK Config fetch
+ *  response model class for sdk config fetch
  */
 @Keep
 @JsonClass(generateAdapter = true)

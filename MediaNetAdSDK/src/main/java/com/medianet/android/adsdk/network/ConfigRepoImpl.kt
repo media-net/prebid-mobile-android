@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 
 /**
-* Repository class for fetching SDK Config
+* repository class for fetching sdk config
 */
 class ConfigRepoImpl(private val serverApiService: ServerApiService?, private val configDataStore: DataStore<StoredConfigs.StoredSdkConfig>): IConfigRepo {
 
@@ -46,7 +46,7 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
 
     /**
      * fetches the last sdk config emitted by flow
-     * @param cid is the config ID of publisher
+     * @param cid is the config id of publisher
      * @return the sdk config data
      */
     override suspend fun getSDKConfig(
@@ -73,7 +73,7 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
 
     /**
      * fetches config from server
-     * @param cid is the config ID of publisher
+     * @param cid is the config id of publisher
      * @param context specifies the context of application where MediaNetAdSdk has been integrated
      */
     override suspend fun refreshSdkConfig(cid: String, context: Context) {

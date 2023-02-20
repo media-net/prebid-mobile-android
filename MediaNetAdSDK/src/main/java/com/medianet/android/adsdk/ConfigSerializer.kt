@@ -8,7 +8,7 @@ import java.io.InputStream
 import java.io.OutputStream
 
 /**
- * Serializer Class to read and write sdk config from datastore
+ * serializer class to read and write sdk config from datastore
  */
 object ConfigSerializer : Serializer<StoredSdkConfig> {
     override val defaultValue: StoredSdkConfig = StoredSdkConfig.getDefaultInstance()

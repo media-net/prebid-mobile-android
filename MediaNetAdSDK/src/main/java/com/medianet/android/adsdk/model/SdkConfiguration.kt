@@ -3,7 +3,7 @@ package com.medianet.android.adsdk.model
 import com.medianet.android.adsdk.BuildConfig
 
 /**
- *  Mapper Class for ConfigResponse.kt class
+ *  mapper class for ConfigResponse.kt class
  */
 data class SdkConfiguration(
     val customerId: String,

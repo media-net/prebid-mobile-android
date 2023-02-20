@@ -13,7 +13,7 @@ import org.prebid.mobile.AdSize
 import org.prebid.mobile.InterstitialAdUnit
 
 /**
- * Interstitial Ad Class for original type
+ * interstitial ad class for original type
  */
 class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-display-interstitial-320-480")) {
     // TODO Pass adUnitId to InterstitialAdUnit once it is configured
@@ -54,7 +54,7 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-di
     }
 
     /**
-     * this method loads the ad and provides the interstitial ad object for further use
+     * loads the ad and provides the interstitial ad object for further use
      * @param context specifies context of view on which ad loads
      * @param adUnitId specifies Id of the adUnit containers where we show ads
      * @param adRequest is the ad request for ad manager

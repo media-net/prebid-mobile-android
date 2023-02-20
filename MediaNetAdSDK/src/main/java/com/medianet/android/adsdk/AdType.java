@@ -1,7 +1,7 @@
 package com.medianet.android.adsdk;
 
 /**
- * Enum class for different types of Ads
+ * enum class for different types of ads
  */
 public enum AdType {
     BANNER,

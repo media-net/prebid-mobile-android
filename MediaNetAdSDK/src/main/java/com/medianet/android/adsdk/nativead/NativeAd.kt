@@ -11,7 +11,7 @@ import com.medianet.android.adsdk.utils.Util.getPrebidEventTracker
 import org.prebid.mobile.*
 
 /**
- * Native Ad Class for both original and rendering types of loading an Ad
+ * native ad class for both original and rendering types of loading an ad
  */
 class NativeAd(adUnitId: String): Ad(NativeAdUnit("imp-prebid-banner-native-styles")) {
     // TODO Pass adUnitId to NativeAdUnit once it is configured
@@ -80,7 +80,7 @@ class NativeAd(adUnitId: String): Ad(NativeAdUnit("imp-prebid-banner-native-styl
     }
 
     /**
-     * adds Assets for the native ad for
+     * adds assets for the native ad for
      * which will in turn be sent in the request for bid request call
      * @param asset specifies the ad asset to be added to native ad
      */

@@ -5,8 +5,8 @@ import org.json.JSONObject
 import org.prebid.mobile.LogUtil
 
 /**
- * Asset Class for Images and to provide description
- * so that would be present in Native Bid Response
+ * asset class for images and to provide description
+ * so that would be present in native bid response
  */
 data class ImageAsset(
     var width: Int,

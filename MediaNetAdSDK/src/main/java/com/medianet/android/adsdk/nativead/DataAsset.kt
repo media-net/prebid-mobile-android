@@ -4,7 +4,7 @@ import org.json.JSONObject
 import org.prebid.mobile.LogUtil
 
 /**
- * Asset Class for Different Types of Data to be present in Native Bid Response
+ * asset class for different types of data to be present in native bid response
  */
 data class DataAsset(
     var type: DataType? = null,

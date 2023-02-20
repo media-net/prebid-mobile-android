@@ -4,7 +4,7 @@ import org.json.JSONObject
 import org.prebid.mobile.LogUtil
 
 /**
- * Asset Class for Title Text to be present in Native Bid Response
+ * asset class for title text to be present in native bid response
  */
 data class TitleAsset (
     var length: Int = 0,
