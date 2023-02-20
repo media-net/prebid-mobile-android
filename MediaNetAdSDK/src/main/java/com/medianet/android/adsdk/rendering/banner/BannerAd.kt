@@ -17,6 +17,9 @@ import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 
+/**
+ * banner ad class for rendering type
+ */
 class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
 
     constructor(context: Context, adUnitId: String, width: Int, height: Int) : this(context, adUnitId, AdSize(width, height))
@@ -55,6 +58,10 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
 
     private var bannerAdListener: AdEventListener? = null
 
+    /**
+     * listens to the ad events once the bid request is completed
+     * @param listener
+     */
     fun setBannerAdListener(listener: AdEventListener) = apply {
         bannerAdListener = listener
         bannerView.setBannerListener(object: BannerViewListener {
@@ -82,14 +89,24 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
         })
     }
 
+    /**
+     * returns the banner view UI
+     */
     fun getView(): FrameLayout {
         return bannerView
     }
 
+    /**
+     * sets the interval in which the ad needs to be refreshed
+     * @param delay is the interval time in seconds
+     */
     fun setAutoRefreshInterval(delay: Int)  = apply {
         bannerView.setAutoRefreshDelay(delay)
     }
 
+    /**
+     * initiates the ad loading by doing bid request call
+     */
     fun loadAd() {
         if(MediaNetAdSDK.isSdkOnVacation()){
             CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
@@ -99,10 +116,16 @@ class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
         bannerView.loadAd()
     }
 
+    /**
+     * destroys the banner view created
+     */
     fun destroy() {
         bannerView.destroy()
     }
 
+    /**
+     * stops the banner view ad refresh
+     */
     fun stopRefresh() {
         bannerView.stopRefresh()
     }

@@ -3,6 +3,9 @@ package com.medianet.android.adsdk.nativead
 import org.json.JSONObject
 import org.prebid.mobile.LogUtil
 
+/**
+ * asset class for title text to be present in native bid response
+ */
 data class TitleAsset (
     var length: Int = 0,
     var titleExt: Any? = null,
