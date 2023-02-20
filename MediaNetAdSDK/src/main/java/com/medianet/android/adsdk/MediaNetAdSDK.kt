@@ -78,11 +78,11 @@ object MediaNetAdSDK {
         configRepo = ConfigRepoImpl(serverApiService, applicationContext.configDataStore)
         coroutineScope.launch {
             LogUtil.setBaseTag(TAG)
+            initialiseSdkConfig(applicationContext)
             PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
             //TODO - that need to be come from customer
             setSubjectToGDPR(true)
             publisherSdkInitListener = sdkInitListener
-            initialiseSdkConfig(applicationContext)
         }
     }
 
@@ -91,25 +91,27 @@ object MediaNetAdSDK {
      * if not, fetches it from server remotely
      * @param applicationContext is the context of application where the SDK has been integrated
       */
-    internal suspend fun initialiseSdkConfig(applicationContext: Context) {
-        configRepo?.getSDKConfigFlow()?.collectLatest { sdkConfig ->
-            config = sdkConfig
+    private fun initialiseSdkConfig(applicationContext: Context) {
+        coroutineScope.launch {
+            configRepo?.getSDKConfigFlow()?.collectLatest { sdkConfig ->
+                config = sdkConfig
 
-            // We get null config when no config is stored in data store, so scheduling the fetch config from server
-            if (config == null || config?.isConfigExpired() == true) {
-                CustomLogger.debug(TAG, "fetching fresh config from server")
-                fetchConfigFromServer(applicationContext)
-            }
+                // We get null config when no config is stored in data store, so scheduling the fetch config from server
+                if (config == null || config?.isConfigExpired() == true) {
+                    CustomLogger.debug(TAG, "fetching fresh config from server")
+                    fetchConfigFromServer(applicationContext)
+                }
 
-            //Disable SDK if kill switch is onn
-            if (config?.shouldKillSDK == true) {
-                CustomLogger.debug(TAG, "config kill switch is onn so disabling SDK functionality")
-                sdkOnVacation = true
-                return@collectLatest
-            }
-            config?.let {
-                updateSDKConfigDependencies(applicationContext, it)
-                initConfigExpiryTimer(applicationContext, it.configExpiryMillis)
+                //Disable SDK if kill switch is onn
+                if (config?.shouldKillSDK == true) {
+                    CustomLogger.debug(TAG, "config kill switch is onn so disabling SDK functionality")
+                    sdkOnVacation = true
+                    return@collectLatest
+                }
+                config?.let {
+                    updateSDKConfigDependencies(applicationContext, it)
+                    initConfigExpiryTimer(applicationContext, it.configExpiryMillis)
+                }
             }
         }
     }
@@ -179,7 +181,9 @@ object MediaNetAdSDK {
     }
 
     /**
-     * sets stored auction response
+     * set as type string, stored auction responses signal server to respond with a static response matching the storedAuctionResponse found in the server database,
+     * useful for debugging and integration testing.
+     * no bid requests will be sent to any bidders when a matching storedAuctionResponse is found
      * @param storedAuctionResponse
      */
     fun setStoredAuctionResponse(storedAuctionResponse: String? = null) = apply {
