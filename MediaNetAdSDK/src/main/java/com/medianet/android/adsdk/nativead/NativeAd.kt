@@ -13,7 +13,6 @@ import com.medianet.android.adsdk.utils.Util
 import com.medianet.android.adsdk.utils.Util.getPrebidAssetFromNativeAdAsset
 import com.medianet.android.adsdk.utils.Util.getPrebidEventTracker
 import org.prebid.mobile.NativeAdUnit
-import org.prebid.mobile.NativeTitleAsset
 
 /**
  * native ad class for both original and rendering types of loading an ad

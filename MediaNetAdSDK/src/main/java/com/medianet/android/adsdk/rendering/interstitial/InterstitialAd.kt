@@ -11,13 +11,13 @@ import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
 import com.medianet.android.adsdk.utils.Util.mapAdExceptionToError
 import com.medianet.android.adsdk.utils.Util.mapInterstitialAdFormat
+import java.util.EnumSet
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
-import java.util.EnumSet
 
 /**
  * interstitial ad class for rendering type
@@ -27,7 +27,7 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
     constructor(context: Context, adUnitId: String) : this(context, adUnitId, EnumSet.of(AdType.DISPLAY))
 
     private val gamInterstitialEventHandler = GamInterstitialEventHandler(context as Activity?, adUnitId)
-    //TODO Pass adUnitId to InterstitialAdUnit once it is configured
+    // TODO Pass adUnitId to InterstitialAdUnit once it is configured
     private val mInterstitialAdUnit: InterstitialAdUnit
     private var interstitialAdListener: AdEventListener? = null
 

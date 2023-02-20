@@ -36,9 +36,9 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener
 object MediaNetAdSDK {
 
     const val TAG = "MediaNetAdSDK"
-    const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d" //TODO - should store in preference ?
-    private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction" //TODO - should store in preference ?
-    private const val CONFIG_BASE_URL = "http://ems-adserving-stage-1.traefik.internal.media.net/" //TODO - should store in preference ?
+    const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d" // TODO - should store in preference ?
+    private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction" // TODO - should store in preference ?
+    private const val CONFIG_BASE_URL = "http://ems-adserving-stage-1.traefik.internal.media.net/" // TODO - should store in preference ?
     private const val CID = "8CU5Z4D53" // Temp account Id for config call
     private var sdkOnVacation: Boolean = false
     val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -48,7 +48,7 @@ object MediaNetAdSDK {
     private var isTestMode: Boolean = false
 
     private var publisherSdkInitListener: MSdkInitListener? = null
-    private var prebidSdkInitializationListener: SdkInitializationListener = object : SdkInitializationListener  {
+    private var prebidSdkInitializationListener: SdkInitializationListener = object : SdkInitializationListener {
         override fun onSdkInit() {
             CustomLogger.debug(TAG, "SDK initialized successfully!")
             // If we need to send event for SDK initialisation we can do here
@@ -78,7 +78,7 @@ object MediaNetAdSDK {
      * @param sdkInitListener listens to the sdk initialization result
      */
     fun init(
-        applicationContext : Context,
+        applicationContext: Context,
         accountId: String,
         sdkInitListener: MSdkInitListener? = null
     ) {
@@ -87,7 +87,7 @@ object MediaNetAdSDK {
             LogUtil.setBaseTag(TAG)
             initialiseSdkConfig(applicationContext)
             PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
-            //TODO - that need to be come from customer
+            // TODO - that need to be come from customer
             setSubjectToGDPR(true)
             publisherSdkInitListener = sdkInitListener
         }
@@ -97,7 +97,7 @@ object MediaNetAdSDK {
      * fetches sdk config for account id from data store if present and not expired
      * if not, fetches it from server remotely
      * @param applicationContext is the context of application where the sdk has been integrated
-      */
+     */
     private fun initialiseSdkConfig(applicationContext: Context) {
         coroutineScope.launch {
             configRepo?.getSDKConfigFlow()?.collectLatest { sdkConfig ->
@@ -109,7 +109,7 @@ object MediaNetAdSDK {
                     fetchConfigFromServer(applicationContext)
                 }
 
-                //Disable sdk if kill switch is on
+                // Disable sdk if kill switch is on
                 if (config?.shouldKillSDK == true) {
                     CustomLogger.debug(TAG, "config kill switch is onn so disabling SDK functionality")
                     sdkOnVacation = true
@@ -137,7 +137,7 @@ object MediaNetAdSDK {
      * schedules config fetch after config store expires
      * @param applicationContext is the context of application where the sdk has been integrated
      * @param expiry is the time in seconds after which config will be expired and config should be fetched from server
-      */
+     */
     private fun initConfigExpiryTimer(applicationContext: Context, expiry: Long?) {
         expiry?.let { expiryInSeconds ->
             CustomLogger.debug(TAG, "refreshing config after $expiryInSeconds seconds")
@@ -149,7 +149,7 @@ object MediaNetAdSDK {
      * initializes dependencies like server host, account id, bid request url, connection timeout time, analytics etc.  from config fetched from server
      * @param applicationContext is the context of application where the sdk has been integrated
      * @param config is the sdk config which is mapped from SDK Config Response
-      */
+     */
     private fun updateSDKConfigDependencies(applicationContext: Context, config: SdkConfiguration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) // PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
@@ -159,7 +159,6 @@ object MediaNetAdSDK {
         // Initialising Analytics
         initAnalytics(applicationContext, config)
     }
-
 
     // TODO - publisherAccountId is better name?
     fun getAccountId() = PrebidMobile.getPrebidServerAccountId()
@@ -240,7 +239,7 @@ object MediaNetAdSDK {
      * initializes analytics sdk to be used across the MediaNetAdSDK
      * @param applicationContext is the context of application where the sdk has been integrated
      * @param sdkConfig is the sdk config which is mapped from SDK Config Response
-      */
+     */
     private fun initAnalytics(applicationContext: Context, sdkConfig: SdkConfiguration) {
         EventManager.init(sdkConfig)
         val samplingMap = SamplingMap()
@@ -260,7 +259,7 @@ object MediaNetAdSDK {
     /**
      * indicates the working/availability of sdk.
      * if true then sdk will not function from there on.
-      */
+     */
     fun isSdkOnVacation() = sdkOnVacation
 
     // TODO - when to call this

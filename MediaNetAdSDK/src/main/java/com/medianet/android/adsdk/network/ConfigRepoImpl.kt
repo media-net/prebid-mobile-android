@@ -24,7 +24,7 @@ import java.io.IOException
 /**
 * repository class for fetching sdk config
 */
-class ConfigRepoImpl(private val serverApiService: ServerApiService?, private val configDataStore: DataStore<StoredConfigs.StoredSdkConfig>): IConfigRepo {
+class ConfigRepoImpl(private val serverApiService: ServerApiService?, private val configDataStore: DataStore<StoredConfigs.StoredSdkConfig>) : IConfigRepo {
 
     companion object {
         private val TAG = ConfigRepoImpl::class.java.name
@@ -70,7 +70,6 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
         }
     }
 
-
     /**
      * fetches config from server
      * @param cid is the config id of publisher
@@ -105,9 +104,7 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
             CustomLogger.debug(TAG, "scheduling config fetch after 2 min")
             SDKConfigSyncWorker.scheduleConfigFetch(context, 120L)
         }
-
     }
-
 
     /**
      * updates the config in the data store
