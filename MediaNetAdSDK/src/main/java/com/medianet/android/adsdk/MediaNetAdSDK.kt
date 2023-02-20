@@ -185,14 +185,28 @@ object MediaNetAdSDK {
         }
     }
 
+    /**
+     * Adds a Stored Bid Response. Stored Bid Responses are similar to Stored Auction Responses in that they signal to server to
+     * respond with a static pre-defined response,
+     * except Stored Bid Responses is done at the bidder level,
+     * with bid requests sent out for any bidders not specified in the bidder parameter.
+     * @param bidder
+     * @param responseId
+     */
     fun addStoredBidResponse(bidder: String, responseId: String) {
         PrebidMobile.addStoredBidResponse(bidder, responseId)
     }
 
+    /**
+     * Returns a map of all Stored Bid Responses.
+     */
     fun getStoredBidResponses(): Map<String, String> {
         return PrebidMobile.getStoredBidResponses()
     }
 
+    /**
+     * Clears all the Stored Bid Responses
+     */
     fun clearStoredBidResponses() {
         PrebidMobile.clearStoredBidResponses()
     }
