@@ -95,9 +95,6 @@ abstract class Ad(val adUnit: AdUnit) {
      */
     fun clearContextData() = apply { adUnit.clearContextData() }
 
-    //TODO - prebid does not expose it, should we expose it?
-    fun getContextData() = adUnit.configuration.contextDataDictionary
-
     fun getPrebidAdSlot() = adUnit.pbAdSlot
     fun setPrebidAdSlot(slot: String) = apply { adUnit.pbAdSlot =  slot }
 

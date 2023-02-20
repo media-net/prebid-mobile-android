@@ -27,7 +27,7 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
     constructor(context: Context, adUnitId: String): this(context, adUnitId, EnumSet.of(AdType.DISPLAY))
 
     private val gamInterstitialEventHandler = GamInterstitialEventHandler(context as Activity?, adUnitId)
-    //TODO Pass adUnitId to InterstitialAdUnit once it is configured
+
     private val mInterstitialAdUnit: InterstitialAdUnit
     private var interstitialAdListener: AdEventListener? = null
 
@@ -62,7 +62,7 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
     }
 
     init {
-        mInterstitialAdUnit = InterstitialAdUnit(context, "imp-prebid-display-interstitial-320-480", mapInterstitialAdFormat(adUnitFormats), gamInterstitialEventHandler, mediaEventListener)
+        mInterstitialAdUnit = InterstitialAdUnit(context, adUnitId, mapInterstitialAdFormat(adUnitFormats), gamInterstitialEventHandler, mediaEventListener)
     }
 
     /**

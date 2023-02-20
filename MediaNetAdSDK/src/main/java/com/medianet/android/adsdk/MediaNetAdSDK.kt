@@ -28,16 +28,14 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener
 object MediaNetAdSDK {
 
     const val TAG = "MediaNetAdSDK"
-    const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d" //TODO - should store in preference ?
-    private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction" //TODO - should store in preference ?
-    private const val CONFIG_BASE_URL = "http://ems-adserving-stage-1.traefik.internal.media.net/" //TODO - should store in preference ?
+    const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d"
+    private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction"
+    private const val CONFIG_BASE_URL = "http://ems-adserving-stage-1.traefik.internal.media.net/"
     private const val CID = "8CU5Z4D53" // Temp account Id for config call
     private var sdkOnVacation: Boolean = false
-    val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    const val DATA_STORE_FILE_NAME = "sdk_config.pb"
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private const val DATA_STORE_FILE_NAME = "sdk_config.pb"
     private var logLevel: MLogLevel = MLogLevel.INFO
-    // TODO - For some action we can check if test mode is on or not
-    private var isTestMode: Boolean = false
 
     private var publisherSdkInitListener: MSdkInitListener? = null
     private var prebidSdkInitializationListener: SdkInitializationListener = object : SdkInitializationListener  {
@@ -80,8 +78,6 @@ object MediaNetAdSDK {
             LogUtil.setBaseTag(TAG)
             initialiseSdkConfig(applicationContext)
             PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
-            //TODO - that need to be come from customer
-            setSubjectToGDPR(true)
             publisherSdkInitListener = sdkInitListener
         }
     }
@@ -153,10 +149,7 @@ object MediaNetAdSDK {
         initAnalytics(applicationContext, config)
     }
 
-
-    // TODO - publisherAccountId is better name?
     fun getAccountId() = PrebidMobile.getPrebidServerAccountId()
-    fun setAccountId(accountId: String) = apply { PrebidMobile.setPrebidServerAccountId(accountId) }
 
     fun getMediaNetServerHost() = HOST_URL
 
@@ -165,21 +158,18 @@ object MediaNetAdSDK {
      * because MediaNetSdk sdk solicits bids from server in one payload, setting timeout too low can stymie all demand resulting in a potential negative revenue impact.
      */
     fun setTimeoutMillis(timeoutMillis: Long) = apply { PrebidMobile.setTimeoutMillis(timeoutMillis.toInt()) }
+
     fun getTimeOutMillis() = PrebidMobile.getTimeoutMillis()
 
-    //TODO - should expose PrebidMobile.setCustomHeaders()
-
-    //TODO - should expose PrebidMobile.getApplicationContext()
     fun enableTestMode() = apply {
-        isTestMode = true
         PrebidMobile.setPbsDebug(true)
     }
+
     fun disableTestMode() = apply {
-        isTestMode = false
         PrebidMobile.setPbsDebug(false)
     }
+
     fun isDebugMode(): Boolean {
-        //return isTestMode
         return PrebidMobile.getPbsDebug()
     }
 
@@ -195,7 +185,31 @@ object MediaNetAdSDK {
         }
     }
 
-    //TODO - should expose PrebidMobile.addStoredBidResponse()
+    /**
+     * Adds a Stored Bid Response. Stored Bid Responses are similar to Stored Auction Responses in that they signal to server to
+     * respond with a static pre-defined response,
+     * except Stored Bid Responses is done at the bidder level,
+     * with bid requests sent out for any bidders not specified in the bidder parameter.
+     * @param bidder
+     * @param responseId
+     */
+    fun addStoredBidResponse(bidder: String, responseId: String) {
+        PrebidMobile.addStoredBidResponse(bidder, responseId)
+    }
+
+    /**
+     * Returns a map of all Stored Bid Responses.
+     */
+    fun getStoredBidResponses(): Map<String, String> {
+        return PrebidMobile.getStoredBidResponses()
+    }
+
+    /**
+     * Clears all the Stored Bid Responses
+     */
+    fun clearStoredBidResponses() {
+        PrebidMobile.clearStoredBidResponses()
+    }
 
     fun setLogLevel(level: MLogLevel) = apply {
         logLevel = level

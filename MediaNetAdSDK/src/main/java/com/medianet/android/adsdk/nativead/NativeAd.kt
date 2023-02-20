@@ -13,8 +13,7 @@ import org.prebid.mobile.*
 /**
  * native ad class for both original and rendering types of loading an ad
  */
-class NativeAd(adUnitId: String): Ad(NativeAdUnit("imp-prebid-banner-native-styles")) {
-    // TODO Pass adUnitId to NativeAdUnit once it is configured
+class NativeAd(adUnitId: String): Ad(NativeAdUnit(adUnitId)) {
     private var mNativeAdUnit: NativeAdUnit = adUnit as NativeAdUnit
 
     override val adType: AdType = AdType.NATIVE
