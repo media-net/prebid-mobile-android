@@ -7,6 +7,9 @@ import com.medianet.android.adsdk.model.StoredConfigs.StoredSdkConfig
 import java.io.InputStream
 import java.io.OutputStream
 
+/**
+ * serializer class to read and write sdk config from datastore
+ */
 object ConfigSerializer : Serializer<StoredSdkConfig> {
     override val defaultValue: StoredSdkConfig = StoredSdkConfig.getDefaultInstance()
 

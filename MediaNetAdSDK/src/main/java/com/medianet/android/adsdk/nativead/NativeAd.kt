@@ -15,21 +15,38 @@ import com.medianet.android.adsdk.utils.Util.getPrebidEventTracker
 import org.prebid.mobile.NativeAdUnit
 import org.prebid.mobile.NativeTitleAsset
 
+/**
+ * native ad class for both original and rendering types of loading an ad
+ */
 class NativeAd(adUnitId: String) : Ad(NativeAdUnit("imp-prebid-banner-native-styles")) {
     // TODO Pass adUnitId to NativeAdUnit once it is configured
     private var mNativeAdUnit: NativeAdUnit = adUnit as NativeAdUnit
 
     override val adType: AdType = AdType.NATIVE
 
+    /**
+     * sets the context type for the native ad
+     * which will in turn be sent in the request for bid request call
+     * @param type specifies the context type like PRODUCT or CUSTOM or CONTENT_CENTRIC etc
+     */
     fun setContextType(type: ContextType) {
         mNativeAdUnit.setContextType(Util.getPrebidContextType(type))
-        val title = NativeTitleAsset()
     }
 
+    /**
+     * sets the sub context type for the native ad
+     * which will in turn be sent in the request for bid request call
+     * @param type specifies the sub context type like GENERAL or ARTICLE or VIDEO or AUDIO
+     */
     fun setContextSubType(type: ContextSubType) {
         mNativeAdUnit.setContextSubType(Util.getPrebidContextSubType(type))
     }
 
+    /**
+     * sets the placement type for the native ad
+     * which will in turn be sent in the request for bid request call
+     * @param placementType specifies how the placement of ad should be
+     */
     fun setPlacementType(placementType: PlacementType) {
         mNativeAdUnit.setPlacementType(Util.getPrebidPlacementType(placementType))
     }
@@ -58,10 +75,20 @@ class NativeAd(adUnitId: String) : Ad(NativeAdUnit("imp-prebid-banner-native-sty
         mNativeAdUnit.setExt(jsonObject)
     }
 
+    /**
+     * adds event tracker for the native ad
+     * which will in turn be sent in the request for bid request call
+     * @param tracker is the event tracker added to the bid request
+     */
     fun addEventTracker(tracker: EventTracker) {
         mNativeAdUnit.addEventTracker(getPrebidEventTracker(tracker))
     }
 
+    /**
+     * adds assets for the native ad for
+     * which will in turn be sent in the request for bid request call
+     * @param asset specifies the ad asset to be added to native ad
+     */
     fun addAsset(asset: NativeAdAsset) {
         mNativeAdUnit.addAsset(getPrebidAssetFromNativeAdAsset(asset))
     }
@@ -97,6 +124,11 @@ class NativeAd(adUnitId: String) : Ad(NativeAdUnit("imp-prebid-banner-native-sty
         CUSTOM(500)
     }
 
+    /**
+     * starts the bid request call
+     * @param adRequest is the ad request for ad manager
+     * @param listener listens to GAM events
+     */
     fun fetchDemand(
         adRequest: AdManagerAdRequest,
         listener: GamEventListener

@@ -5,6 +5,10 @@ import com.medianet.android.adsdk.NativeAdEventListener
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.PrebidNativeAdEventListener
 
+/**
+ * native ad class that is provided for inflation on UI
+ * once the native ad is loaded
+ */
 class NativeInAppAd(private val prebidNativeAd: PrebidNativeAd) {
     fun registerView(view: View, listener: NativeAdEventListener): Boolean {
         return prebidNativeAd.registerView(

@@ -1,5 +1,6 @@
 package com.medianet.android.adsdk.utils
 
+
 object Constants {
     const val KEY_AD_RENDERED: String = "ad_rendered"
 

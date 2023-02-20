@@ -21,6 +21,9 @@ import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
+/**
+* repository class for fetching sdk config
+*/
 class ConfigRepoImpl(private val serverApiService: ServerApiService?, private val configDataStore: DataStore<StoredConfigs.StoredSdkConfig>): IConfigRepo {
 
     companion object {
@@ -41,7 +44,11 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
             Util.storedConfigToSdkConfig(it)
         }
 
-
+    /**
+     * fetches the last sdk config emitted by flow
+     * @param cid is the config id of publisher
+     * @return the sdk config data
+     */
     override suspend fun getSDKConfig(
         cid: String
     ): SdkConfiguration? {
@@ -52,6 +59,9 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
         return sdkConfigFlow
     }
 
+    /**
+     * clears sdk config stored in the datastore
+     */
     override suspend fun clearSdkConfig() {
         configDataStore.updateData { config ->
             config.toBuilder().apply {
@@ -60,6 +70,12 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
         }
     }
 
+
+    /**
+     * fetches config from server
+     * @param cid is the config id of publisher
+     * @param context specifies the context of application where MediaNetAdSdk has been integrated
+     */
     override suspend fun refreshSdkConfig(cid: String, context: Context) {
         val configParams = mapOf(
             KEY_CC to VALUE_US,
@@ -80,7 +96,7 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
         )
 
         if (serverConfigResult.isSuccess) {
-            CustomLogger.error(TAG, "config fetch from server is successful")
+            CustomLogger.debug(TAG, "config fetch from server is successful")
             serverConfigResult.successValue()?.let {
                 updateSdkConfig(it)
             }
@@ -92,6 +108,11 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
 
     }
 
+
+    /**
+     * updates the config in the data store
+     * @param serverConfig is the config response from server fetch
+     */
     private suspend fun updateSdkConfig(serverConfig: ConfigResponse) {
         CustomLogger.debug(TAG, "updating sdk config from server in datastore")
         val crIdMap = mutableMapOf<String, String>()

@@ -14,6 +14,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
+/**
+ * worker class to sync sdk config from server to datastore
+ * as per config cache expiry
+ */
 class SDKConfigSyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
     companion object {
@@ -24,6 +28,11 @@ class SDKConfigSyncWorker(context: Context, params: WorkerParameters) : Coroutin
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
+        /**
+         * schedules config fetch from server as per expiry time which is in seconds
+         * @param context specifies the context of application where MediaNetAdSdk has been integrated
+         * @param expiry is the time in seconds after which config fetch from server will be scheduled
+         */
         fun scheduleConfigFetch(context: Context, expiry: Long) {
             val sdkConfigSyncWorker = OneTimeWorkRequestBuilder<SDKConfigSyncWorker>()
                 .setConstraints(constraints)
@@ -39,6 +48,10 @@ class SDKConfigSyncWorker(context: Context, params: WorkerParameters) : Coroutin
             )
         }
 
+        /**
+         * cancels all works scheduled by the worker
+         * @param context specifies the context of application where MediaNetAdSdk has been integrated
+         */
         fun cancelSDKConfigSync(context: Context) {
             WorkManager.getInstance(context).cancelAllWorkByTag(WORKER_TAG)
         }
