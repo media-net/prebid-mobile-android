@@ -11,20 +11,22 @@ import org.prebid.mobile.PrebidNativeAdEventListener
  */
 class NativeInAppAd(private val prebidNativeAd: PrebidNativeAd) {
     fun registerView(view: View, listener: NativeAdEventListener): Boolean {
-        return prebidNativeAd.registerView(view, object : PrebidNativeAdEventListener{
-            override fun onAdClicked() {
-                listener.onAdClicked()
-            }
+        return prebidNativeAd.registerView(
+            view,
+            object : PrebidNativeAdEventListener {
+                override fun onAdClicked() {
+                    listener.onAdClicked()
+                }
 
-            override fun onAdImpression() {
-                listener.onAdImpression()
-            }
+                override fun onAdImpression() {
+                    listener.onAdImpression()
+                }
 
-            override fun onAdExpired() {
-                listener.onAdExpired()
+                override fun onAdExpired() {
+                    listener.onAdExpired()
+                }
             }
-
-        })
+        )
     }
 
     fun getIconUrl(): String = prebidNativeAd.iconUrl

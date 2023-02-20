@@ -5,7 +5,7 @@ import com.medianet.android.adsdk.nativead.NativeInAppAd
 /**
  * listener interface to listen to native ad events
  */
-interface NativeAdListener{
+interface NativeAdListener {
     /**
      * a successful native ad is returned
      *

@@ -1,7 +1,6 @@
 package com.medianet.android.adsdk
 
 import androidx.annotation.MainThread
-import org.prebid.mobile.ResultCode
 
 /**
  * listener interface to listen to bid request call result

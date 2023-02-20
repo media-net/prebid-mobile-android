@@ -33,6 +33,5 @@ interface AnalyticsEventDao {
     @Query("SELECT COUNT(*) FROM EventDBEntity")
     suspend fun getEventCount(): Long
 
-
-    //TODO - decide return of each operation
+    // TODO - decide return of each operation
 }

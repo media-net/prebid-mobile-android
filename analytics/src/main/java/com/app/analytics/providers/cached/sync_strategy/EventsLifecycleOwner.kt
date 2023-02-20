@@ -4,9 +4,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.LiveData
 
-class EventsLifecycleOwner: LifecycleOwner {
+class EventsLifecycleOwner : LifecycleOwner {
 
     private val mLifecycleRegistry = LifecycleRegistry(this)
 

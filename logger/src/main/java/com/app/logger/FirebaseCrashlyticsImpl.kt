@@ -24,5 +24,4 @@ class FirebaseCrashlyticsImpl : ICrashlytics {
     override fun setUserId(userId: String) {
         firBaseCrashlytics.setUserId(userId)
     }
-
 }

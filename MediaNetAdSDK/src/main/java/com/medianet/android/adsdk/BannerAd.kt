@@ -17,14 +17,13 @@ import org.prebid.mobile.addendum.PbFindSizeError
  * banner ad class for original type of loading where bid request call is made
  * and modified adRequest is returned to the user
  */
-class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerAdUnit("divid", adSize.width, adSize.height)) {
+class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER) : Ad(BannerAdUnit("divid", adSize.width, adSize.height)) {
 
     constructor(adUnitId: String, width: Int, height: Int) : this(adUnitId, AdSize(width, height))
 
     // TODO Pass adUnitId to BannerAdUnit once it is configured
     private val bannerAdUnit: BannerAdUnit = adUnit as BannerAdUnit
     override val adType: AdType = AdType.BANNER
-
 
     /**
      * allows us to add multiple sizes to the ad
@@ -54,7 +53,7 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerA
         adRequest: AdManagerAdRequest,
         listener: GamEventListener
     ) {
-        if(MediaNetAdSDK.isSdkOnVacation()){
+        if (MediaNetAdSDK.isSdkOnVacation()) {
             CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
             return
         }
@@ -62,14 +61,17 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerA
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 // Update ad view
-                AdViewUtils.findPrebidCreativeSize(adView, object : AdViewUtils.PbFindSizeListener {
-                    override fun success(width: Int, height: Int) {
-                        adView.setAdSizes(AdSize(width, height))
-                    }
+                AdViewUtils.findPrebidCreativeSize(
+                    adView,
+                    object : AdViewUtils.PbFindSizeListener {
+                        override fun success(width: Int, height: Int) {
+                            adView.setAdSizes(AdSize(width, height))
+                        }
 
-                    override fun failure(error: PbFindSizeError) {
+                        override fun failure(error: PbFindSizeError) {
+                        }
                     }
-                })
+                )
                 sendAdLoadedEvent()
                 listener.onAdLoaded()
             }
@@ -95,15 +97,18 @@ class BannerAd(adUnitId: String, val adSize: AdSize = AdSize.BANNER): Ad(BannerA
             }
         }
 
-        fetchDemand(adRequest, object : OnBidCompletionListener{
-            override fun onSuccess(keywordMap: Map<String, String>?) {
-                listener.onSuccess()
-                adView.loadAd(adRequest)
-            }
+        fetchDemand(
+            adRequest,
+            object : OnBidCompletionListener {
+                override fun onSuccess(keywordMap: Map<String, String>?) {
+                    listener.onSuccess()
+                    adView.loadAd(adRequest)
+                }
 
-            override fun onError(error: Error) {
-                listener.onAdFailedToLoad(error)
+                override fun onError(error: Error) {
+                    listener.onAdFailedToLoad(error)
+                }
             }
-        })
+        )
     }
 }

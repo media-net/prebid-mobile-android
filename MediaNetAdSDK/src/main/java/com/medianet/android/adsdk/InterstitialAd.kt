@@ -15,7 +15,7 @@ import org.prebid.mobile.InterstitialAdUnit
 /**
  * interstitial ad class for original type
  */
-class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-display-interstitial-320-480")) {
+class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit("imp-prebid-display-interstitial-320-480")) {
     // TODO Pass adUnitId to InterstitialAdUnit once it is configured
     private var mInterstitialAdUnit: InterstitialAdUnit = adUnit as InterstitialAdUnit
 
@@ -37,20 +37,23 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-di
         listener: GamEventListener
     ) {
 
-        if(MediaNetAdSDK.isSdkOnVacation()){
+        if (MediaNetAdSDK.isSdkOnVacation()) {
             CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
             return
         }
-        fetchDemand(adRequest, object : OnBidCompletionListener{
-            override fun onSuccess(keywordMap: Map<String, String>?) {
-                listener.onSuccess()
-                loadAd(context ,adUnitId, adRequest, listener)
-            }
+        fetchDemand(
+            adRequest,
+            object : OnBidCompletionListener {
+                override fun onSuccess(keywordMap: Map<String, String>?) {
+                    listener.onSuccess()
+                    loadAd(context, adUnitId, adRequest, listener)
+                }
 
-            override fun onError(error: Error) {
-                listener.onAdFailedToLoad(error)
+                override fun onError(error: Error) {
+                    listener.onAdFailedToLoad(error)
+                }
             }
-        })
+        )
     }
 
     /**
@@ -64,7 +67,8 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-di
         AdManagerInterstitialAd.load(
             context,
             adUnitId,
-            adRequest, object : AdManagerInterstitialAdLoadCallback() {
+            adRequest,
+            object : AdManagerInterstitialAdLoadCallback() {
                 override fun onAdLoaded(adManagerInterstitialAd: AdManagerInterstitialAd) {
                     super.onAdLoaded(adManagerInterstitialAd)
                     sendAdLoadedEvent()
@@ -75,6 +79,7 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit("imp-prebid-di
                     super.onAdFailedToLoad(error)
                     adLoadCallback.onAdFailedToLoad(Util.mapGamLoadAdErrorToError(error))
                 }
-            })
+            }
+        )
     }
 }

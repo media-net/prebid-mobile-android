@@ -6,10 +6,10 @@ import org.prebid.mobile.LogUtil
 /**
  * asset class for title text to be present in native bid response
  */
-data class TitleAsset (
+data class TitleAsset(
     var length: Int = 0,
     var titleExt: Any? = null,
-): NativeAdAsset(AssetType.TITLE) {
+) : NativeAdAsset(AssetType.TITLE) {
 
     override fun getJsonObject(): JSONObject {
         val result = JSONObject()

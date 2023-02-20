@@ -2,7 +2,7 @@ package com.medianet.android.adsdk
 
 sealed class Result
 
-sealed class Error(var errorCode: Int, var errorMessage: String): Result() {
+sealed class Error(var errorCode: Int, var errorMessage: String) : Result() {
 
     /**
      * The ad request failed due to empty account id
@@ -75,5 +75,3 @@ sealed class Error(var errorCode: Int, var errorMessage: String): Result() {
 
     object THIRD_PARTY : Error(148, "Third Party SDK")
 }
-
-

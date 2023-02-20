@@ -8,7 +8,7 @@ object Util {
         return (e is HttpException && e.code() in 401..451).not()
     }
 
-    fun isClientSideHttpErrorError(e:Exception): Boolean {
+    fun isClientSideHttpErrorError(e: Exception): Boolean {
         return e is HttpException && e.code() in 401..451
     }
 }

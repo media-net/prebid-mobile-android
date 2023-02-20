@@ -6,7 +6,7 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 
-class NetworkStateBroadcastReceiver(private val listener: NetworkWatcher.NetworkConnectionListener): BroadcastReceiver() {
+class NetworkStateBroadcastReceiver(private val listener: NetworkWatcher.NetworkConnectionListener) : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val connectivityManager: ConnectivityManager =

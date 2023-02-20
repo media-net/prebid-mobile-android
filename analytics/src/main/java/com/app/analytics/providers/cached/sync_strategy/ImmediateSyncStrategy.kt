@@ -18,13 +18,13 @@ import kotlinx.coroutines.launch
 class ImmediateSyncStrategy(
     var context: Context?,
     private val eventRepository: IAnalyticsEventRepository,
-    pushService: PushEventToServerService)
-    : EventSyncStrategy(pushService), NetworkWatcher.NetworkConnectionListener {
+    pushService: PushEventToServerService
+) :
+    EventSyncStrategy(pushService), NetworkWatcher.NetworkConnectionListener {
 
     companion object {
         private val TAG = ImmediateSyncStrategy::class.java.simpleName
         private const val SYNC_PAUSE_INTERVAL_MILLIS: Long = 15 * 60 * 1000L // 15 minutes.
-
     }
 
     private var topEventInDbLiveData: LiveData<EventDBEntity>? = null
@@ -46,7 +46,6 @@ class ImmediateSyncStrategy(
     private fun startListeningDbEvents() {
         eventLifecycleOwner.let { lifecycleOwner ->
             topEventInDbLiveData?.observe(lifecycleOwner, observer)
-
         }
         eventLifecycleOwner.startListening()
     }
@@ -63,7 +62,7 @@ class ImmediateSyncStrategy(
             if (result.isSuccess) {
                 CustomLogger.debug(TAG, "event synced to server successfully so deleting entry from DB - ${dbEntry.name}")
                 eventRepository.delete(dbEntry)
-            } else  {
+            } else {
                 val exception = result.errorValue()?.errorModel?.exception
                 exception?.let {
                     if (Util.isClientSideHttpErrorError(it)) {

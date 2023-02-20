@@ -3,7 +3,6 @@ package com.medianet.android.adsdk.events
 import com.app.analytics.Event
 import com.medianet.android.adsdk.LoggingEvents
 import com.medianet.android.adsdk.MAdSize
-import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.events.Constants.Keys.AD_SIZE
 import com.medianet.android.adsdk.events.Constants.Keys.AD_SIZES
 import com.medianet.android.adsdk.events.Constants.Keys.AP_LOG_ID
@@ -33,7 +32,7 @@ import com.medianet.android.adsdk.model.SdkConfiguration
  */
 object EventFactory {
 
-    private var sdkConfig: SdkConfiguration?  = null
+    private var sdkConfig: SdkConfiguration? = null
     private val commonParams = mutableMapOf<String, String>()
     private val projectEventParams = mutableMapOf<String, String>()
     private val opportunityEventParams = mutableMapOf<String, String>()
@@ -90,7 +89,7 @@ object EventFactory {
             }
         }
 
-        return Event (
+        return Event(
             name = eventName,
             type = eventType.type,
             params = params,

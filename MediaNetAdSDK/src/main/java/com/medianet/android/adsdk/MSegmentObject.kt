@@ -1,6 +1,6 @@
 package com.medianet.android.adsdk
 
-data class MSegmentObject (
+data class MSegmentObject(
     /**
      * ID of the data segment specific to the data provider.
      */

@@ -1,14 +1,13 @@
 package com.app.analytics.providers.defaults
 
-import com.app.analytics.PushEventToServerService
 import com.app.analytics.Event
+import com.app.analytics.PushEventToServerService
 import com.app.analytics.providers.AnalyticsProvider
 import com.app.analytics.utils.AnalyticsUtil.getDefaultAnalyticsPixel
 import com.app.analytics.utils.Constant
 import com.app.logger.CustomLogger
 import com.app.network.wrapper.safeApiCall
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class DefaultAnalyticsProvider(
@@ -31,15 +30,15 @@ class DefaultAnalyticsProvider(
     }
 
     private suspend fun pushEventToServer(pixel: DefaultAnalyticsPixel) = withContext(Dispatchers.IO) {
-            val result = safeApiCall(
-                apiCall = {
-                    pushService.pushAnalyticsEvent(pixel.pixel)
-                    CustomLogger.debug(TAG, "pushing pixel to server: $pixel")
-                },
-                successTransform = {
-                    it
-                }
-            )
+        val result = safeApiCall(
+            apiCall = {
+                pushService.pushAnalyticsEvent(pixel.pixel)
+                CustomLogger.debug(TAG, "pushing pixel to server: $pixel")
+            },
+            successTransform = {
+                it
+            }
+        )
         return@withContext (result.isSuccess)
     }
 

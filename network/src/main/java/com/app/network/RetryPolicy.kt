@@ -19,7 +19,7 @@ class RetryPolicy(
 
     fun shouldTry() = remainingTries > 0
 
-    fun getDelay():Long {
+    fun getDelay(): Long {
         return when (multiplier) {
             RetryMultiplier.CONSTANT -> delayInMillis
             RetryMultiplier.LINEAR -> delayInMillis * (maxTries - remainingTries)

@@ -1,7 +1,6 @@
 package com.app.analytics.providers.cached.db
 
 import androidx.lifecycle.LiveData
-import com.app.analytics.providers.cached.db.EventDBEntity
 
 interface IAnalyticsEventRepository {
     fun getFirstEvent(): LiveData<EventDBEntity>
@@ -13,5 +12,5 @@ interface IAnalyticsEventRepository {
     suspend fun delete(events: List<EventDBEntity>)
     suspend fun getCount(): Long
 
-    //TODO - decide return of each operation
+    // TODO - decide return of each operation
 }

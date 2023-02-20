@@ -2,11 +2,22 @@ package com.medianet.android.adsdk.utils
 
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
-import com.medianet.android.adsdk.*
-import com.medianet.android.adsdk.model.ConfigResponse
+import com.medianet.android.adsdk.AdType
+import com.medianet.android.adsdk.MAdSize
+import com.medianet.android.adsdk.MContentObject
+import com.medianet.android.adsdk.MDataObject
+import com.medianet.android.adsdk.MLogLevel
+import com.medianet.android.adsdk.MProducerObject
+import com.medianet.android.adsdk.MSegmentObject
 import com.medianet.android.adsdk.model.SdkConfiguration
 import com.medianet.android.adsdk.model.StoredConfigs.StoredSdkConfig
-import com.medianet.android.adsdk.nativead.*
+import com.medianet.android.adsdk.nativead.DataAsset
+import com.medianet.android.adsdk.nativead.EventTracker
+import com.medianet.android.adsdk.nativead.ImageAsset
+import com.medianet.android.adsdk.nativead.NativeAd
+import com.medianet.android.adsdk.nativead.NativeAdAsset
+import com.medianet.android.adsdk.nativead.TitleAsset
+import java.util.EnumSet
 import org.prebid.mobile.ContentObject
 import org.prebid.mobile.ContentObject.ProducerObject
 import org.prebid.mobile.DataObject
@@ -27,25 +38,23 @@ import org.prebid.mobile.PrebidMobile.LogLevel
 import org.prebid.mobile.ResultCode
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.exceptions.AdException
-import java.util.*
-import kotlin.collections.ArrayList
 
 object Util {
 
-    fun mapResultCodeToError(code: ResultCode): Error {
+    fun mapResultCodeToError(code: ResultCode): com.medianet.android.adsdk.Error {
         return when (code) {
-            ResultCode.INVALID_ACCOUNT_ID -> Error.INVALID_ACCOUNT_ID
-            ResultCode.INVALID_CONFIG_ID -> Error.INVALID_CONFIG_ID
-            ResultCode.INVALID_HOST_URL -> Error.INVALID_HOST_URL
-            ResultCode.INVALID_SIZE -> Error.INVALID_BANNER_SIZE
-            ResultCode.INVALID_CONTEXT -> Error.INVALID_CONTEXT
-            ResultCode.INVALID_AD_OBJECT -> Error.INVALID_AD_OBJECT
-            ResultCode.NETWORK_ERROR -> Error.NETWORK_ERROR
-            ResultCode.TIMEOUT -> Error.REQUEST_TIMEOUT
-            ResultCode.NO_BIDS -> Error.NO_BIDS
-            ResultCode.PREBID_SERVER_ERROR -> Error.PREBID_SERVER_ERROR
-            ResultCode.INVALID_NATIVE_REQUEST -> Error.INVALID_NATIVE_REQUEST
-            else -> Error.MISCELLANIOUS_ERROR
+            ResultCode.INVALID_ACCOUNT_ID -> com.medianet.android.adsdk.Error.INVALID_ACCOUNT_ID
+            ResultCode.INVALID_CONFIG_ID -> com.medianet.android.adsdk.Error.INVALID_CONFIG_ID
+            ResultCode.INVALID_HOST_URL -> com.medianet.android.adsdk.Error.INVALID_HOST_URL
+            ResultCode.INVALID_SIZE -> com.medianet.android.adsdk.Error.INVALID_BANNER_SIZE
+            ResultCode.INVALID_CONTEXT -> com.medianet.android.adsdk.Error.INVALID_CONTEXT
+            ResultCode.INVALID_AD_OBJECT -> com.medianet.android.adsdk.Error.INVALID_AD_OBJECT
+            ResultCode.NETWORK_ERROR -> com.medianet.android.adsdk.Error.NETWORK_ERROR
+            ResultCode.TIMEOUT -> com.medianet.android.adsdk.Error.REQUEST_TIMEOUT
+            ResultCode.NO_BIDS -> com.medianet.android.adsdk.Error.NO_BIDS
+            ResultCode.PREBID_SERVER_ERROR -> com.medianet.android.adsdk.Error.PREBID_SERVER_ERROR
+            ResultCode.INVALID_NATIVE_REQUEST -> com.medianet.android.adsdk.Error.INVALID_NATIVE_REQUEST
+            else -> com.medianet.android.adsdk.Error.MISCELLANIOUS_ERROR
         }
     }
 
@@ -129,14 +138,14 @@ object Util {
         return segmentObject
     }
 
-    fun mapGamLoadAdErrorToError(gamError: LoadAdError): Error {
-        return  Error.GAM_LOAD_AD_ERROR.apply {
+    fun mapGamLoadAdErrorToError(gamError: LoadAdError): com.medianet.android.adsdk.Error {
+        return com.medianet.android.adsdk.Error.GAM_LOAD_AD_ERROR.apply {
             errorCode = gamError.code
             errorMessage = gamError.message
         }
     }
 
-    //Rendering Interstitial Ad format
+    // Rendering Interstitial Ad format
     fun mapInterstitialAdFormat(enumSetOfAdFormat: EnumSet<AdType>): EnumSet<AdUnitFormat> {
         val enumSetOfAdUnitFormat = EnumSet.noneOf(AdUnitFormat::class.java)
         for (format in enumSetOfAdFormat) {
@@ -149,19 +158,19 @@ object Util {
         return enumSetOfAdUnitFormat
     }
 
-    //Ad Exception to Error class
-    fun mapAdExceptionToError(adException: AdException?): Error {
+    // Ad Exception to Error class
+    fun mapAdExceptionToError(adException: AdException?): com.medianet.android.adsdk.Error {
         return when (adException?.message) {
-            AdException.INIT_ERROR -> Error.INIT_ERROR
-            AdException.INVALID_REQUEST -> Error.INVALID_REQUEST
-            AdException.INTERNAL_ERROR -> Error.INTERNAL_ERROR
-            AdException.SERVER_ERROR -> Error.SERVER_ERROR
-            AdException.THIRD_PARTY -> Error.THIRD_PARTY
-            else -> Error.MISCELLANIOUS_ERROR
+            AdException.INIT_ERROR -> com.medianet.android.adsdk.Error.INIT_ERROR
+            AdException.INVALID_REQUEST -> com.medianet.android.adsdk.Error.INVALID_REQUEST
+            AdException.INTERNAL_ERROR -> com.medianet.android.adsdk.Error.INTERNAL_ERROR
+            AdException.SERVER_ERROR -> com.medianet.android.adsdk.Error.SERVER_ERROR
+            AdException.THIRD_PARTY -> com.medianet.android.adsdk.Error.THIRD_PARTY
+            else -> com.medianet.android.adsdk.Error.MISCELLANIOUS_ERROR
         }
     }
 
-    //To convert AdSize
+    // To convert AdSize
     fun getPrebidAdSizeFromGAMAdSize(adSize: AdSize): org.prebid.mobile.AdSize {
         return org.prebid.mobile.AdSize(adSize.width, adSize.height)
     }
@@ -186,7 +195,7 @@ object Util {
     }
 
     fun getPrebidContextSubType(contextSubType: NativeAd.ContextSubType): CONTEXTSUBTYPE {
-        return when(contextSubType) {
+        return when (contextSubType) {
             NativeAd.ContextSubType.ARTICLE -> CONTEXTSUBTYPE.ARTICAL
             NativeAd.ContextSubType.AUDIO -> CONTEXTSUBTYPE.AUDIO
             NativeAd.ContextSubType.APPLICATION_STORE -> CONTEXTSUBTYPE.APPLICATION_STORE
@@ -205,7 +214,7 @@ object Util {
     }
 
     fun getPrebidPlacementType(placementType: NativeAd.PlacementType): PLACEMENTTYPE {
-        return when(placementType) {
+        return when (placementType) {
             NativeAd.PlacementType.CUSTOM -> PLACEMENTTYPE.CUSTOM
             NativeAd.PlacementType.CONTENT_ATOMIC_UNIT -> PLACEMENTTYPE.CONTENT_ATOMIC_UNIT
             NativeAd.PlacementType.CONTENT_FEED -> PLACEMENTTYPE.CONTENT_FEED
@@ -216,7 +225,7 @@ object Util {
     }
 
     private fun getPrebidImageType(imageType: ImageAsset.ImageType): IMAGE_TYPE {
-        return when(imageType) {
+        return when (imageType) {
             ImageAsset.ImageType.ICON -> IMAGE_TYPE.ICON
             ImageAsset.ImageType.MAIN -> IMAGE_TYPE.MAIN
             ImageAsset.ImageType.CUSTOM -> IMAGE_TYPE.CUSTOM
@@ -225,7 +234,7 @@ object Util {
     }
 
     private fun getPrebidDataType(dataType: DataAsset.DataType): DATA_TYPE {
-        return when(dataType) {
+        return when (dataType) {
             DataAsset.DataType.DESC -> DATA_TYPE.DESC
             DataAsset.DataType.DESC2 -> DATA_TYPE.DESC2
             DataAsset.DataType.CTA_TEXT -> DATA_TYPE.CTATEXT
@@ -244,7 +253,7 @@ object Util {
     }
 
     private fun getPrebidEventType(eventType: EventTracker.EventType): EVENT_TYPE {
-        return when(eventType) {
+        return when (eventType) {
             EventTracker.EventType.CUSTOM -> EVENT_TYPE.CUSTOM
             EventTracker.EventType.IMPRESSION -> EVENT_TYPE.IMPRESSION
             EventTracker.EventType.VIEWABLE_MRC100 -> EVENT_TYPE.VIEWABLE_MRC100
@@ -263,7 +272,8 @@ object Util {
                     EventTracker.EventTrackingMethods.IMAGE -> EVENT_TRACKING_METHOD.IMAGE
                     EventTracker.EventTrackingMethods.JS -> EVENT_TRACKING_METHOD.JS
                     else -> EVENT_TRACKING_METHOD.CUSTOM
-            })
+                }
+            )
         }
         return methodsArray
     }
@@ -314,10 +324,9 @@ object Util {
         return headerValue?.split(",")?.find { it.contains("max-age") }?.split("=")?.get(1)?.trim()?.toLongOrNull()
     }
 
-
     fun calculateConfigExpiryTime(statusCode: Int?, headerValue: String?): Long {
         return parseConfigExpiryTime(headerValue) ?: when (statusCode) {
-            500 -> 300L //300 sec = 5 min
+            500 -> 300L // 300 sec = 5 min
             else -> 120L // 120 sec = 2 min (For error codes 502, 503, 504)
         }
     }

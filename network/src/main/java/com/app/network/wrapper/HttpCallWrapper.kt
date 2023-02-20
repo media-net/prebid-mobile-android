@@ -1,7 +1,11 @@
 package com.app.network.wrapper
 
 import com.app.logger.CustomLogger
-import com.app.network.*
+import com.app.network.Either
+import com.app.network.ErrorModel
+import com.app.network.Failure
+import com.app.network.IFailure
+import com.app.network.RetryPolicy
 import com.app.network.Util.shouldRetryHttpCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -82,4 +86,3 @@ suspend fun <T, X> safeApiCall(
         }
     }
 }
-

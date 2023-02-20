@@ -2,18 +2,22 @@ package com.medianet.android.adsdk.nativead
 
 import com.app.logger.CustomLogger
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
-import com.medianet.android.adsdk.*
+import com.medianet.android.adsdk.Ad
+import com.medianet.android.adsdk.AdType
+import com.medianet.android.adsdk.GamEventListener
+import com.medianet.android.adsdk.MediaNetAdSDK
+import com.medianet.android.adsdk.OnBidCompletionListener
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
 import com.medianet.android.adsdk.utils.Util
 import com.medianet.android.adsdk.utils.Util.getPrebidAssetFromNativeAdAsset
 import com.medianet.android.adsdk.utils.Util.getPrebidEventTracker
-import org.prebid.mobile.*
+import org.prebid.mobile.NativeAdUnit
 
 /**
  * native ad class for both original and rendering types of loading an ad
  */
-class NativeAd(adUnitId: String): Ad(NativeAdUnit("imp-prebid-banner-native-styles")) {
+class NativeAd(adUnitId: String) : Ad(NativeAdUnit("imp-prebid-banner-native-styles")) {
     // TODO Pass adUnitId to NativeAdUnit once it is configured
     private var mNativeAdUnit: NativeAdUnit = adUnit as NativeAdUnit
 
@@ -128,20 +132,22 @@ class NativeAd(adUnitId: String): Ad(NativeAdUnit("imp-prebid-banner-native-styl
         adRequest: AdManagerAdRequest,
         listener: GamEventListener
     ) {
-        if(MediaNetAdSDK.isSdkOnVacation()){
+        if (MediaNetAdSDK.isSdkOnVacation()) {
             CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
             return
         }
 
+        fetchDemand(
+            adRequest,
+            object : OnBidCompletionListener {
+                override fun onSuccess(keywordMap: Map<String, String>?) {
+                    listener.onSuccess()
+                }
 
-        fetchDemand(adRequest, object : OnBidCompletionListener {
-            override fun onSuccess(keywordMap: Map<String, String>?) {
-                listener.onSuccess()
+                override fun onError(error: com.medianet.android.adsdk.Error) {
+                    listener.onError(error)
+                }
             }
-
-            override fun onError(error: Error) {
-                listener.onError(error)
-            }
-        })
+        )
     }
 }

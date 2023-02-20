@@ -5,7 +5,11 @@ import com.app.analytics.providers.AnalyticsProvider
 import com.app.analytics.providers.AnalyticsProviderFactory
 import com.app.analytics.utils.NetworkWatcher
 import com.app.logger.CustomLogger
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
 
 object AnalyticsSDK {
 
@@ -27,7 +31,6 @@ object AnalyticsSDK {
             CustomLogger.debug(TAG, "Analytics SDK initialised")
         }
     }
-
 
     private fun addProviders(providers: List<AnalyticsProvider>) {
         config?.apply {
@@ -99,7 +102,6 @@ object AnalyticsSDK {
         this.config = config
         addProviders(customProviders)
     }
-
 
     class Configuration private constructor(
         val eventSamplingEnabled: Boolean,

@@ -2,14 +2,13 @@ package com.app.logger
 
 import com.app.logger.factory.CrashlyticsFactory
 
-
 object CrashlyticsHelper {
 
     fun initialize() {
         createCrashlyticsSources()
     }
 
-    //method to add multiple sources of CrashAnalytics
+    // method to add multiple sources of CrashAnalytics
     private fun createCrashlyticsSources() {
         CrashlyticsFactory.setUp()
         CrashlyticsFactory.addSource(FirebaseCrashlyticsImpl())
