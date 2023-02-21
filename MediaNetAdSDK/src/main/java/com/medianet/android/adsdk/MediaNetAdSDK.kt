@@ -10,10 +10,20 @@ import com.app.logger.CustomLogger
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.model.SdkConfiguration
 import com.medianet.android.adsdk.model.StoredConfigs
-import com.medianet.android.adsdk.network.*
+import com.medianet.android.adsdk.network.ApiConstants.CID
+import com.medianet.android.adsdk.network.ApiConstants.CONFIG_BASE_URL
+import com.medianet.android.adsdk.network.ConfigRepoImpl
+import com.medianet.android.adsdk.network.IConfigRepo
+import com.medianet.android.adsdk.network.NetworkComponentFactory
+import com.medianet.android.adsdk.network.SDKConfigSyncWorker
+import com.medianet.android.adsdk.network.ServerApiService
 import com.medianet.android.adsdk.utils.Util
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.prebid.mobile.Host
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidMobile
@@ -30,8 +40,6 @@ object MediaNetAdSDK {
     const val TAG = "MediaNetAdSDK"
     const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d"
     private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction"
-    private const val CONFIG_BASE_URL = "http://ems-adserving-stage-1.traefik.internal.media.net/"
-    private const val CID = "8CU5Z4D53" // Temp account Id for config call
     private var sdkOnVacation: Boolean = false
     private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private const val DATA_STORE_FILE_NAME = "sdk_config.pb"
