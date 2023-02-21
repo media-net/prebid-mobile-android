@@ -18,10 +18,10 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.ads.AdSize
-import com.medianet.android.adsdk.Error
+import com.medianet.android.adsdk.base.Error
 import com.medianet.android.adsdk.MediaNetAdSDK
-import com.medianet.android.adsdk.rendering.AdEventListener
-import com.medianet.android.adsdk.rendering.banner.BannerAd
+import com.medianet.android.adsdk.ad.rendering.AdEventListener
+import com.medianet.android.adsdk.ad.rendering.banner.BannerAd
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {

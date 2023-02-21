@@ -7,11 +7,17 @@ import com.app.analytics.AnalyticsSDK
 import com.app.analytics.SamplingMap
 import com.app.analytics.providers.AnalyticsProviderFactory
 import com.app.logger.CustomLogger
+import com.medianet.android.adsdk.base.MLogLevel
+import com.medianet.android.adsdk.base.listeners.MSdkInitListener
 import com.medianet.android.adsdk.events.EventManager
-import com.medianet.android.adsdk.model.SdkConfiguration
+import com.medianet.android.adsdk.events.LoggingEvents
+import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
 import com.medianet.android.adsdk.model.StoredConfigs
 import com.medianet.android.adsdk.network.*
-import com.medianet.android.adsdk.utils.Util
+import com.medianet.android.adsdk.network.repository.ConfigRepoImpl
+import com.medianet.android.adsdk.network.repository.IConfigRepo
+import com.medianet.android.adsdk.utils.ConfigSerializer
+import com.medianet.android.adsdk.utils.MapperUtils.mapLogLevelToPrebidLogLevel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
 import org.prebid.mobile.Host
@@ -47,7 +53,7 @@ object MediaNetAdSDK {
 
         override fun onSdkFailedToInit(error: InitError?) {
             CustomLogger.error(TAG, "SDK initialization error: " + error?.error)
-            val sdkInitError = Error.SDK_INIT_ERROR.apply {
+            val sdkInitError = com.medianet.android.adsdk.base.Error.SDK_INIT_ERROR.apply {
                 errorMessage = error?.error.toString()
             }
             publisherSdkInitListener?.onInitFailed(sdkInitError)
@@ -213,7 +219,7 @@ object MediaNetAdSDK {
 
     fun setLogLevel(level: MLogLevel) = apply {
         logLevel = level
-        PrebidMobile.setLogLevel(Util.mapLogLevelToPrebidLogLevel(level))
+        PrebidMobile.setLogLevel(level.mapLogLevelToPrebidLogLevel())
     }
 
     fun getLogLevel() = logLevel

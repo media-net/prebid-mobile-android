@@ -7,7 +7,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 /**
  * factory class for retrieving api service instances
  */
-object NetworkComponentFactory {
+internal object NetworkComponentFactory {
     private lateinit var serverApiService: ServerApiService
 
     private val retrofitParams: RetrofitParams = RetrofitParams().apply {

@@ -17,11 +17,11 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
 import android.util.Log
-import com.medianet.android.adsdk.rendering.interstitial.InterstitialAd
+import com.medianet.android.adsdk.ad.rendering.interstitial.InterstitialAd
 import com.medianet.android.adsdk.MediaNetAdSDK
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
-import com.medianet.android.adsdk.Error
-import com.medianet.android.adsdk.rendering.AdEventListener
+import com.medianet.android.adsdk.base.Error
+import com.medianet.android.adsdk.ad.rendering.AdEventListener
 
 class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
 

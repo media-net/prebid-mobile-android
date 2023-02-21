@@ -22,9 +22,9 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import com.medianet.android.adsdk.BannerAd
-import com.medianet.android.adsdk.Error
-import com.medianet.android.adsdk.GamEventListener
+import com.medianet.android.adsdk.ad.original.banner.BannerAd
+import com.medianet.android.adsdk.base.Error
+import com.medianet.android.adsdk.base.listeners.GamEventListener
 import com.medianet.android.adsdk.MediaNetAdSDK
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
@@ -104,7 +104,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
                 Log.e("Nikhil", "onSuccess")
             }
 
-            override fun onError(error: Error) {
+            override fun onError(error: com.medianet.android.adsdk.base.Error) {
                 Log.e(TAG, "Error: code: ${error.errorCode}, message: ${error.errorMessage}")
             }
 
