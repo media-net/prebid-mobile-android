@@ -9,17 +9,13 @@ import com.medianet.android.adsdk.BuildConfig
 import com.medianet.android.adsdk.model.ConfigResponse
 import com.medianet.android.adsdk.model.SdkConfiguration
 import com.medianet.android.adsdk.model.StoredConfigs
-import com.medianet.android.adsdk.utils.Constants.KEY_CC
 import com.medianet.android.adsdk.utils.Constants.KEY_DN
-import com.medianet.android.adsdk.utils.Constants.KEY_UGD
-import com.medianet.android.adsdk.utils.Constants.VALUE_MOBILE
-import com.medianet.android.adsdk.utils.Constants.VALUE_US
 import com.medianet.android.adsdk.utils.Util
+import java.io.IOException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
-import java.io.IOException
 
 /**
 * repository class for fetching sdk config
@@ -78,9 +74,7 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
      */
     override suspend fun refreshSdkConfig(cid: String, context: Context) {
         val configParams = mapOf(
-            KEY_CC to VALUE_US,
-            KEY_DN to BuildConfig.LIBRARY_PACKAGE_NAME,
-            KEY_UGD to VALUE_MOBILE
+            KEY_DN to BuildConfig.LIBRARY_PACKAGE_NAME
         )
         val serverConfigResult = safeApiCall(
             apiCall = {
