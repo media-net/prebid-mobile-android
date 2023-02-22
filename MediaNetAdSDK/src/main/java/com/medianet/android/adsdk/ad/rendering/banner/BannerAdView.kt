@@ -3,6 +3,7 @@ package com.medianet.android.adsdk.ad.rendering.banner
 import android.content.Context
 import android.widget.FrameLayout
 import com.app.logger.CustomLogger
+import com.medianet.android.adsdk.MAdSize
 import com.google.android.gms.ads.AdSize
 import com.medianet.android.adsdk.model.banner.ContentModel
 import com.medianet.android.adsdk.MediaNetAdSDK
@@ -23,11 +24,11 @@ import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 /**
  * banner ad class for rendering type
  */
-class BannerAdView(context: Context, val adUnitId: String, adSize: AdSize) {
+class BannerAdView(context: Context, val adUnitId: String, adSize: MAdSize) {
 
-    constructor(context: Context, adUnitId: String, width: Int, height: Int) : this(context, adUnitId, AdSize(width, height))
+    constructor(context: Context, adUnitId: String, width: Int, height: Int) : this(context, adUnitId, MAdSize(width, height))
 
-    private val bannerEventHandler = GamBannerEventHandler(context, adUnitId, adSize.getPrebidAdSizeFromGAMAdSize())
+    private val bannerEventHandler = GamBannerEventHandler(context, adUnitId, adSize.getPrebidAdSizeFromMediaNetAdSize())
 
     private val bannerView = BannerView(context, adUnitId, bannerEventHandler, object : MediaEventListener{
         override fun onBidRequest() {
@@ -137,4 +138,27 @@ class BannerAdView(context: Context, val adUnitId: String, adSize: AdSize) {
         bannerView.stopRefresh()
     }
 
+    /**
+     * allows us to add multiple sizes to the ad
+     * @param size specifies the size for ad slot through AdSize object
+     */
+    fun addAdditionalSize(size: MAdSize) = apply {
+        bannerView.addAdditionalSizes(getPrebidAdSizeFromMediaNetAdSize(size))
+    }
+
+    /**
+     * allows us to add multiple sizes to the ad
+     * @param width specifies the width for ad slot
+     * @param height specifies the height for ad slot
+     */
+    fun addAdditionalSize(width: Int, height: Int) = apply {
+        bannerView.addAdditionalSizes(org.prebid.mobile.AdSize(width, height))
+    }
+
+    /**
+     * Returns a list all the additional ad sizes
+     */
+    fun getAdditionalAdSizes(): List<MAdSize> {
+        return Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
+    }
 }

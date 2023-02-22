@@ -34,7 +34,7 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-banner-320-50"
         const val WIDTH = 320
         const val HEIGHT = 50
-        val TAG = GamOriginalApiDisplayBanner320x50Activity::class.java.name
+        const val TAG = "GamOriginalApiDisplayBanner320x50Activity"
     }
 
     private var adUnit: BannerAd? = null

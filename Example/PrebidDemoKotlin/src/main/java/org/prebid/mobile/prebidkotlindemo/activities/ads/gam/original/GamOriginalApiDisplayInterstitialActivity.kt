@@ -31,6 +31,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-display-interstitial"
         const val CONFIG_ID = "imp-prebid-display-interstitial-320-480"
         const val STORED_RESPONSE = "response-prebid-display-interstitial-320-480"
+        const val TAG = "GamOriginalApiDisplayInterstitialActivity"
     }
 
     private var adUnit: InterstitialAd? = null
@@ -54,14 +55,14 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         adUnit?.fetchDemandAndLoad(this, request, listener = object : GamEventListener {
 
             override fun onInterstitialAdLoaded(ad: AdManagerInterstitialAd) {
-                Log.e("Nikhil", "$ad with id: ${ad.adUnitId} loaded")
+                Log.e(TAG, "$ad with id: ${ad.adUnitId} loaded")
             }
             override fun onSuccess(keywordMap: Map<String, String>?) {
-                Log.e("Nikhil", "bid request successful")
+                Log.e(TAG, "bid request successful")
             }
 
             override fun onError(error: Error) {
-                Log.e("Nikhil", error.errorMessage)
+                Log.e(TAG, error.errorMessage)
             }
         })
 

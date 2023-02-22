@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import com.app.logger.CustomLogger
 import com.medianet.android.adsdk.base.AdType
+import com.medianet.android.adsdk.MAdSize
 import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.ad.rendering.AdEventListener
@@ -105,8 +106,8 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
      * that in turn will be sent in the request for bid request call
      * @param minSizePercentage
      */
-    fun setMinSizePercentage(minSizePercentage: AdSize?) {
-        mInterstitialAdUnit.setMinSizePercentage(minSizePercentage)
+    fun setMinSizePercentage(minSizePercentage: MAdSize) {
+        mInterstitialAdUnit.setMinSizePercentage(Util.getPrebidAdSizeFromMediaNetAdSize(minSizePercentage))
     }
 
     /**

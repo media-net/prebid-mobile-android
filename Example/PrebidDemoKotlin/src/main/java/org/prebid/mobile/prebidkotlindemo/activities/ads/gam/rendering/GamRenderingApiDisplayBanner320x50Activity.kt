@@ -17,8 +17,8 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
 import android.util.Log
-import com.google.android.gms.ads.AdSize
 import com.medianet.android.adsdk.base.Error
+import com.medianet.android.adsdk.MAdSize
 import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.ad.rendering.AdEventListener
 import com.medianet.android.adsdk.ad.rendering.banner.BannerAdView
@@ -32,6 +32,7 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-banner-320-50"
         const val WIDTH = 320
         const val HEIGHT = 50
+        const val TAG = "GamRenderingApiDisplayBanner320x50Activity"
     }
 
     private var bannerAdView: BannerAdView? = null
@@ -47,27 +48,27 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val bannerAdView = BannerAdView(this, AD_UNIT_ID, AdSize.BANNER)
+        val bannerAdView = BannerAdView(this, AD_UNIT_ID, MAdSize(WIDTH, HEIGHT))
             .setAutoRefreshInterval(refreshTimeSeconds)
             .setBannerAdListener(object : AdEventListener {
                 override fun onAdClicked() {
-                    Log.d("Tushar", "onAdClicked")
+                    Log.d(TAG, "onAdClicked")
                 }
 
                 override fun onAdClosed() {
-                    Log.d("Tushar", "onAdClosed")
+                    Log.d(TAG, "onAdClosed")
                 }
 
                 override fun onAdDisplayed() {
-                    Log.d("Tushar", "onAdDisplayed")
+                    Log.d(TAG, "onAdDisplayed")
                 }
 
                 override fun onAdFailed(error: Error) {
-                    Log.d("Tushar", "onAdFailed code ${error.errorCode} message ${error.errorMessage}")
+                    Log.d(TAG, "onAdFailed code ${error.errorCode} message ${error.errorMessage}")
                 }
 
                 override fun onAdLoaded() {
-                    Log.d("Tushar", "onAdLoaded")
+                    Log.d(TAG, "onAdLoaded")
                 }
 
             })
