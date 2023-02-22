@@ -104,7 +104,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
                 Log.e("Nikhil", "onSuccess")
             }
 
-            override fun onError(error: com.medianet.android.adsdk.base.Error) {
+            override fun onError(error: Error) {
                 Log.e(TAG, "Error: code: ${error.errorCode}, message: ${error.errorMessage}")
             }
 
