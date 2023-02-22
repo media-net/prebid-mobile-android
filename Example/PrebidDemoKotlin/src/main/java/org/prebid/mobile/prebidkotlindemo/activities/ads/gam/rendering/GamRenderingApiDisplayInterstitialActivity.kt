@@ -29,6 +29,7 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
         const val AD_UNIT_ID = "/21808260008/prebid_oxb_html_interstitial"
         const val CONFIG_ID = "imp-prebid-display-interstitial-320-480"
         const val STORED_RESPONSE = "response-prebid-display-interstitial-320-480"
+        const val TAG = "GamRenderingApiDisplayInterstitialActivity"
     }
 
     private var adUnit: InterstitialAd? = null
@@ -47,24 +48,24 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
         adUnit = InterstitialAd(this, AD_UNIT_ID)
         adUnit?.setInterstitialAdListener(object: AdEventListener {
             override fun onAdLoaded() {
-                Log.d("Tushar", "onAdLoaded")
+                Log.d(TAG, "onAdLoaded")
                 adUnit?.show()
             }
 
             override fun onAdClicked() {
-                Log.d("Tushar", "onAdClicked")
+                Log.d(TAG, "onAdClicked")
             }
 
             override fun onAdClosed() {
-                Log.d("Tushar", "onAdClosed")
+                Log.d(TAG, "onAdClosed")
             }
 
             override fun onAdDisplayed() {
-                Log.d("Tushar", "onAdDisplayed")
+                Log.d(TAG, "onAdDisplayed")
             }
 
             override fun onAdFailed(error: Error) {
-                Log.d("Tushar", "onAdFailed code ${error.errorCode} message ${error.errorMessage}")
+                Log.d(TAG, "onAdFailed code ${error.errorCode} message ${error.errorMessage}")
             }
 
         })

@@ -4,14 +4,15 @@ import android.app.Activity
 import android.content.Context
 import com.app.logger.CustomLogger
 import com.medianet.android.adsdk.AdType
+import com.medianet.android.adsdk.MAdSize
 import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.rendering.AdEventListener
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
+import com.medianet.android.adsdk.utils.Util
 import com.medianet.android.adsdk.utils.Util.mapAdExceptionToError
 import com.medianet.android.adsdk.utils.Util.mapInterstitialAdFormat
-import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
@@ -104,8 +105,8 @@ class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: Enum
      * that in turn will be sent in the request for bid request call
      * @param minSizePercentage
      */
-    fun setMinSizePercentage(minSizePercentage: AdSize?) {
-        mInterstitialAdUnit.setMinSizePercentage(minSizePercentage)
+    fun setMinSizePercentage(minSizePercentage: MAdSize) {
+        mInterstitialAdUnit.setMinSizePercentage(Util.getPrebidAdSizeFromMediaNetAdSize(minSizePercentage))
     }
 
     /**

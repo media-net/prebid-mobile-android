@@ -174,6 +174,10 @@ object Util {
         }.toList()
     }
 
+    fun getPrebidAdSizeFromMediaNetAdSize(adSize: MAdSize): org.prebid.mobile.AdSize {
+        return org.prebid.mobile.AdSize(adSize.width, adSize.height)
+    }
+
     /* Native Ads */
     fun getPrebidContextType(contextType: NativeAd.ContextType): CONTEXT_TYPE {
         return when (contextType) {
