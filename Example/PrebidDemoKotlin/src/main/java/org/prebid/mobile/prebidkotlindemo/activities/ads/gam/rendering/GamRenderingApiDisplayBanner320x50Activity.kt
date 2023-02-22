@@ -18,7 +18,7 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 import android.os.Bundle
 import android.util.Log
 import com.medianet.android.adsdk.base.Error
-import com.medianet.android.adsdk.MAdSize
+import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.ad.rendering.AdEventListener
 import com.medianet.android.adsdk.ad.rendering.banner.BannerAdView

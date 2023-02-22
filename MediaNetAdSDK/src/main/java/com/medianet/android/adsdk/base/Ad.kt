@@ -4,7 +4,7 @@ import androidx.annotation.IntRange
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
 import com.medianet.android.adsdk.events.EventManager
-import com.medianet.android.adsdk.utils.MapperUtils
+import com.medianet.android.adsdk.utils.MapperUtils.mapAdSizesToMAdSizes
 import com.medianet.android.adsdk.utils.MapperUtils.mapResultCodeToError
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.PrebidMobile
@@ -25,21 +25,21 @@ abstract class Ad(val adUnit: AdUnit) {
         override fun onBidRequest() {
             EventManager.sendBidRequestEvent(
                 dfpDivId = adUnit.configuration.configId,
-                sizes = MapperUtils.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+                sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes()
             )
         }
 
         override fun onBidRequestTimeout() {
             EventManager.sendTimeoutEvent(
                 dfpDivId = adUnit.configuration.configId,
-                sizes = MapperUtils.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+                sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes()
             )
         }
 
         override fun onRequestSentToGam() {
             EventManager.sendAdRequestToGamEvent(
                 dfpDivId = adUnit.configuration.configId,
-                sizes = MapperUtils.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+                sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes()
             )
         }
 
@@ -106,7 +106,7 @@ abstract class Ad(val adUnit: AdUnit) {
     fun sendAdLoadedEvent() {
         EventManager.sendAdLoadedEvent(
             dfpDivId = adUnit.configuration.configId,
-            sizes = MapperUtils.mapAdSizesToMAdSizes(adUnit.configuration.sizes)
+            sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes()
         )
     }
 

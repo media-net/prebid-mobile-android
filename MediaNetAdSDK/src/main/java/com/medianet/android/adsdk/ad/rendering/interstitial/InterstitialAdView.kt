@@ -4,15 +4,15 @@ import android.app.Activity
 import android.content.Context
 import com.app.logger.CustomLogger
 import com.medianet.android.adsdk.base.AdType
-import com.medianet.android.adsdk.MAdSize
+import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.ad.rendering.AdEventListener
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
+import com.medianet.android.adsdk.utils.MapperUtils.getPrebidAdSizeFromMediaNetAdSize
 import com.medianet.android.adsdk.utils.MapperUtils.mapAdExceptionToError
 import com.medianet.android.adsdk.utils.MapperUtils.mapInterstitialAdFormat
-import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
@@ -107,7 +107,7 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
      * @param minSizePercentage
      */
     fun setMinSizePercentage(minSizePercentage: MAdSize) {
-        mInterstitialAdUnit.setMinSizePercentage(Util.getPrebidAdSizeFromMediaNetAdSize(minSizePercentage))
+        mInterstitialAdUnit.setMinSizePercentage(minSizePercentage.getPrebidAdSizeFromMediaNetAdSize())
     }
 
     /**

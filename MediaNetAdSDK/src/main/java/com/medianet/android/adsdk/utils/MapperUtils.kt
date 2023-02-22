@@ -154,15 +154,15 @@ object MapperUtils {
     }
 
     //To convert AdSize
-    fun AdSize.getPrebidAdSizeFromGAMAdSize(): org.prebid.mobile.AdSize {
+    fun MAdSize.getPrebidAdSizeFromMediaNetAdSize(): org.prebid.mobile.AdSize {
         return org.prebid.mobile.AdSize(width, height)
     }
 
     private fun mapAdSizeToMAdSize(size: org.prebid.mobile.AdSize) =
         MAdSize(height = size.height, width = size.width)
 
-    fun mapAdSizesToMAdSizes(adSizes: HashSet<org.prebid.mobile.AdSize>): List<MAdSize> {
-        return adSizes.map {
+    fun HashSet<org.prebid.mobile.AdSize>.mapAdSizesToMAdSizes(): List<MAdSize> {
+        return this.map {
             mapAdSizeToMAdSize(it)
         }.toList()
     }

@@ -3,17 +3,16 @@ package com.medianet.android.adsdk.ad.rendering.banner
 import android.content.Context
 import android.widget.FrameLayout
 import com.app.logger.CustomLogger
-import com.medianet.android.adsdk.MAdSize
-import com.google.android.gms.ads.AdSize
 import com.medianet.android.adsdk.model.banner.ContentModel
 import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.ad.rendering.AdEventListener
+import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
-import com.medianet.android.adsdk.utils.MapperUtils
-import com.medianet.android.adsdk.utils.MapperUtils.getPrebidAdSizeFromGAMAdSize
+import com.medianet.android.adsdk.utils.MapperUtils.getPrebidAdSizeFromMediaNetAdSize
 import com.medianet.android.adsdk.utils.MapperUtils.mapAdExceptionToError
+import com.medianet.android.adsdk.utils.MapperUtils.mapAdSizesToMAdSizes
 import com.medianet.android.adsdk.utils.MapperUtils.mapContentModelToContentObject
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
@@ -34,28 +33,28 @@ class BannerAdView(context: Context, val adUnitId: String, adSize: MAdSize) {
         override fun onBidRequest() {
             EventManager.sendBidRequestEvent(
                 dfpDivId = adUnitId,
-                sizes = MapperUtils.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+                sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes()
             )
         }
 
         override fun onBidRequestTimeout() {
             EventManager.sendTimeoutEvent(
                 dfpDivId = adUnitId,
-                sizes = MapperUtils.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+                sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes()
             )
         }
 
         override fun onRequestSentToGam() {
             EventManager.sendAdRequestToGamEvent(
                 dfpDivId = adUnitId,
-                sizes = MapperUtils.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+                sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes()
             )
         }
 
         override fun onAdLoaded() {
             EventManager.sendAdLoadedEvent(
                 dfpDivId = adUnitId,
-                sizes = MapperUtils.mapAdSizesToMAdSizes(bannerEventHandler.adSizeArray.toHashSet())
+                sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes()
             )
         }
     })
@@ -143,7 +142,7 @@ class BannerAdView(context: Context, val adUnitId: String, adSize: MAdSize) {
      * @param size specifies the size for ad slot through AdSize object
      */
     fun addAdditionalSize(size: MAdSize) = apply {
-        bannerView.addAdditionalSizes(getPrebidAdSizeFromMediaNetAdSize(size))
+        bannerView.addAdditionalSizes(size.getPrebidAdSizeFromMediaNetAdSize())
     }
 
     /**
@@ -159,6 +158,6 @@ class BannerAdView(context: Context, val adUnitId: String, adSize: MAdSize) {
      * Returns a list all the additional ad sizes
      */
     fun getAdditionalAdSizes(): List<MAdSize> {
-        return Util.mapAdSizesToMAdSizes(bannerView.additionalSizes.toHashSet())
+        return bannerView.additionalSizes.toHashSet().mapAdSizesToMAdSizes()
     }
 }
