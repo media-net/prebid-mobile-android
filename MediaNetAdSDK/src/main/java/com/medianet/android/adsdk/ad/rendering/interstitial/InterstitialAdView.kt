@@ -22,7 +22,7 @@ import java.util.*
 /**
  * interstitial ad class for rendering type
  */
-class InterstitialAd(context: Context, val adUnitId: String, adUnitFormats: EnumSet<AdType>) {
+class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: EnumSet<AdType>) {
 
     constructor(context: Context, adUnitId: String): this(context, adUnitId, EnumSet.of(
         AdType.DISPLAY))

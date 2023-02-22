@@ -21,7 +21,7 @@ import com.google.android.gms.ads.AdSize
 import com.medianet.android.adsdk.base.Error
 import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.ad.rendering.AdEventListener
-import com.medianet.android.adsdk.ad.rendering.banner.BannerAd
+import com.medianet.android.adsdk.ad.rendering.banner.BannerAdView
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
@@ -34,7 +34,7 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
         const val HEIGHT = 50
     }
 
-    private var bannerAd: BannerAd? = null
+    private var bannerAdView: BannerAdView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +47,7 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val bannerAd = BannerAd(this, AD_UNIT_ID, AdSize.BANNER)
+        val bannerAdView = BannerAdView(this, AD_UNIT_ID, AdSize.BANNER)
             .setAutoRefreshInterval(refreshTimeSeconds)
             .setBannerAdListener(object : AdEventListener {
                 override fun onAdClicked() {
@@ -71,14 +71,14 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
                 }
 
             })
-        adWrapperView.addView(bannerAd.getView())
-        bannerAd.loadAd()
+        adWrapperView.addView(bannerAdView.getView())
+        bannerAdView.loadAd()
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        bannerAd?.destroy()
+        bannerAdView?.destroy()
     }
 
 }

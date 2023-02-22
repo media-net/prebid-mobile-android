@@ -23,7 +23,7 @@ import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 /**
  * banner ad class for rendering type
  */
-class BannerAd(context: Context, val adUnitId: String, adSize: AdSize) {
+class BannerAdView(context: Context, val adUnitId: String, adSize: AdSize) {
 
     constructor(context: Context, adUnitId: String, width: Int, height: Int) : this(context, adUnitId, AdSize(width, height))
 

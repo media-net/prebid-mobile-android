@@ -41,7 +41,7 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener
  */
 object MediaNetAdSDK {
 
-    const val TAG = "MediaNetAdSDK"
+    private const val TAG = "MediaNetAdSDK"
     const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d"
     private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction"
     private var sdkOnVacation: Boolean = false

@@ -17,7 +17,7 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
 import android.util.Log
-import com.medianet.android.adsdk.ad.rendering.interstitial.InterstitialAd
+import com.medianet.android.adsdk.ad.rendering.interstitial.InterstitialAdView
 import com.medianet.android.adsdk.MediaNetAdSDK
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 import com.medianet.android.adsdk.base.Error
@@ -31,7 +31,7 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-display-interstitial-320-480"
     }
 
-    private var adUnit: InterstitialAd? = null
+    private var adUnit: InterstitialAdView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,7 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
     }
 
    private fun createAd() {
-        adUnit = InterstitialAd(this, AD_UNIT_ID)
+        adUnit = InterstitialAdView(this, AD_UNIT_ID)
         adUnit?.setInterstitialAdListener(object: AdEventListener {
             override fun onAdLoaded() {
                 Log.d("Tushar", "onAdLoaded")
