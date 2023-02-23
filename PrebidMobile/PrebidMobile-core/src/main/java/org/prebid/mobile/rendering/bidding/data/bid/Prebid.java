@@ -41,6 +41,7 @@ public class Prebid {
     private String type;
     private String winEventUrl;
     private String impEventUrl;
+    private Boolean isOriginal;
 
     protected Prebid() {
     }
@@ -113,9 +114,12 @@ public class Prebid {
             Utils.addValue(cache, "vastxml", new JSONObject());
         }
 
+        boolean isCacheEnabled = false;
         if (PrebidMobile.isUseCacheForReportingWithRenderingApi() || isOriginalAdUnit) {
             Utils.addValue(prebid, "cache", cache);
+            isCacheEnabled = true;
         }
+        Utils.addValue(prebid, "isCacheEnabled", isCacheEnabled);
         Utils.addValue(prebid, "targeting", new JSONObject());
 
         if (!TargetingParams.getAccessControlList().isEmpty()) {
