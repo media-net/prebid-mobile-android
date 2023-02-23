@@ -1,19 +1,17 @@
 package com.medianet.android.adsdk.events
 
 import com.app.analytics.AnalyticsSDK
-import com.medianet.android.adsdk.LoggingEvents
-import com.medianet.android.adsdk.MAdSize
-import com.medianet.android.adsdk.MediaNetAdSDK
+import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.events.Constants.EventName.AD_LOADED
 import com.medianet.android.adsdk.events.Constants.EventName.AD_REQUEST_TO_GAM
 import com.medianet.android.adsdk.events.Constants.EventName.BID_REQUEST
 import com.medianet.android.adsdk.events.Constants.EventName.TIME_OUT
-import com.medianet.android.adsdk.model.SdkConfiguration
+import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
 
 /**
  * manager class that handles events transmission to analytics sdk
  */
-object EventManager {
+internal object EventManager {
 
     fun init(config: SdkConfiguration) {
         EventFactory.updateConfiguration(config)

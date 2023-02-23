@@ -16,9 +16,20 @@ import com.google.android.gms.ads.nativead.NativeCustomFormatAd
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd.OnCustomFormatAdLoadedListener
 import com.medianet.android.adsdk.*
-import com.medianet.android.adsdk.nativead.*
+import com.medianet.android.adsdk.ad.nativead.EventTracker
+import com.medianet.android.adsdk.ad.nativead.NativeAd
+import com.medianet.android.adsdk.ad.nativead.NativeInAppAd
+import com.medianet.android.adsdk.base.listeners.GamEventListener
+import com.medianet.android.adsdk.ad.nativead.assets.DataAsset
+import com.medianet.android.adsdk.ad.nativead.assets.ImageAsset
+import com.medianet.android.adsdk.ad.nativead.assets.TitleAsset
+import com.medianet.android.adsdk.ad.nativead.listeners.NativeAdEventListener
+import com.medianet.android.adsdk.ad.nativead.listeners.NativeAdListener
+import com.medianet.android.adsdk.utils.ImageUtil
+import com.medianet.android.adsdk.utils.MAdViewUtils
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 import org.prebid.mobile.prebidkotlindemo.R
+import com.medianet.android.adsdk.base.Error
 
 class GamRenderingApiNativeActivity : BaseAdActivity() {
 

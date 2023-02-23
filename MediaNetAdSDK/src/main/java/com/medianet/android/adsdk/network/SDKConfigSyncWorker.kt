@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
  * worker class to sync sdk config from server to datastore
  * as per config cache expiry
  */
-class SDKConfigSyncWorker(context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
+internal class SDKConfigSyncWorker(context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
 
     companion object {
         private const val WORKER_TAG = "CONFIG_SYNC_WORKER_TAG"

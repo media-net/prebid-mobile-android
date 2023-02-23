@@ -1,6 +1,6 @@
 package com.medianet.android.adsdk.events
 
-object Constants {
+internal object Constants {
 
     object EventName {
         const val TIME_OUT = "CLIENT_SIDE_TIME_OUT" //PE

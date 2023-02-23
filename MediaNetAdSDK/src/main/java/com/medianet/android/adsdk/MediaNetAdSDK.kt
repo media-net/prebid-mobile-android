@@ -7,21 +7,25 @@ import com.app.analytics.AnalyticsSDK
 import com.app.analytics.SamplingMap
 import com.app.analytics.providers.AnalyticsProviderFactory
 import com.app.logger.CustomLogger
+import com.medianet.android.adsdk.base.MLogLevel
+import com.medianet.android.adsdk.base.listeners.MSdkInitListener
 import com.medianet.android.adsdk.events.EventManager
-import com.medianet.android.adsdk.model.SdkConfiguration
+import com.medianet.android.adsdk.events.LoggingEvents
+import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
 import com.medianet.android.adsdk.model.StoredConfigs
 import com.medianet.android.adsdk.network.ApiConstants.CID
 import com.medianet.android.adsdk.network.ApiConstants.CONFIG_BASE_URL
-import com.medianet.android.adsdk.network.ConfigRepoImpl
-import com.medianet.android.adsdk.network.IConfigRepo
 import com.medianet.android.adsdk.network.NetworkComponentFactory
 import com.medianet.android.adsdk.network.SDKConfigSyncWorker
 import com.medianet.android.adsdk.network.ServerApiService
-import com.medianet.android.adsdk.utils.Util
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
+import com.medianet.android.adsdk.network.repository.ConfigRepoImpl
+import com.medianet.android.adsdk.network.repository.IConfigRepo
+import com.medianet.android.adsdk.utils.ConfigSerializer
+import com.medianet.android.adsdk.utils.MapperUtils.mapLogLevelToPrebidLogLevel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.prebid.mobile.Host
@@ -37,7 +41,7 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener
  */
 object MediaNetAdSDK {
 
-    const val TAG = "MediaNetAdSDK"
+    private const val TAG = "MediaNetAdSDK"
     const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d"
     private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction"
     private var sdkOnVacation: Boolean = false
@@ -55,7 +59,7 @@ object MediaNetAdSDK {
 
         override fun onSdkFailedToInit(error: InitError?) {
             CustomLogger.error(TAG, "SDK initialization error: " + error?.error)
-            val sdkInitError = Error.SDK_INIT_ERROR.apply {
+            val sdkInitError = com.medianet.android.adsdk.base.Error.SDK_INIT_ERROR.apply {
                 errorMessage = error?.error.toString()
             }
             publisherSdkInitListener?.onInitFailed(sdkInitError)
@@ -221,7 +225,7 @@ object MediaNetAdSDK {
 
     fun setLogLevel(level: MLogLevel) = apply {
         logLevel = level
-        PrebidMobile.setLogLevel(Util.mapLogLevelToPrebidLogLevel(level))
+        PrebidMobile.setLogLevel(level.mapLogLevelToPrebidLogLevel())
     }
 
     fun getLogLevel() = logLevel

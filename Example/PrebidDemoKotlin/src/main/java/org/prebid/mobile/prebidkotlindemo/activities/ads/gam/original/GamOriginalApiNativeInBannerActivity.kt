@@ -5,10 +5,14 @@ import android.util.Log
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import com.medianet.android.adsdk.Error
-import com.medianet.android.adsdk.GamEventListener
+import com.medianet.android.adsdk.base.Error
+import com.medianet.android.adsdk.base.listeners.GamEventListener
 import com.medianet.android.adsdk.MediaNetAdSDK
-import com.medianet.android.adsdk.nativead.*
+import com.medianet.android.adsdk.ad.nativead.EventTracker
+import com.medianet.android.adsdk.ad.nativead.NativeAd
+import com.medianet.android.adsdk.ad.nativead.assets.DataAsset
+import com.medianet.android.adsdk.ad.nativead.assets.ImageAsset
+import com.medianet.android.adsdk.ad.nativead.assets.TitleAsset
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {

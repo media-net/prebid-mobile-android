@@ -1,9 +1,7 @@
 package com.medianet.android.adsdk.events
 
 import com.app.analytics.Event
-import com.medianet.android.adsdk.LoggingEvents
-import com.medianet.android.adsdk.MAdSize
-import com.medianet.android.adsdk.MediaNetAdSDK
+import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.events.Constants.Keys.AD_SIZE
 import com.medianet.android.adsdk.events.Constants.Keys.AD_SIZES
 import com.medianet.android.adsdk.events.Constants.Keys.AP_LOG_ID
@@ -26,12 +24,12 @@ import com.medianet.android.adsdk.events.Constants.Keys.PROJECT_TYPE
 import com.medianet.android.adsdk.events.Constants.Keys.SDK_VERSION
 import com.medianet.android.adsdk.events.Constants.Keys.TO_CONSIDER
 import com.medianet.android.adsdk.events.Constants.Keys.UGD
-import com.medianet.android.adsdk.model.SdkConfiguration
+import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
 
 /**
  * factory class to create different types of events
  */
-object EventFactory {
+internal object EventFactory {
 
     private var sdkConfig: SdkConfiguration?  = null
     private val commonParams = mutableMapOf<String, String>()

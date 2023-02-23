@@ -19,10 +19,10 @@ import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
-import com.medianet.android.adsdk.Error
-import com.medianet.android.adsdk.GamEventListener
-import com.medianet.android.adsdk.InterstitialAd
+import com.medianet.android.adsdk.base.listeners.GamEventListener
+import com.medianet.android.adsdk.ad.original.interstitial.InterstitialAd
 import com.medianet.android.adsdk.MediaNetAdSDK
+import com.medianet.android.adsdk.base.Error
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
@@ -52,7 +52,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
 
         // 2. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
-        adUnit?.fetchDemandAndLoad(this, request, listener = object : GamEventListener{
+        adUnit?.fetchDemandAndLoad(this, request, listener = object : GamEventListener {
 
             override fun onInterstitialAdLoaded(ad: AdManagerInterstitialAd) {
                 Log.e(TAG, "$ad with id: ${ad.adUnitId} loaded")
@@ -60,6 +60,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
             override fun onSuccess(keywordMap: Map<String, String>?) {
                 Log.e(TAG, "bid request successful")
             }
+
             override fun onError(error: Error) {
                 Log.e(TAG, error.errorMessage)
             }
