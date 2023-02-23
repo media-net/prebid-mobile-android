@@ -74,7 +74,7 @@ class ConfigRepoImpl(private val serverApiService: ServerApiService?, private va
      */
     override suspend fun refreshSdkConfig(cid: String, context: Context) {
         val configParams = mapOf(
-            KEY_DN to BuildConfig.LIBRARY_PACKAGE_NAME
+            KEY_DN to context.packageName
         )
         val serverConfigResult = safeApiCall(
             apiCall = {
