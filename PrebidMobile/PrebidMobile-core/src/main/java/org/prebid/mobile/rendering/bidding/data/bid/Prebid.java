@@ -41,7 +41,6 @@ public class Prebid {
     private String type;
     private String winEventUrl;
     private String impEventUrl;
-    private Boolean isOriginal;
 
     protected Prebid() {
     }
