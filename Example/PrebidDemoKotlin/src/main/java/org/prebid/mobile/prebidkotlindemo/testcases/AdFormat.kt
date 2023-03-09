@@ -5,11 +5,11 @@ enum class AdFormat(
 ) {
 
     DISPLAY_BANNER("Display Banner"),
-    VIDEO_BANNER("Video Banner"),
     DISPLAY_INTERSTITIAL("Display Interstitial"),
-    VIDEO_INTERSTITIAL("Video Interstitial"),
+    NATIVE("Native")
+    /*VIDEO_INTERSTITIAL("Video Interstitial"),
     VIDEO_REWARDED("Video Rewarded"),
-    IN_STREAM_VIDEO("In-stream Video"),
-    NATIVE("Native"),
+    VIDEO_BANNER("Video Banner"),
+    IN_STREAM_VIDEO("In-stream Video"),*/
 
 }

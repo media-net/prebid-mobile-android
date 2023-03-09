@@ -31,19 +31,19 @@ object TestCaseRepository {
             IntegrationKind.GAM_ORIGINAL,
             GamOriginalApiDisplayBannerMultiSizeActivity::class.java,
         ),
-        TestCase(
+      /*  TestCase(
             R.string.gam_original_video_banner,
             AdFormat.VIDEO_BANNER,
             IntegrationKind.GAM_ORIGINAL,
             GamOriginalApiVideoBannerActivity::class.java,
-        ),
+        ),*/
         TestCase(
             R.string.gam_original_display_interstitial,
             AdFormat.DISPLAY_INTERSTITIAL,
             IntegrationKind.GAM_ORIGINAL,
             GamOriginalApiDisplayInterstitialActivity::class.java,
         ),
-        TestCase(
+        /*TestCase(
             R.string.gam_original_video_interstitial,
             AdFormat.VIDEO_INTERSTITIAL,
             IntegrationKind.GAM_ORIGINAL,
@@ -60,7 +60,7 @@ object TestCaseRepository {
             AdFormat.IN_STREAM_VIDEO,
             IntegrationKind.GAM_ORIGINAL,
             GamOriginalApiInStreamActivity::class.java,
-        ),
+        ),*/
         TestCase(
             R.string.gam_original_native_in_app,
             AdFormat.NATIVE,
@@ -81,30 +81,30 @@ object TestCaseRepository {
             IntegrationKind.GAM_RENDERING,
             GamRenderingApiDisplayBanner320x50Activity::class.java,
         ),
-        TestCase(
+        /*TestCase(
             R.string.gam_rendering_video_banner,
             AdFormat.VIDEO_BANNER,
             IntegrationKind.GAM_RENDERING,
             GamRenderingApiVideoBannerActivity::class.java,
-        ),
+        ),*/
         TestCase(
             R.string.gam_rendering_display_interstitial,
             AdFormat.DISPLAY_INTERSTITIAL,
             IntegrationKind.GAM_RENDERING,
             GamRenderingApiDisplayInterstitialActivity::class.java,
         ),
-        TestCase(
+        /*TestCase(
             R.string.gam_rendering_video_interstitial,
             AdFormat.VIDEO_INTERSTITIAL,
             IntegrationKind.GAM_RENDERING,
             GamRenderingApiVideoInterstitialActivity::class.java,
-        ),
-        TestCase(
+        ),*/
+        /*TestCase(
             R.string.gam_rendering_video_rewarded,
             AdFormat.VIDEO_REWARDED,
             IntegrationKind.GAM_RENDERING,
             GamRenderingApiVideoRewardedActivity::class.java,
-        ),
+        ),*/
         TestCase(
             R.string.gam_rendering_native,
             AdFormat.NATIVE,
