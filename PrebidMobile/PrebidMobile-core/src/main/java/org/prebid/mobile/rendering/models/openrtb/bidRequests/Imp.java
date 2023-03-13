@@ -44,7 +44,7 @@ public class Imp extends BaseBid {
         toJSON(jsonObject, "id", id);
         toJSON(jsonObject, "displaymanager", displaymanager);
         toJSON(jsonObject, "displaymanagerver", displaymanagerver);
-        toJSON(jsonObject, "instl", instl);
+        toJSON(jsonObject, "instl", 0);
         toJSON(jsonObject, "tagid", tagid);
         toJSON(jsonObject, "clickbrowser", clickBrowser);
 

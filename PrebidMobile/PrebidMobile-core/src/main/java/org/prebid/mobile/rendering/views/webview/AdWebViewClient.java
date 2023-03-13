@@ -113,6 +113,7 @@ public class AdWebViewClient extends WebViewClient {
             // Need to check webViewBase.containsIFrame() because displayed ad could contain another
             // injected script (for example OpenMeasurement) that initializes own resources.
             // Otherwise, we could get an error: jira/browse/MOBILE-5100
+
             if (webViewBase.containsIFrame() && webViewBase.isClicked() && !urls.contains(url) && view.getHitTestResult() != null && (view.getHitTestResult()
                                                                                                                                           .getType() == SRC_ANCHOR_TYPE || view.getHitTestResult()
                                                                                                                                                                                .getType() == SRC_IMAGE_ANCHOR_TYPE)) {

@@ -25,13 +25,13 @@ object TestCaseRepository {
             IntegrationKind.GAM_ORIGINAL,
             GamOriginalApiDisplayBanner300x250Activity::class.java,
         ),
-        TestCase(
+        /*TestCase(
             R.string.gam_original_display_banner_multi_size,
             AdFormat.DISPLAY_BANNER,
             IntegrationKind.GAM_ORIGINAL,
             GamOriginalApiDisplayBannerMultiSizeActivity::class.java,
         ),
-      /*  TestCase(
+        TestCase(
             R.string.gam_original_video_banner,
             AdFormat.VIDEO_BANNER,
             IntegrationKind.GAM_ORIGINAL,

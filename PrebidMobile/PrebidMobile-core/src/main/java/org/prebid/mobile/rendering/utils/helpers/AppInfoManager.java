@@ -104,8 +104,9 @@ public class AppInfoManager {
         try {
             sUserAgent = new WebView(context).getSettings().getUserAgentString();
             if (TextUtils.isEmpty(sUserAgent) || sUserAgent.contains("UNAVAILABLE")) {
-                sUserAgent = "Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + ";" + " " + getDeviceName() + ")";
+                sUserAgent = "Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + ";" + " " + getDeviceName() + ")" ;
             }
+            sUserAgent += "&frpvid=4&frbid=10";
         }
         catch (Exception e) {
             LogUtil.error(TAG, "Failed to get user agent");

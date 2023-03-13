@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.bidding.data.bid;
 
 import android.text.TextUtils;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.json.JSONArray;
@@ -68,7 +69,11 @@ public class Prebid {
         prebid.cache = Cache.fromJSONObject(jsonObject.optJSONObject("cache"));
         prebid.type = jsonObject.optString("type");
         parseEvents(prebid, jsonObject.optJSONObject("events"));
-        toHashMap(prebid.targeting, jsonObject.optJSONObject("targeting"));
+        try {
+            toHashMap(prebid.targeting, jsonObject.optJSONArray("targeting"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return prebid;
     }
 
@@ -193,15 +198,28 @@ public class Prebid {
         }
     }
 
-    private static void toHashMap(HashMap<String, String> hashMap, JSONObject jsonObject) {
-        if (jsonObject == null || hashMap == null) {
+    private static void toHashMap(HashMap<String, String> hashMap, JSONArray jsonArray) throws JSONException {
+        if (jsonArray == null || hashMap == null) {
             return;
         }
-        Iterator<String> jsonIterator = jsonObject.keys();
-        while (jsonIterator.hasNext()) {
-            String key = jsonIterator.next();
-            hashMap.put(key, jsonObject.optString(key));
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+            String key = jsonObject.getString("name");
+            String value = jsonObject.getString("value");
+            if (key.equals("hb_pb")) {
+                hashMap.put(key, "0.12");
+            } else {
+                hashMap.put(key, value);
+            }
         }
+        Log.d("MY_TAG", "hashmap " + hashMap);
+//        Log.d("MY_TAG", "IN jsonObject " + jsonObject);
+//        Iterator<String> jsonIterator = jsonObject.keys();
+//        while (jsonIterator.hasNext()) {
+//            String key = jsonIterator.next();
+//            hashMap.put(key, jsonObject.optString(key));
+//        }
     }
 
 }

@@ -43,7 +43,7 @@ object MediaNetAdSDK {
 
     private const val TAG = "MediaNetAdSDK"
     const val TEMP_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d"
-    private const val HOST_URL = "https://prebid-server-test-j.prebid.org/openrtb2/auction"
+    private const val HOST_URL = "https://mobile-sdk.media.net/rtb/pb/mobile-sdk"
     private var sdkOnVacation: Boolean = false
     private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private const val DATA_STORE_FILE_NAME = "sdk_config.pb"

@@ -67,10 +67,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        if (item.itemId == R.id.settings) {
+        /*if (item.itemId == R.id.settings) {
             startActivity(SettingsActivity.getIntent(this))
             return true
-        }
+        }*/
         return false
     }
 
@@ -117,10 +117,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initSearch() {
-        binding.etSearch.addTextChangedListener {
+        /*binding.etSearch.addTextChangedListener {
             searchRequest = it.toString()
             updateList()
-        }
+        }*/
     }
 
     private fun initList() {
