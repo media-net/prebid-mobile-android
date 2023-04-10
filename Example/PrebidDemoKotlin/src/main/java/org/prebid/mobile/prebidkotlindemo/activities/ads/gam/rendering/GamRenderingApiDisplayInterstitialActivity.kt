@@ -17,7 +17,6 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
 import android.util.Log
-import android.webkit.WebView
 import com.medianet.android.adsdk.ad.rendering.interstitial.InterstitialAdView
 import com.medianet.android.adsdk.MediaNetAdSDK
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
@@ -41,8 +40,6 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
         MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
-
-        WebView.setWebContentsDebuggingEnabled(true)
 
         createAd()
     }

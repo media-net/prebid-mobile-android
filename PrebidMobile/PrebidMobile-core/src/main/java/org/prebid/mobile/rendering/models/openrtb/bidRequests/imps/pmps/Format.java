@@ -33,8 +33,8 @@ public class Format extends BaseBid {
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
-        toJSON(jsonObject, "w", 320);
-        toJSON(jsonObject, "h", 50);
+        toJSON(jsonObject, "w", w);
+        toJSON(jsonObject, "h", h);
 
         return jsonObject;
     }

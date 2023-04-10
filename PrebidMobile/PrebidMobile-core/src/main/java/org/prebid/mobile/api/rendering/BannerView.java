@@ -19,7 +19,6 @@ package org.prebid.mobile.api.rendering;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -151,7 +150,6 @@ public class BannerView extends FrameLayout {
                 return;
             }
 
-            Log.d("MY_TAG", "onPrebidSdkWin");
             displayPrebidView();
         }
 
@@ -160,7 +158,6 @@ public class BannerView extends FrameLayout {
             markPrimaryAdRequestFinished();
 
             notifyAdLoadedListener();
-            Log.d("MY_TAG", "onAdServerWin");
             displayAdServerView(view);
         }
 

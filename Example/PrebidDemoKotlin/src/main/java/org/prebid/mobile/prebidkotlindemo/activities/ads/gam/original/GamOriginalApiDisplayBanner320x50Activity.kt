@@ -29,7 +29,7 @@ import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
 
     companion object {
-        const val AD_UNIT_ID = "divid"
+        const val AD_UNIT_ID = "/45361917/prebidsdkad"
         const val CONFIG_ID = "imp-prebid-banner-320-50"
         const val STORED_RESPONSE = "response-prebid-banner-320-50"
         const val WIDTH = 320
@@ -73,7 +73,7 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
             }
 
             override fun onAdFailedToLoad(error: Error) {
-                Log.d(TAG, "onAdFailedToLoad")
+                Log.d(TAG, "onAdFailedToLoad ${error.errorCode} ${error.errorMessage}")
             }
 
             override fun onAdOpened() {

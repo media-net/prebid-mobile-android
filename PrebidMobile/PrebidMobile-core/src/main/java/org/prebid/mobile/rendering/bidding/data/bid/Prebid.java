@@ -17,7 +17,6 @@
 package org.prebid.mobile.rendering.bidding.data.bid;
 
 import android.text.TextUtils;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.json.JSONArray;
@@ -207,14 +206,15 @@ public class Prebid {
             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
             String key = jsonObject.getString("name");
             String value = jsonObject.getString("value");
+
+            // TODO: Remove this hardcoding
             if (key.equals("hb_pb")) {
                 hashMap.put(key, "0.12");
             } else {
                 hashMap.put(key, value);
             }
         }
-        Log.d("MY_TAG", "hashmap " + hashMap);
-//        Log.d("MY_TAG", "IN jsonObject " + jsonObject);
+        // TODO: Remove this once request response contract is finalized
 //        Iterator<String> jsonIterator = jsonObject.keys();
 //        while (jsonIterator.hasNext()) {
 //            String key = jsonIterator.next();

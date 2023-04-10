@@ -104,8 +104,9 @@ public class AppInfoManager {
         try {
             sUserAgent = new WebView(context).getSettings().getUserAgentString();
             if (TextUtils.isEmpty(sUserAgent) || sUserAgent.contains("UNAVAILABLE")) {
-                sUserAgent = "Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + ";" + " " + getDeviceName() + ")" ;
+                sUserAgent = "Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + ";" + " " + getDeviceName() + ")";
             }
+            // TODO : To be removed once we decide to go live.
             sUserAgent += "&frpvid=4&frbid=10";
         }
         catch (Exception e) {
