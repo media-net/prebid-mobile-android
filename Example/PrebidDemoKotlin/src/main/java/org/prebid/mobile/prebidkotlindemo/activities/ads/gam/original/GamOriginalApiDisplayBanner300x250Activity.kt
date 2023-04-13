@@ -26,6 +26,9 @@ import com.medianet.android.adsdk.ad.original.banner.BannerAd
 import com.medianet.android.adsdk.base.Error
 import com.medianet.android.adsdk.base.listeners.GamEventListener
 import com.medianet.android.adsdk.MediaNetAdSDK
+import com.medianet.android.adsdk.base.FindSizeError
+import com.medianet.android.adsdk.base.listeners.FindSizeListener
+import com.medianet.android.adsdk.utils.MAdViewUtils
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 
@@ -66,12 +69,14 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
         adView.adUnitId = AD_UNIT_ID
         adView.setAdSizes(AdSize(WIDTH, HEIGHT))
 
+        adView.adListener = createGAMListener(adView)
+
         // Add GMA SDK banner view to the app UI
         adWrapperView.addView(adView)
 
         // 4. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
-        adUnit?.fetchDemandAndLoad(adView, request, object: GamEventListener {
+        adUnit?.fetchDemand(request, object: GamEventListener {
             override fun onAdLoaded() {
                 Log.e("Nikhil", "onAdLoaded")
             }
@@ -102,10 +107,12 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
 
             override fun onSuccess(keywordMap: Map<String, String>?) {
                 Log.e("Nikhil", "onSuccess")
+                adView.loadAd(request)
             }
 
             override fun onError(error: Error) {
                 Log.e(TAG, "Error: code: ${error.errorCode}, message: ${error.errorMessage}")
+                adView.loadAd(request)
             }
 
         })
@@ -122,13 +129,13 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
                 super.onAdLoaded()
 
                 // 6. Update ad view
-                /*AdViewUtils.findPrebidCreativeSize(adView, object : AdViewUtils.PbFindSizeListener {
+                MAdViewUtils.findCreativeSize(adView, object : FindSizeListener {
                     override fun success(width: Int, height: Int) {
                         adView.setAdSizes(AdSize(width, height))
                     }
 
-                    override fun failure(error: PbFindSizeError) {}
-                })*/
+                    override fun failure(error: FindSizeError) {}
+                })
             }
 
             override fun onAdClicked() {
@@ -136,7 +143,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
             }
 
             override fun onAdClosed() {
-
+                super.onAdClosed()
             }
 
             override fun onAdFailedToLoad(p0: LoadAdError) {
@@ -151,9 +158,9 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
                 super.onAdImpression()
             }
 
-            /*override fun onAdSwipeGestureClicked() {
+            override fun onAdSwipeGestureClicked() {
                 super.onAdSwipeGestureClicked()
-            }*/
+            }
         }
     }
 

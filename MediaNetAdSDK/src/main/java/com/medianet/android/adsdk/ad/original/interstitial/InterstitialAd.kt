@@ -21,7 +21,7 @@ import com.medianet.android.adsdk.base.Error
 /**
  * interstitial ad class for original type
  */
-class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit(adUnitId)) {
+class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
 
     private var mInterstitialAdUnit: InterstitialAdUnit = adUnit as InterstitialAdUnit
 
@@ -33,6 +33,33 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit(adUnitId)) {
 
     /**
      * starts the bid request call
+     * @param adRequest is the ad request for ad manager
+     * @param listener listens to request call events
+     */
+    fun fetchDemand(
+        adRequest: AdManagerAdRequest,
+        listener: GamEventListener
+    ) {
+
+        if (MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()) {
+            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
+            listener.onError(Error.CONFIG_ERROR)
+            return
+        }
+        fetchDemand(adRequest, object : OnBidCompletionListener {
+            override fun onSuccess(keywordMap: Map<String, String>?) {
+                listener.onSuccess()
+            }
+
+            override fun onError(error: Error) {
+                listener.onError(error)
+            }
+        })
+    }
+
+
+    /**
+     * starts the bid request call and loads the
      * @param context specifies context of view on which ad loads
      * @param adRequest is the ad request for ad manager
      * @param listener listens to GAM events
@@ -43,18 +70,19 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit(adUnitId)) {
         listener: GamEventListener
     ) {
 
-        if(MediaNetAdSDK.isSdkOnVacation()){
+        if (MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()) {
             CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
+            listener.onError(Error.CONFIG_ERROR)
             return
         }
         fetchDemand(adRequest, object : OnBidCompletionListener {
             override fun onSuccess(keywordMap: Map<String, String>?) {
                 listener.onSuccess()
-                loadAd(context ,adUnitId, adRequest, listener)
+                loadAd(context, adUnitId, adRequest, listener)
             }
 
             override fun onError(error: Error) {
-                listener.onAdFailedToLoad(error)
+                listener.onError(error)
             }
         })
     }
@@ -66,7 +94,12 @@ class InterstitialAd(val adUnitId: String): Ad(InterstitialAdUnit(adUnitId)) {
      * @param adRequest is the ad request for ad manager
      * @param adLoadCallback listens to GAM events
      */
-    private fun loadAd(context: Context, adUnitId: String, adRequest: AdManagerAdRequest, adLoadCallback: GamEventListener) {
+    private fun loadAd(
+        context: Context,
+        adUnitId: String,
+        adRequest: AdManagerAdRequest,
+        adLoadCallback: GamEventListener
+    ) {
         AdManagerInterstitialAd.load(
             context,
             adUnitId,

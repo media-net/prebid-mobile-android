@@ -135,8 +135,9 @@ class NativeAd(adUnitId: String) : Ad(NativeAdUnit(adUnitId)) {
         adRequest: AdManagerAdRequest,
         listener: GamEventListener
     ) {
-        if (MediaNetAdSDK.isSdkOnVacation()) {
+        if (MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()) {
             CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
+            listener.onError(Error.CONFIG_ERROR)
             return
         }
 
