@@ -131,9 +131,9 @@ class NativeAd(adUnitId: String) : Ad(NativeAdUnit(adUnitId)) {
      * @param adRequest is the ad request for ad manager
      * @param listener listens to GAM events
      */
-    fun fetchDemand(
+    fun fetchDemandForAd(
         adRequest: AdManagerAdRequest,
-        listener: GamEventListener
+        listener: OnBidCompletionListener
     ) {
         if (MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()) {
             CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
@@ -142,14 +142,6 @@ class NativeAd(adUnitId: String) : Ad(NativeAdUnit(adUnitId)) {
         }
 
 
-        fetchDemand(adRequest, object : OnBidCompletionListener {
-            override fun onSuccess(keywordMap: Map<String, String>?) {
-                listener.onSuccess()
-            }
-
-            override fun onError(error: Error) {
-                listener.onError(error)
-            }
-        })
+        fetchDemand(adRequest, listener)
     }
 }

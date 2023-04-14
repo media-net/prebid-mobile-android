@@ -24,10 +24,10 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.medianet.android.adsdk.ad.original.banner.BannerAd
 import com.medianet.android.adsdk.base.Error
-import com.medianet.android.adsdk.base.listeners.GamEventListener
 import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.base.FindSizeError
 import com.medianet.android.adsdk.base.listeners.FindSizeListener
+import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
 import com.medianet.android.adsdk.utils.MAdViewUtils
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
@@ -66,34 +66,7 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
         adWrapperView.addView(adView)
 
         val request = AdManagerAdRequest.Builder().build()
-        adUnit?.fetchDemand(request, object : GamEventListener {
-            override fun onAdLoaded() {
-                Log.d(TAG, "onAdLoaded")
-            }
-
-            override fun onAdClicked() {
-                Log.d(TAG, "onAdClicked")
-            }
-
-            override fun onAdClosed() {
-                Log.d(TAG, "onAdClosed")
-            }
-
-            override fun onAdFailedToLoad(error: Error) {
-                Log.d(TAG, "onAdFailedToLoad")
-            }
-
-            override fun onAdOpened() {
-                Log.d(TAG, "onAdOpened")
-            }
-
-            override fun onAdImpression() {
-                Log.d(TAG, "onAdImpression")
-            }
-
-            override fun onEvent(key: String, value: String) {
-                Log.d(TAG, "onEvent")
-            }
+        adUnit?.fetchDemandForAd(request, object : OnBidCompletionListener {
 
             override fun onSuccess(keywordMap: Map<String, String>?) {
                 Log.d(TAG, "onSuccess")

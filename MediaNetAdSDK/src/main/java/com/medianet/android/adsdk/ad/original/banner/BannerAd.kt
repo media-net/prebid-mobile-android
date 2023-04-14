@@ -55,9 +55,9 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
      * @param adRequest is the ad request for ad manager
      * @param listener listens to request call events
      */
-    fun fetchDemand(
+    fun fetchDemandForAd(
         adRequest: AdManagerAdRequest,
-        listener: GamEventListener
+        listener: OnBidCompletionListener
     ) {
 
         if (MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()) {
@@ -66,15 +66,7 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
             return
         }
 
-        fetchDemand(adRequest, object : OnBidCompletionListener {
-            override fun onSuccess(keywordMap: Map<String, String>?) {
-                listener.onSuccess()
-            }
-
-            override fun onError(error: Error) {
-                listener.onError(error)
-            }
-        })
+        fetchDemand(adRequest, listener)
     }
 
     /**
@@ -132,7 +124,7 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
 
         fetchDemand(adRequest, object : OnBidCompletionListener {
             override fun onSuccess(keywordMap: Map<String, String>?) {
-                listener.onSuccess()
+                listener.onSuccess(keywordMap)
                 adView.loadAd(adRequest)
             }
 

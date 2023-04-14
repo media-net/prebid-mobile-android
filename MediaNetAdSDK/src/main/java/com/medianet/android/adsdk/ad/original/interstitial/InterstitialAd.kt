@@ -36,9 +36,9 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
      * @param adRequest is the ad request for ad manager
      * @param listener listens to request call events
      */
-    fun fetchDemand(
+    fun fetchDemandForAd(
         adRequest: AdManagerAdRequest,
-        listener: GamEventListener
+        listener: OnBidCompletionListener
     ) {
 
         if (MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()) {
@@ -46,15 +46,7 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
             listener.onError(Error.CONFIG_ERROR)
             return
         }
-        fetchDemand(adRequest, object : OnBidCompletionListener {
-            override fun onSuccess(keywordMap: Map<String, String>?) {
-                listener.onSuccess()
-            }
-
-            override fun onError(error: Error) {
-                listener.onError(error)
-            }
-        })
+        fetchDemand(adRequest, listener)
     }
 
 
@@ -77,7 +69,7 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
         }
         fetchDemand(adRequest, object : OnBidCompletionListener {
             override fun onSuccess(keywordMap: Map<String, String>?) {
-                listener.onSuccess()
+                listener.onSuccess(keywordMap)
                 loadAd(context, adUnitId, adRequest, listener)
             }
 

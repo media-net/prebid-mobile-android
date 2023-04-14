@@ -21,10 +21,10 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
-import com.medianet.android.adsdk.base.listeners.GamEventListener
 import com.medianet.android.adsdk.ad.original.interstitial.InterstitialAd
 import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.base.Error
+import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
@@ -54,7 +54,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
 
         // 2. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
-        adUnit?.fetchDemand(request, listener = object : GamEventListener {
+        adUnit?.fetchDemandForAd(request, listener = object : OnBidCompletionListener {
             override fun onSuccess(keywordMap: Map<String, String>?) {
                 AdManagerInterstitialAd.load(
                     this@GamOriginalApiDisplayInterstitialActivity,
