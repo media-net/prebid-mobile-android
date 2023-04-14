@@ -51,6 +51,25 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
     }
 
     /**
+     * starts the bid request call
+     * @param adRequest is the ad request for ad manager
+     * @param listener listens to request call events
+     */
+    fun fetchDemandForAd(
+        adRequest: AdManagerAdRequest,
+        listener: OnBidCompletionListener
+    ) {
+
+        if (MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()) {
+            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
+            listener.onError(Error.CONFIG_ERROR)
+            return
+        }
+
+        fetchDemand(adRequest, listener)
+    }
+
+    /**
      * starts the bid request call and loads the ad into the adView
      * @param adView is the view where ad loads
      * @param adRequest is the ad request for ad manager
@@ -61,8 +80,9 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
         adRequest: AdManagerAdRequest,
         listener: GamEventListener
     ) {
-        if (MediaNetAdSDK.isSdkOnVacation()) {
+        if (MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()) {
             CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
+            listener.onError(Error.CONFIG_ERROR)
             return
         }
 
@@ -104,12 +124,13 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
 
         fetchDemand(adRequest, object : OnBidCompletionListener {
             override fun onSuccess(keywordMap: Map<String, String>?) {
-                listener.onSuccess()
+                listener.onSuccess(keywordMap)
                 adView.loadAd(adRequest)
             }
 
             override fun onError(error: Error) {
-                listener.onAdFailedToLoad(error)
+                listener.onError(error)
+                adView.loadAd(adRequest)
             }
         })
     }

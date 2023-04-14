@@ -6,13 +6,13 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.medianet.android.adsdk.base.Error
-import com.medianet.android.adsdk.base.listeners.GamEventListener
 import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.ad.nativead.EventTracker
 import com.medianet.android.adsdk.ad.nativead.NativeAd
 import com.medianet.android.adsdk.ad.nativead.assets.DataAsset
 import com.medianet.android.adsdk.ad.nativead.assets.ImageAsset
 import com.medianet.android.adsdk.ad.nativead.assets.TitleAsset
+import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
@@ -54,27 +54,7 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
 
         // 4. Make a bid request to Server
         val request = AdManagerAdRequest.Builder().build()
-        nativeAdUnit?.fetchDemand(request, object : GamEventListener {
-
-            override fun onAdClicked() {
-                Log.d("Tushar", "onAdClicked")
-            }
-
-            override fun onAdClosed() {
-                Log.d("Tushar", "onAdClosed")
-            }
-
-            override fun onAdFailedToLoad(error: Error) {
-                Log.d("Tushar", "Error code: ${error.errorCode}, message: ${error.errorMessage}")
-            }
-
-            override fun onAdOpened() {
-                Log.d("Tushar", "onAdOpened")
-            }
-
-            override fun onAdImpression() {
-                Log.d("Tushar", "onAdImpression")
-            }
+        nativeAdUnit?.fetchDemandForAd(request, object : OnBidCompletionListener {
 
             override fun onSuccess(keywordMap: Map<String, String>?) {
                 gamView.loadAd(request)
