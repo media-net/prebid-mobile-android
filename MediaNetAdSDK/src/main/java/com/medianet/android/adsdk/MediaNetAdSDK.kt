@@ -297,6 +297,12 @@ object MediaNetAdSDK {
      */
     fun isSdkOnVacation() = sdkOnVacation
 
+    /**
+     * indicates the successful fetch of sdk config.
+     * if true then sdk will not function from there on.
+     */
+    internal fun isConfigEmpty() = config == null
+
     //TODO - when to call this
     fun clear() {
         AnalyticsSDK.clear()

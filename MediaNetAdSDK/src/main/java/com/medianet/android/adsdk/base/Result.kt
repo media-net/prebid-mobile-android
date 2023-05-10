@@ -74,6 +74,8 @@ sealed class Error(var errorCode: Int, var errorMessage: String): Result() {
     object SERVER_ERROR : Error(147, "Server error")
 
     object THIRD_PARTY : Error(148, "Third Party SDK")
+
+    object CONFIG_ERROR : Error(149, "SDK Config Data error")
 }
 
 

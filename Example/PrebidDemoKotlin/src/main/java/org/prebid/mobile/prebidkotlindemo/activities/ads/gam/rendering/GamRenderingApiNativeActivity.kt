@@ -19,7 +19,6 @@ import com.medianet.android.adsdk.*
 import com.medianet.android.adsdk.ad.nativead.EventTracker
 import com.medianet.android.adsdk.ad.nativead.NativeAd
 import com.medianet.android.adsdk.ad.nativead.NativeInAppAd
-import com.medianet.android.adsdk.base.listeners.GamEventListener
 import com.medianet.android.adsdk.ad.nativead.assets.DataAsset
 import com.medianet.android.adsdk.ad.nativead.assets.ImageAsset
 import com.medianet.android.adsdk.ad.nativead.assets.TitleAsset
@@ -30,6 +29,7 @@ import com.medianet.android.adsdk.utils.MAdViewUtils
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 import org.prebid.mobile.prebidkotlindemo.R
 import com.medianet.android.adsdk.base.Error
+import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
 
 class GamRenderingApiNativeActivity : BaseAdActivity() {
 
@@ -60,27 +60,7 @@ class GamRenderingApiNativeActivity : BaseAdActivity() {
         adUnit = configureNativeAdUnit()
         val adRequest = AdManagerAdRequest.Builder().build()
         adLoader = createAdLoader(adWrapperView)
-        adUnit?.fetchDemand(adRequest, object : GamEventListener {
-
-            override fun onAdClicked() {
-                Log.d("NativeAd", "onAdClicked")
-            }
-
-            override fun onAdClosed() {
-                Log.d("NativeAd", "onAdClosed")
-            }
-
-            override fun onAdFailedToLoad(error: Error) {
-                Log.d("NativeAd", "Error code: ${error.errorCode}, message: ${error.errorMessage}")
-            }
-
-            override fun onAdOpened() {
-                Log.d("NativeAd", "onAdOpened")
-            }
-
-            override fun onAdImpression() {
-                Log.d("NativeAd", "onAdImpression")
-            }
+        adUnit?.fetchDemandForAd(adRequest, object : OnBidCompletionListener {
 
             override fun onSuccess(keywordMap: Map<String, String>?) {
                 adLoader.loadAd(adRequest)

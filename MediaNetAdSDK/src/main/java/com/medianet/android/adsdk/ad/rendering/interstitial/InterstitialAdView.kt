@@ -122,8 +122,9 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
      */
     fun loadAd() {
 
-        if(MediaNetAdSDK.isSdkOnVacation()){
+        if(MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()){
             CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
+            interstitialAdListener?.onAdFailed(com.medianet.android.adsdk.base.Error.CONFIG_ERROR)
             return
         }
         mInterstitialAdUnit.loadAd()
