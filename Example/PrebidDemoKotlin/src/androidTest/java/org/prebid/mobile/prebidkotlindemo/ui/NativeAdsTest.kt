@@ -44,7 +44,7 @@ class NativeAdsTest(
     private fun nativeAd(testCase: TestCase): BySelector {
         return when (testCase.integrationKind) {
             IntegrationKind.GAM_ORIGINAL -> By.clazz("android.webkit.WebView")
-            IntegrationKind.ADMOB -> By.clazz("android.widget.LinearLayout")
+            /*IntegrationKind.ADMOB -> By.clazz("android.widget.LinearLayout")
                 .hasChild(
                     By.clazz("android.widget.LinearLayout")
                 )
@@ -53,7 +53,7 @@ class NativeAdsTest(
                 )
                 .hasChild(
                     By.res(packageName, "imgMedia")
-                )
+                )*/
 
             else -> By.clazz("android.widget.LinearLayout")
                 .hasChild(

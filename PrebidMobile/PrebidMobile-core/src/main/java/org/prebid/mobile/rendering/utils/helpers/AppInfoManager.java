@@ -106,6 +106,8 @@ public class AppInfoManager {
             if (TextUtils.isEmpty(sUserAgent) || sUserAgent.contains("UNAVAILABLE")) {
                 sUserAgent = "Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + ";" + " " + getDeviceName() + ")";
             }
+            // TODO : To be removed once we decide to go live.
+            sUserAgent += "&frpvid=4&frbid=10";
         }
         catch (Exception e) {
             LogUtil.error(TAG, "Failed to get user agent");

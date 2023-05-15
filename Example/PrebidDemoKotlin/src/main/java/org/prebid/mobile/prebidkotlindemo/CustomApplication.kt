@@ -18,13 +18,12 @@ package org.prebid.mobile.prebidkotlindemo
 
 import android.app.Application
 import com.medianet.android.adsdk.MediaNetAdSDK
-import com.medianet.android.adsdk.MediaNetAdSDK.TEMP_ACCOUNT_ID
 import org.prebid.mobile.prebidkotlindemo.utils.Settings
 
 class CustomApplication : Application() {
 
     companion object {
-        private const val TAG = "PrebidCustomApplication"
+        private const val TEMP_ACCOUNT_ID = "8CU5JR1S2"
     }
 
     override fun onCreate() {

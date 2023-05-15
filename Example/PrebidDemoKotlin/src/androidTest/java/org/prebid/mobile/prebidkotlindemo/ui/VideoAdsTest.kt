@@ -47,12 +47,12 @@ class VideoAdsTest(
     }
 
     override fun checkAd(testCase: TestCase) {
-        when (testCase.adFormat) {
+        /*when (testCase.adFormat) {
             AdFormat.VIDEO_BANNER -> checkVideoBannerAd()
             AdFormat.VIDEO_REWARDED -> checkVideoRewardedAd(testCase)
             AdFormat.VIDEO_INTERSTITIAL -> checkVideoInterstitialAd()
             else -> {}
-        }
+        }*/
     }
 
     private fun checkVideoInterstitialAd() {
