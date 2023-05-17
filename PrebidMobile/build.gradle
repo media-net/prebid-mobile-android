@@ -1,6 +1,30 @@
+plugins {
+    id "maven-publish"
+}
 apply from: 'android.gradle'
 apply from: 'publisher.gradle'
 
+android {
+    defaultConfig{
+        versionName "0.0.1"
+    }
+}
+
 dependencies {
     api project(':PrebidMobile-core')
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                setGroupId 'com.media.net'
+                //You can either define these here or get them from project conf elsewhere
+                setArtifactId 'PrebidMobile'
+                version '0.0.1'
+                artifact bundleReleaseAar //aar artifact you want to publish
+
+            }
+        }
+    }
 }

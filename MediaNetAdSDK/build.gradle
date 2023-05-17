@@ -1,8 +1,21 @@
+buildscript {
+    ext {
+        medianet_ad_sdk_version = "0.0.1"
+        prebid_mobile_version = "0.0.1"
+        prebid_mobile_core_version = "0.0.1"
+        prebid_mobile_gam_eventhandlers_version = "0.0.1"
+        analytics_version = "0.0.1"
+        network_version = "0.0.1"
+        logger_version = "0.0.1"
+    }
+}
+
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id "com.google.protobuf" version "0.8.17"
+    id "maven-publish"
 }
 
 android {
@@ -31,14 +44,71 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                setGroupId 'com.media.net'
+                //You can either define these here or get them from project conf elsewhere
+                setArtifactId 'medianetadsdk'
+                version medianet_ad_sdk_version
+                artifact bundleReleaseAar //aar artifact you want to publish
+
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+                    configurations.implementation.allDependencies.each {
+                        if (it.name != "PrebidMobile" && it.name != "PrebidMobile-core" && it.name != "PrebidMobile-gamEventHandlers" && it.name != "analytics" && it.name != "network" && it.name != "logger") {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            dependencyNode.appendNode('version', it.version)
+                        }
+                    }
+
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('artifactId', "PrebidMobile")
+                    dependencyNode.appendNode('version', prebid_mobile_version)
+
+                    dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('artifactId', "PrebidMobile-core")
+                    dependencyNode.appendNode('version', prebid_mobile_core_version)
+
+                    dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('artifactId', "PrebidMobile-gamEventHandlers")
+                    dependencyNode.appendNode('version', prebid_mobile_gam_eventhandlers_version)
+
+                    dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('artifactId', "analytics")
+                    dependencyNode.appendNode('version', analytics_version)
+
+                    dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('artifactId', "network")
+                    dependencyNode.appendNode('version', network_version)
+
+                    dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('artifactId', "logger")
+                    dependencyNode.appendNode('version', logger_version)
+                }
+            }
+        }
+    }
 }
 
 dependencies {
 
-    implementation project(':PrebidMobile')
-    implementation project(':PrebidMobile-core')
-    implementation project(':PrebidMobile-gamEventHandlers')
-    api "com.google.android.gms:play-services-ads:$play_services_ads"
+    api project(':PrebidMobile')
+    api project(':PrebidMobile-core')
+    api project(':PrebidMobile-gamEventHandlers')
+    api "com.google.android.gms:play-services-ads:21.4.0"
 
     implementation "androidx.core:core-ktx:$core_ktx"
     implementation "androidx.appcompat:appcompat:$appcompat"
@@ -48,7 +118,7 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$ext_junit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core"
 
-    implementation project(':analytics')
+    api project(':analytics')
     //moshi parsing
     implementation "com.squareup.moshi:moshi-kotlin-codegen:$moshi_impl"
     kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi_kapt")
@@ -56,7 +126,7 @@ dependencies {
     //work manager
     implementation "androidx.work:work-runtime-ktx:$work_runtime_ktx"
 
-    implementation project(path: ':network')
+    api project(path: ':network')
 
     implementation "androidx.datastore:datastore:1.1.0-alpha01"
     implementation "com.google.protobuf:protobuf-javalite:3.19.2"
