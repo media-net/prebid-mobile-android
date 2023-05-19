@@ -8,4 +8,5 @@ object Constants {
     const val SDK_ON_VACATION_LOG_MSG = "Your Contract with MediaNetAdSdk has ended"
     const val TEST_CUSTOMER_ID = "8CURM5854"
     const val FORCE_BID_PARAM = "&frpvid=509&frbid=10"
+    const val DATA_STORE_FILE_NAME = "sdk_config.pb"
 }

@@ -113,7 +113,7 @@ object AnalyticsSDK {
             private var analyticsUrl: String = "",
             private var samplingMap: Map<String, Int> = mutableMapOf()
         ) {
-            fun enableEventSampling(enable: Boolean, samplingMap: SamplingMap) = apply {
+            fun enableEventSampling(samplingMap: SamplingMap, enable: Boolean = true) = apply {
                 eventSamplingEnabled = enable
                 this.samplingMap = samplingMap.map
             }

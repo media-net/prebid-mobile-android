@@ -93,7 +93,6 @@ public class PrebidMobile {
     @Deprecated
     public static LogLevel logLevel = LogLevel.NONE;
 
-
     private static boolean pbsDebug = false;
     private static boolean shareGeoLocation = false;
     private static boolean assignNativeAssetID = false;
@@ -111,7 +110,6 @@ public class PrebidMobile {
 
     private static String accountId = "";
 
-    private static String testAccountId = "";
     private static String storedAuctionResponse = "";
 
     private static Host host = Host.CUSTOM;
@@ -147,10 +145,6 @@ public class PrebidMobile {
         PrebidMobile.accountId = accountId;
     }
 
-    public static void setPrebidServerTestAccountId(String accountId) {
-        PrebidMobile.testAccountId = accountId;
-    }
-
     public static void setUserAgentParam(String params) {
         PrebidMobile.userAgentParam = params;
     }
@@ -161,10 +155,6 @@ public class PrebidMobile {
 
     public static String getPrebidServerAccountId() {
         return accountId;
-    }
-
-    public static String getPrebidServerTestAccountId() {
-        return testAccountId;
     }
 
     public static void setPrebidServerHost(Host host) {
