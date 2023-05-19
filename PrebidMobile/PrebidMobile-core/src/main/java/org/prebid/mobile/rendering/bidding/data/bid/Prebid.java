@@ -207,19 +207,8 @@ public class Prebid {
             String key = jsonObject.getString("name");
             String value = jsonObject.getString("value");
 
-            // TODO: Remove this hardcoding
-            if (key.equals("hb_pb")) {
-                hashMap.put(key, "0.12");
-            } else {
-                hashMap.put(key, value);
-            }
+            hashMap.put(key, value);
         }
-        // TODO: Remove this once request response contract is finalized
-//        Iterator<String> jsonIterator = jsonObject.keys();
-//        while (jsonIterator.hasNext()) {
-//            String key = jsonIterator.next();
-//            hashMap.put(key, jsonObject.optString(key));
-//        }
     }
 
 }
