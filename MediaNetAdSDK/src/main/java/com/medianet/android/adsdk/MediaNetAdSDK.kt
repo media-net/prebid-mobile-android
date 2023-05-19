@@ -11,21 +11,20 @@ import com.medianet.android.adsdk.base.MLogLevel
 import com.medianet.android.adsdk.base.listeners.MSdkInitListener
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.events.LoggingEvents
-import com.medianet.android.adsdk.model.StoredConfigs
 import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
+import com.medianet.android.adsdk.model.StoredConfigs
 import com.medianet.android.adsdk.network.ApiConstants.CONFIG_BASE_URL
 import com.medianet.android.adsdk.network.NetworkComponentFactory
 import com.medianet.android.adsdk.network.SDKConfigSyncWorker
 import com.medianet.android.adsdk.network.ServerApiService
-import com.medianet.android.adsdk.network.repository.ConfigRepoImpl
-import com.medianet.android.adsdk.network.repository.IConfigRepo
-import com.medianet.android.adsdk.utils.ConfigSerializer
-import com.medianet.android.adsdk.utils.Constants
-import com.medianet.android.adsdk.utils.MapperUtils.mapLogLevelToPrebidLogLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
+import com.medianet.android.adsdk.network.repository.ConfigRepoImpl
+import com.medianet.android.adsdk.network.repository.IConfigRepo
+import com.medianet.android.adsdk.utils.ConfigSerializer
+import com.medianet.android.adsdk.utils.MapperUtils.mapLogLevelToPrebidLogLevel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.prebid.mobile.Host
@@ -96,9 +95,6 @@ object MediaNetAdSDK {
             LogUtil.setBaseTag(TAG)
             MediaNetAdSDK.accountId = accountId
             initialiseSdkConfig(applicationContext)
-            if (accountId == Constants.TEST_CUSTOMER_ID) {
-                PrebidMobile.setUserAgentParam(Constants.FORCE_BID_PARAM)
-            }
             PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
             publisherSdkInitListener = sdkInitListener
         }
