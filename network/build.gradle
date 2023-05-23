@@ -38,9 +38,10 @@ artifactory {
 }
 
 project.afterEvaluate {
+    artifactoryPublish.dependsOn("assemble")
     publishing {
         publications {
-            release(MavenPublication) {
+            aar(MavenPublication) {
                 setGroupId 'com.media.net'
                 //You can either define these here or get them from project conf elsewhere
                 setArtifactId 'network'
@@ -60,6 +61,9 @@ project.afterEvaluate {
                 }
             }
         }
+    }
+    artifactoryPublish {
+        publications(publishing.publications.aar)
     }
 }
 

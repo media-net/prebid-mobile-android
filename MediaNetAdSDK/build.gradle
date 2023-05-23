@@ -49,12 +49,12 @@ android {
 }
 
 artifactory {
-    contextUrl = 'https://mobileadsdk.jfrog.io'
+    contextUrl = 'https://a0irxd0yolrga.jfrog.io/artifactory'
     publish {
         repository {
-            repoKey = "mobile-libs-release"
-            username = " nikhil.a@media.net"
-            password = "cmVmdGtuOjAxOjE3MTU5NTM1MTU6ZllpZ1hMRjNSOGlIU1puNkJSbmtQVldjMHpF"
+            repoKey = "test-repo-key"
+            username = "nikhil.a@media.net"
+            password = "nikhil@Media064"
         }
     }
 }
@@ -64,7 +64,7 @@ project.afterEvaluate {
 
     publishing {
         publications {
-            release(MavenPublication) {
+            aar(MavenPublication) {
                 setGroupId 'com.media.net'
                 //You can either define these here or get them from project conf elsewhere
                 setArtifactId 'medianetadsdk'
@@ -117,7 +117,7 @@ project.afterEvaluate {
     }
 
     artifactoryPublish {
-        publications(publishing.publications.release)
+        publications(publishing.publications.aar)
     }
 }
 
@@ -126,6 +126,7 @@ dependencies {
     api project(':PrebidMobile')
     api project(':PrebidMobile-core')
     api project(':PrebidMobile-gamEventHandlers')
+    implementation project(':logger')
     api "com.google.android.gms:play-services-ads:21.4.0"
 
     implementation "androidx.core:core-ktx:$core_ktx"

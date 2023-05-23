@@ -27,10 +27,22 @@ android {
     }
 }
 
+artifactory {
+    contextUrl = 'https://a0irxd0yolrga.jfrog.io/artifactory'
+    publish {
+        repository {
+            repoKey = "test-repo-key"
+            username = "nikhil.a@media.net"
+            password = "nikhil@Media064"
+        }
+    }
+}
+
 project.afterEvaluate {
+    artifactoryPublish.dependsOn("assemble")
     publishing {
         publications {
-            release(MavenPublication) {
+            aar(MavenPublication) {
                 setGroupId 'com.media.net'
                 //You can either define these here or get them from project conf elsewhere
                 setArtifactId 'PrebidMobile-core'
@@ -51,19 +63,11 @@ project.afterEvaluate {
             }
         }
     }
-}
-
-artifactory {
-    contextUrl = 'https://a0irxd0yolrga.jfrog.io/artifactory'   //The base Artifactory URL if not overridden by the publisher/resolver
-    resolve {
-        repository {
-            repoKey = 'test-virtual-repo'
-            username = "nikhil.a@media.net"
-            password = "nikhil@Media064"
-
-        }
+    artifactoryPublish {
+        publications(publishing.publications.aar)
     }
 }
+
 
 dependencies {
     implementation project(":omsdk-android")

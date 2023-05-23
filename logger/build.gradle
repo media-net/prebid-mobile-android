@@ -38,7 +38,7 @@ artifactory {
 }
 
 project.afterEvaluate {
-    //artifactoryPublish.dependsOn("assemble")
+    artifactoryPublish.dependsOn("assemble")
     publishing {
         publications {
             aar(MavenPublication) {

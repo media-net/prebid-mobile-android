@@ -54,7 +54,7 @@ allprojects {
         maven { url 'https://jitpack.io' }
         maven { url "https://oss.sonatype.org/content/repositories/orgprebid-1093" }
         maven {
-            url = uri("https://a0irxd0yolrga.jfrog.io/artifactory/api/gradle/test-virtual-repo")
+            url = uri("https://a0irxd0yolrga.jfrog.io/artifactory/test-repo-key/")
             credentials {
                 username = "nikhil.a@media.net"
                 password = "nikhil@Media064"

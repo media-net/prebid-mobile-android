@@ -1,5 +1,6 @@
 plugins {
     id "maven-publish"
+    id "com.jfrog.artifactory"
 }
 apply from: '../android.gradle'
 apply from: '../publisher.gradle'
@@ -13,10 +14,22 @@ android {
     }
 }
 
+artifactory {
+    contextUrl = 'https://a0irxd0yolrga.jfrog.io/artifactory'
+    publish {
+        repository {
+            repoKey = "test-repo-key"
+            username = "nikhil.a@media.net"
+            password = "nikhil@Media064"
+        }
+    }
+}
+
 project.afterEvaluate {
+    artifactoryPublish.dependsOn("assemble")
     publishing {
         publications {
-            release(MavenPublication) {
+            aar(MavenPublication) {
                 setGroupId 'com.media.net'
                 //You can either define these here or get them from project conf elsewhere
                 setArtifactId 'PrebidMobile-gamEventHandlers'
@@ -24,6 +37,9 @@ project.afterEvaluate {
                 artifact bundleReleaseAar //aar artifact you want to publish
             }
         }
+    }
+    artifactoryPublish {
+        publications(publishing.publications.aar)
     }
 }
 
