@@ -16,6 +16,7 @@ plugins {
     id 'kotlin-kapt'
     id "com.google.protobuf" version "0.8.17"
     id "maven-publish"
+    id "com.jfrog.artifactory"
 }
 
 android {
@@ -47,7 +48,20 @@ android {
 
 }
 
+artifactory {
+    contextUrl = 'https://mobileadsdk.jfrog.io'
+    publish {
+        repository {
+            repoKey = "mobile-libs-release"
+            username = " nikhil.a@media.net"
+            password = "cmVmdGtuOjAxOjE3MTU5NTM1MTU6ZllpZ1hMRjNSOGlIU1puNkJSbmtQVldjMHpF"
+        }
+    }
+}
+
 project.afterEvaluate {
+    artifactoryPublish.dependsOn("assemble")
+
     publishing {
         publications {
             release(MavenPublication) {
@@ -100,6 +114,10 @@ project.afterEvaluate {
                 }
             }
         }
+    }
+
+    artifactoryPublish {
+        publications(publishing.publications.release)
     }
 }
 

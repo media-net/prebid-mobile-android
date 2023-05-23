@@ -42,6 +42,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.31.9'
     }
 }
 
@@ -52,5 +53,12 @@ allprojects {
         maven { url 'https://maven.google.com' }
         maven { url 'https://jitpack.io' }
         maven { url "https://oss.sonatype.org/content/repositories/orgprebid-1093" }
+        maven {
+            url = uri("https://a0irxd0yolrga.jfrog.io/artifactory/api/gradle/test-virtual-repo")
+            credentials {
+                username = "nikhil.a@media.net"
+                password = "nikhil@Media064"
+            }
+        }
     }
 }

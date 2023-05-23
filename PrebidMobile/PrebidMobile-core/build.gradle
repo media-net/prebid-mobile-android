@@ -1,10 +1,12 @@
 plugins {
     id "maven-publish"
+    id "com.jfrog.artifactory"
 }
 
 apply from: '../android.gradle'
 apply from: '../publisher.gradle'
 apply from: '../tests.gradle'
+
 
 
 android {
@@ -51,16 +53,28 @@ project.afterEvaluate {
     }
 }
 
+artifactory {
+    contextUrl = 'https://a0irxd0yolrga.jfrog.io/artifactory'   //The base Artifactory URL if not overridden by the publisher/resolver
+    resolve {
+        repository {
+            repoKey = 'test-virtual-repo'
+            username = "nikhil.a@media.net"
+            password = "nikhil@Media064"
+
+        }
+    }
+}
+
 dependencies {
     implementation project(":omsdk-android")
-    api project(':logger')
+    //api project(':logger')
+    implementation 'com.media.net:logger:0.0.1'
+
 
     implementation 'androidx.annotation:annotation:1.3.0'
-
     implementation 'com.google.android.gms:play-services-base:18.1.0'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.15.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.1'
-
     implementation "androidx.localbroadcastmanager:localbroadcastmanager:1.0.0"
 }
