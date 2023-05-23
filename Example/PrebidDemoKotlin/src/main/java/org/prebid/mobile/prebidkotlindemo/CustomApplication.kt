@@ -23,7 +23,7 @@ import org.prebid.mobile.prebidkotlindemo.utils.Settings
 class CustomApplication : Application() {
 
     companion object {
-        private const val TEMP_ACCOUNT_ID = "8CU5JR1S2"
+        private const val TEMP_ACCOUNT_ID = "8CURM5854"
     }
 
     override fun onCreate() {

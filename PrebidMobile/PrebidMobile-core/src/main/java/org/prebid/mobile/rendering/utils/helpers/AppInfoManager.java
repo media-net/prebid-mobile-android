@@ -28,6 +28,7 @@ import android.webkit.WebView;
 import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.security.ProviderInstaller;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidMobile;
 
 public class AppInfoManager {
     private static final String TAG = AppInfoManager.class.getSimpleName();
@@ -106,8 +107,7 @@ public class AppInfoManager {
             if (TextUtils.isEmpty(sUserAgent) || sUserAgent.contains("UNAVAILABLE")) {
                 sUserAgent = "Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + ";" + " " + getDeviceName() + ")";
             }
-            // TODO : To be removed once we decide to go live.
-            sUserAgent += "&frpvid=4&frbid=10";
+            sUserAgent += PrebidMobile.getUserAgentParam();
         }
         catch (Exception e) {
             LogUtil.error(TAG, "Failed to get user agent");

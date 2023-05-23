@@ -1,6 +1,10 @@
 package com.medianet.android.adsdk.events
 
 import com.app.analytics.Event
+import com.app.analytics.utils.Constant.Providers.DEFAULT_DTYPE_ID_VALUE
+import com.app.analytics.utils.Constant.Providers.DEFAULT_TO_CONSIDER_VALUE
+import com.app.analytics.utils.Constant.Providers.DEFAULT_UGD_VALUE
+import com.app.analytics.utils.Constant.Providers.MOBILE_SDK
 import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.events.Constants.Keys.AD_SIZE
 import com.medianet.android.adsdk.events.Constants.Keys.AD_SIZES
@@ -44,7 +48,7 @@ internal object EventFactory {
         }
         opportunityEventParams.apply {
             put(LOG_ID, AP_LOG_ID)
-            put(TO_CONSIDER, "1")
+            put(TO_CONSIDER, DEFAULT_TO_CONSIDER_VALUE)
         }
     }
 
@@ -61,7 +65,7 @@ internal object EventFactory {
         sizes: List<MAdSize>?,
         eventType: LoggingEvents
     ): Event {
-        val params = commonParams
+        val params = commonParams.toMutableMap()
         var baseUrl = ""
         when (eventType) {
             LoggingEvents.PROJECT -> {
@@ -117,15 +121,16 @@ internal object EventFactory {
      * @param sdkConfig sdk config data for the publisher account Id
      */
     fun updateConfiguration(sdkConfig: SdkConfiguration) {
+        this.sdkConfig = sdkConfig
         commonParams.apply {
             put(CUSTOMER_ID, sdkConfig.customerId)
             put(PARTNER_ID, sdkConfig.partnerId)
             put(DOMAIN_NAME, sdkConfig.domainName)
             put(COUNTRY_CODE, sdkConfig.countryCode)
             put(SDK_VERSION, sdkConfig.sdkVersion)
-            put(UGD, "3")
-            put(DTYPE_ID, "3")
-            put(ITYPE, "MOBILE_SDK")
+            put(UGD, DEFAULT_UGD_VALUE)
+            put(DTYPE_ID, DEFAULT_DTYPE_ID_VALUE)
+            put(ITYPE, MOBILE_SDK)
         }
 
         projectEventParams.apply {

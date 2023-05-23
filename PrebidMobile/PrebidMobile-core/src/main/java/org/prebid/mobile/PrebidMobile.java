@@ -93,7 +93,6 @@ public class PrebidMobile {
     @Deprecated
     public static LogLevel logLevel = LogLevel.NONE;
 
-
     private static boolean pbsDebug = false;
     private static boolean shareGeoLocation = false;
     private static boolean assignNativeAssetID = false;
@@ -110,6 +109,7 @@ public class PrebidMobile {
     private static final String TAG = PrebidMobile.class.getSimpleName();
 
     private static String accountId = "";
+
     private static String storedAuctionResponse = "";
 
     private static Host host = Host.CUSTOM;
@@ -117,6 +117,11 @@ public class PrebidMobile {
     private static final Map<String, String> storedBidResponses = new LinkedHashMap<>();
     private static List<ExternalUserId> externalUserIds = new ArrayList<>();
     private static HashMap<String, String> customHeaders = new HashMap<>();
+
+    // For testing We need to append this force bid param in ua string in request. request -> device -> ua
+    // This param if non empty (frpvid=509&frbid=10 or similar) will ensure the mock bid response.
+    // This param will only be non empty for test customers. for real customers this will be empty
+    private static String userAgentParam = "";
 
     private PrebidMobile() {}
 
@@ -138,6 +143,14 @@ public class PrebidMobile {
 
     public static void setPrebidServerAccountId(String accountId) {
         PrebidMobile.accountId = accountId;
+    }
+
+    public static void setUserAgentParam(String params) {
+        PrebidMobile.userAgentParam = params;
+    }
+
+    public static String getUserAgentParam() {
+        return PrebidMobile.userAgentParam;
     }
 
     public static String getPrebidServerAccountId() {

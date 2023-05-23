@@ -11,20 +11,22 @@ import com.medianet.android.adsdk.base.MLogLevel
 import com.medianet.android.adsdk.base.listeners.MSdkInitListener
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.events.LoggingEvents
-import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
 import com.medianet.android.adsdk.model.StoredConfigs
+import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
 import com.medianet.android.adsdk.network.ApiConstants.CONFIG_BASE_URL
 import com.medianet.android.adsdk.network.NetworkComponentFactory
 import com.medianet.android.adsdk.network.SDKConfigSyncWorker
 import com.medianet.android.adsdk.network.ServerApiService
+import com.medianet.android.adsdk.network.repository.ConfigRepoImpl
+import com.medianet.android.adsdk.network.repository.IConfigRepo
+import com.medianet.android.adsdk.utils.ConfigSerializer
+import com.medianet.android.adsdk.utils.Constants
+import com.medianet.android.adsdk.utils.Constants.DATA_STORE_FILE_NAME
+import com.medianet.android.adsdk.utils.MapperUtils.mapLogLevelToPrebidLogLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
-import com.medianet.android.adsdk.network.repository.ConfigRepoImpl
-import com.medianet.android.adsdk.network.repository.IConfigRepo
-import com.medianet.android.adsdk.utils.ConfigSerializer
-import com.medianet.android.adsdk.utils.MapperUtils.mapLogLevelToPrebidLogLevel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.prebid.mobile.Host
@@ -42,10 +44,8 @@ object MediaNetAdSDK {
 
     private const val TAG = "MediaNetAdSDK"
 
-    private const val HOST_URL = "https://mobile-sdk.media.net/rtb/pb/mobile-sdk"
     private var sdkOnVacation: Boolean = false
     private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    private const val DATA_STORE_FILE_NAME = "sdk_config.pb"
     private var logLevel: MLogLevel = MLogLevel.INFO
     private var accountId = ""
 
@@ -95,6 +95,9 @@ object MediaNetAdSDK {
             LogUtil.setBaseTag(TAG)
             MediaNetAdSDK.accountId = accountId
             initialiseSdkConfig(applicationContext)
+            if (accountId == Constants.TEST_CUSTOMER_ID) {
+                PrebidMobile.setUserAgentParam(Constants.FORCE_BID_PARAM)
+            }
             PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
             publisherSdkInitListener = sdkInitListener
         }
@@ -120,7 +123,7 @@ object MediaNetAdSDK {
                 if (config?.shouldKillSDK == true) {
                     CustomLogger.debug(
                         TAG,
-                        "config kill switch is onn so disabling SDK functionality"
+                        "config kill switch is on so disabling SDK functionality"
                     )
                     sdkOnVacation = true
                     return@collectLatest
@@ -162,17 +165,14 @@ object MediaNetAdSDK {
      */
     private fun updateSDKConfigDependencies(applicationContext: Context, config: SdkConfiguration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl)) //PrebidMobile.setPrebidServerHost(Host.createCustomHost(HOST_URL))
-//        PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
-//        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl))
         PrebidMobile.setTimeoutMillis(config.auctionTimeOutMillis.toInt())
+
         //Initialising Analytics
         initAnalytics(applicationContext, config)
     }
 
     fun getAccountId() = PrebidMobile.getPrebidServerAccountId()
-
-    fun getMediaNetServerHost() = HOST_URL
 
     /**
      * sets in milliseconds, will return control to the ad server sdk to fetch an ad once the expiration period is achieved.
@@ -279,7 +279,7 @@ object MediaNetAdSDK {
 
         val configuration = AnalyticsSDK.Configuration.Builder()
             .setAnalyticsUrl("") // There are multiple type of events with different base url so setting base url for SDK as empty, we will send url in event itself
-            .enableEventSampling(false, samplingMap)
+            .enableEventSampling(samplingMap)
             .build()
 
         //TODO we get interval minute from config, need to update code for this use case, currently we only sync immediately

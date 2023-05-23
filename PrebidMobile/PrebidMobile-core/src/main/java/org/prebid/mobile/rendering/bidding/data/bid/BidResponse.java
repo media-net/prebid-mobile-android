@@ -227,6 +227,8 @@ public class BidResponse {
             return false;
         }
         HashMap<String, String> targeting = prebid.getTargeting();
+//        Prebid 2.0.8 has updated the method to get the winning bid, where only 2 keys are checked (hb_pb and hb_bidder).
+//        In 2.0.6, 3 keys were used. We have taken this code from 2.0.8.
 //        boolean result = targeting.containsKey("hb_pb") && targeting.containsKey("hb_bidder") && targeting.containsKey("hb_size");
         boolean result = targeting.containsKey("hb_pb") && targeting.containsKey("hb_bidder");
         if (isOriginalAdUnit) {

@@ -1,7 +1,6 @@
 package com.app.logger
 
 import android.util.Log
-import com.launcher.android.common.logger.BuildConfig
 
 object CustomLogger {
     private val ENABLE_LOG = BuildConfig.DEBUG
