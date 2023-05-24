@@ -14,7 +14,8 @@ ext {
 
 buildscript {
     ext{
-        kotlin_version = '1.7.22'
+        //Downgraded the kotlin version from 1.7.22 to 1.6.21 (to match carrom version for testing)
+        kotlin_version = '1.6.21'
         ext_junit = '1.1.5'
         junit = '4.13.2'
         espresso_core = '3.5.1'
