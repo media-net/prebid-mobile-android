@@ -75,7 +75,7 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
      * @param adRequest is the ad request for ad manager
      * @param listener listens to GAM events
      */
-    fun fetchDemandAndLoad(
+    private fun fetchDemandAndLoad(
         adView: AdManagerAdView,
         adRequest: AdManagerAdRequest,
         listener: GamEventListener

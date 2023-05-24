@@ -140,7 +140,7 @@ object MediaNetAdSDK {
      * fetches config from server
      * @param context is the context of application where the sdk has been integrated
      */
-    fun fetchConfigFromServer(context: Context) {
+    internal fun fetchConfigFromServer(context: Context) {
         coroutineScope.launch {
             configRepo?.refreshSdkConfig(accountId, context)
         }
@@ -304,7 +304,7 @@ object MediaNetAdSDK {
     internal fun isConfigEmpty() = config == null
 
     //TODO - when to call this
-    fun clear() {
+    internal fun clear() {
         AnalyticsSDK.clear()
         coroutineScope.coroutineContext.cancelChildren()
         config = null
