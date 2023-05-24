@@ -29,7 +29,6 @@ dependencies {
     implementation "androidx.core:core-ktx:$core_ktx"
     androidTestImplementation "androidx.test.ext:junit:$ext_junit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core"
-    implementation 'com.google.firebase:firebase-analytics-ktx'
     testImplementation "junit:junit:$junit"
     implementation project(path: ':network')
     implementation project(':logger')
