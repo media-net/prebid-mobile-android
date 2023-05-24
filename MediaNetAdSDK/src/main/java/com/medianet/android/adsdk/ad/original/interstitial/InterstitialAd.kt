@@ -56,7 +56,7 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
      * @param adRequest is the ad request for ad manager
      * @param listener listens to GAM events
      */
-    fun fetchDemandAndLoad(
+    private fun fetchDemandAndLoad(
         context: Context,
         adRequest: AdManagerAdRequest,
         listener: GamEventListener
