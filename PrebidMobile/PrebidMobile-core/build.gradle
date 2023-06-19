@@ -28,12 +28,12 @@ android {
 }
 
 artifactory {
-    contextUrl = 'https://a0irxd0yolrga.jfrog.io/artifactory'
+    contextUrl = 'https://mobilesdk.jfrog.io/artifactory/'
     publish {
         repository {
-            repoKey = "test-repo-key"
-            username = "nikhil.a@media.net"
-            password = "nikhil@Media064"
+            repoKey = "adsdk"
+            username = "sdk-dev@ad.tech"
+            password = "Androiddev1"
         }
     }
 }
@@ -71,8 +71,8 @@ project.afterEvaluate {
 
 dependencies {
     implementation project(":omsdk-android")
-    //api project(':logger')
-    implementation 'com.media.net:logger:0.0.1'
+    api project(':logger')
+    //implementation 'com.media.net:logger:0.0.1'
 
 
     implementation 'androidx.annotation:annotation:1.3.0'

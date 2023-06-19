@@ -49,12 +49,12 @@ android {
 }
 
 artifactory {
-    contextUrl = 'https://a0irxd0yolrga.jfrog.io/artifactory'
+    contextUrl = 'https://mobilesdk.jfrog.io/artifactory/'
     publish {
         repository {
-            repoKey = "test-repo-key"
-            username = "nikhil.a@media.net"
-            password = "nikhil@Media064"
+            repoKey = "adsdk"
+            username = "sdk-dev@ad.tech"
+            password = "Androiddev1"
         }
     }
 }
