@@ -35,7 +35,7 @@ import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
  */
 internal object EventFactory {
 
-    private var sdkConfig: SdkConfiguration?  = null
+    private var sdkConfig: SdkConfiguration? = null
     private val commonParams = mutableMapOf<String, String>()
     private val projectEventParams = mutableMapOf<String, String>()
     private val opportunityEventParams = mutableMapOf<String, String>()
@@ -63,7 +63,7 @@ internal object EventFactory {
         eventName: String,
         dfpDivId: String,
         sizes: List<MAdSize>?,
-        eventType: LoggingEvents
+        eventType: LoggingEvents,
     ): Event {
         val params = commonParams.toMutableMap()
         var baseUrl = ""
@@ -92,11 +92,11 @@ internal object EventFactory {
             }
         }
 
-        return Event (
+        return Event(
             name = eventName,
             type = eventType.type,
             params = params,
-            baseUrl = baseUrl
+            baseUrl = baseUrl,
         )
     }
 
@@ -134,11 +134,11 @@ internal object EventFactory {
         }
 
         projectEventParams.apply {
-            put(LOGGING_PER, sdkConfig.projectEventPercentage.takeIf { it > 0 }?.let { 100.div(it).toString() } ?: "0")
+            put(LOGGING_PER, sdkConfig.projectEventPercentage.toString())
         }
 
         opportunityEventParams.apply {
-            put(LOGGING_PER, sdkConfig.opportunityEventPercentage.takeIf { it > 0 }?.let { 100.div(it).toString() } ?: "0")
+            put(LOGGING_PER, sdkConfig.opportunityEventPercentage.toString())
         }
     }
 
