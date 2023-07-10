@@ -1,7 +1,7 @@
 package com.medianet.android.adsdk.utils
 
-import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
 import com.medianet.android.adsdk.model.StoredConfigs.StoredSdkConfig
+import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
 
 internal object ConfigUtils {
 
@@ -36,5 +36,13 @@ internal object ConfigUtils {
             dpfToCrIdMap = storedConfig.dpfToCrIdMapMap,
             configExpiryMillis = storedConfig.configExpiryMillis
         )
+    }
+
+    fun getLoggingPercentage(logValue: Double): Double {
+        return if (logValue > 0) {
+            100 / logValue
+        } else {
+            0.0
+        }
     }
 }

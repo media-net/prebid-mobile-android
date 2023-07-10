@@ -5,15 +5,14 @@ import androidx.datastore.core.DataStore
 import com.app.logger.CustomLogger
 import com.app.network.RetryPolicy
 import com.app.network.wrapper.safeApiCall
-import com.medianet.android.adsdk.BuildConfig
+import com.medianet.android.adsdk.model.StoredConfigs
 import com.medianet.android.adsdk.model.sdkconfig.ConfigResponse
 import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
-import com.medianet.android.adsdk.model.StoredConfigs
 import com.medianet.android.adsdk.network.SDKConfigSyncWorker
 import com.medianet.android.adsdk.network.ServerApiService
+import com.medianet.android.adsdk.utils.ConfigUtils
 import com.medianet.android.adsdk.utils.Constants.KEY_DN
 import java.io.IOException
-import com.medianet.android.adsdk.utils.ConfigUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.last
@@ -126,8 +125,8 @@ internal class ConfigRepoImpl(private val serverApiService: ServerApiService?, p
                 countryCode = serverConfig.targeting.countryCode
                 auctionTimeOutMillis = serverConfig.timeout.auctionTimeout.toLong()
                 dummyCrId = serverConfig.dummyCrId.crId
-                projectEventPercentage = serverConfig.logPercentage.projectEvent.toInt()
-                opportunityEventPercentage = serverConfig.logPercentage.opportunityEvent.toInt()
+                projectEventPercentage = ConfigUtils.getLoggingPercentage(serverConfig.logPercentage.projectEvent).toInt()
+                opportunityEventPercentage = ConfigUtils.getLoggingPercentage(serverConfig.logPercentage.opportunityEvent).toInt()
                 shouldKillSDK = serverConfig.publisherConfig.killSwitch
                 bidRequestUrl = serverConfig.urls.auctionLayerUrl
                 projectEventUrl = serverConfig.urls.projectEventUrl
