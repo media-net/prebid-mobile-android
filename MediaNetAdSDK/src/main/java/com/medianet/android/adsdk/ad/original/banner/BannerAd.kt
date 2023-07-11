@@ -6,18 +6,19 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import com.medianet.android.adsdk.*
+import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.base.Ad
 import com.medianet.android.adsdk.base.AdType
+import com.medianet.android.adsdk.base.Error
 import com.medianet.android.adsdk.base.listeners.GamEventListener
 import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
+import com.medianet.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
+import com.medianet.android.adsdk.utils.Constants.CONFIG_FAILURE_MSG
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
-import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
 import com.medianet.android.adsdk.utils.MapperUtils.mapGamLoadAdErrorToError
 import org.prebid.mobile.BannerAdUnit
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
-import com.medianet.android.adsdk.base.Error
 
 
 /**
@@ -59,13 +60,15 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
         adRequest: AdManagerAdRequest,
         listener: OnBidCompletionListener
     ) {
-
-        if (MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()) {
-            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
-            listener.onError(Error.CONFIG_ERROR)
+        if (MediaNetAdSDK.isConfigEmpty()) {
+            CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
+            listener.onError(Error.CONFIG_ERROR_CONFIG_FAILURE)
+            return
+        } else if (MediaNetAdSDK.isSdkOnVacation()) {
+            CustomLogger.error(CONFIG_ERROR_TAG, SDK_ON_VACATION_LOG_MSG)
+            listener.onError(Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
             return
         }
-
         fetchDemand(adRequest, listener)
     }
 
@@ -80,9 +83,13 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
         adRequest: AdManagerAdRequest,
         listener: GamEventListener
     ) {
-        if (MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()) {
-            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
-            listener.onError(Error.CONFIG_ERROR)
+        if (MediaNetAdSDK.isConfigEmpty()) {
+            CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
+            listener.onError(Error.CONFIG_ERROR_CONFIG_FAILURE)
+            return
+        } else if (MediaNetAdSDK.isSdkOnVacation()) {
+            CustomLogger.error(CONFIG_ERROR_TAG, SDK_ON_VACATION_LOG_MSG)
+            listener.onError(Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
             return
         }
 

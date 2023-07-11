@@ -3,22 +3,23 @@ package com.medianet.android.adsdk.ad.rendering.interstitial
 import android.app.Activity
 import android.content.Context
 import com.app.logger.CustomLogger
+import com.medianet.android.adsdk.MediaNetAdSDK
+import com.medianet.android.adsdk.ad.rendering.AdEventListener
 import com.medianet.android.adsdk.base.AdType
 import com.medianet.android.adsdk.base.MAdSize
-import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.events.EventManager
-import com.medianet.android.adsdk.ad.rendering.AdEventListener
+import com.medianet.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
+import com.medianet.android.adsdk.utils.Constants.CONFIG_FAILURE_MSG
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
-import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
 import com.medianet.android.adsdk.utils.MapperUtils.getPrebidAdSizeFromMediaNetAdSize
 import com.medianet.android.adsdk.utils.MapperUtils.mapAdExceptionToError
 import com.medianet.android.adsdk.utils.MapperUtils.mapInterstitialAdFormat
+import java.util.EnumSet
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
-import java.util.*
 
 /**
  * interstitial ad class for rendering type
@@ -122,11 +123,16 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
      */
     fun loadAd() {
 
-        if(MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()){
-            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
-            interstitialAdListener?.onAdFailed(com.medianet.android.adsdk.base.Error.CONFIG_ERROR)
+        if (MediaNetAdSDK.isConfigEmpty()) {
+            CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
+            interstitialAdListener?.onAdFailed(com.medianet.android.adsdk.base.Error.CONFIG_ERROR_CONFIG_FAILURE)
+            return
+        } else if (MediaNetAdSDK.isSdkOnVacation()) {
+            CustomLogger.error(CONFIG_ERROR_TAG, SDK_ON_VACATION_LOG_MSG)
+            interstitialAdListener?.onAdFailed(com.medianet.android.adsdk.base.Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
             return
         }
+
         mInterstitialAdUnit.loadAd()
     }
 

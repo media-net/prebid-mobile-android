@@ -7,7 +7,8 @@ object CustomLogger {
     private const val default_message = ""
 
     private fun printLog(logLevels: LogLevels, tag: String, message: String?, throwable: Throwable? = null) {
-        if (!ENABLE_LOG) return
+        if (shouldLog(logLevels).not()) return
+        LogLevels.ERROR
         val messageLog: String = message ?: default_message
         when (logLevels) {
             LogLevels.ERROR -> {
@@ -96,6 +97,16 @@ object CustomLogger {
         } catch (e: Exception) {
             if (ENABLE_LOG) {
                 e.printStackTrace()
+            }
+        }
+    }
+
+    private fun shouldLog(level: LogLevels): Boolean {
+        return when (level) {
+            LogLevels.ERROR -> true
+            LogLevels.INFO -> true
+            else -> {
+                BuildConfig.DEBUG
             }
         }
     }

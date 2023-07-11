@@ -2,21 +2,21 @@ package com.medianet.android.adsdk.ad.nativead
 
 import com.app.logger.CustomLogger
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
-import com.medianet.android.adsdk.*
+import com.medianet.android.adsdk.MediaNetAdSDK
+import com.medianet.android.adsdk.ad.nativead.assets.NativeAdAsset
 import com.medianet.android.adsdk.base.Ad
 import com.medianet.android.adsdk.base.AdType
-import com.medianet.android.adsdk.base.listeners.GamEventListener
-import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
-import com.medianet.android.adsdk.ad.nativead.assets.NativeAdAsset
 import com.medianet.android.adsdk.base.Error
+import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
+import com.medianet.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
+import com.medianet.android.adsdk.utils.Constants.CONFIG_FAILURE_MSG
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
-import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
 import com.medianet.android.adsdk.utils.MapperUtils.getPrebidAssetFromNativeAdAsset
 import com.medianet.android.adsdk.utils.MapperUtils.getPrebidContextSubType
 import com.medianet.android.adsdk.utils.MapperUtils.getPrebidContextType
 import com.medianet.android.adsdk.utils.MapperUtils.getPrebidEventTracker
 import com.medianet.android.adsdk.utils.MapperUtils.getPrebidPlacementType
-import org.prebid.mobile.*
+import org.prebid.mobile.NativeAdUnit
 
 /**
  * native ad class for both original and rendering types of loading an ad
@@ -135,13 +135,15 @@ class NativeAd(adUnitId: String) : Ad(NativeAdUnit(adUnitId)) {
         adRequest: AdManagerAdRequest,
         listener: OnBidCompletionListener
     ) {
-        if (MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()) {
-            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
-            listener.onError(Error.CONFIG_ERROR)
+        if (MediaNetAdSDK.isConfigEmpty()) {
+            CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
+            listener.onError(Error.CONFIG_ERROR_CONFIG_FAILURE)
+            return
+        } else if (MediaNetAdSDK.isSdkOnVacation()) {
+            CustomLogger.error(CONFIG_ERROR_TAG, SDK_ON_VACATION_LOG_MSG)
+            listener.onError(Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
             return
         }
-
-
         fetchDemand(adRequest, listener)
     }
 }
