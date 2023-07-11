@@ -3,13 +3,14 @@ package com.medianet.android.adsdk.ad.rendering.banner
 import android.content.Context
 import android.widget.FrameLayout
 import com.app.logger.CustomLogger
-import com.medianet.android.adsdk.model.banner.ContentModel
 import com.medianet.android.adsdk.MediaNetAdSDK
-import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.ad.rendering.AdEventListener
 import com.medianet.android.adsdk.base.MAdSize
+import com.medianet.android.adsdk.events.EventManager
+import com.medianet.android.adsdk.model.banner.ContentModel
+import com.medianet.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
+import com.medianet.android.adsdk.utils.Constants.CONFIG_FAILURE_MSG
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
-import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_TAG
 import com.medianet.android.adsdk.utils.MapperUtils.getPrebidAdSizeFromMediaNetAdSize
 import com.medianet.android.adsdk.utils.MapperUtils.mapAdExceptionToError
 import com.medianet.android.adsdk.utils.MapperUtils.mapAdSizesToMAdSizes
@@ -111,9 +112,14 @@ class BannerAdView(context: Context, val adUnitId: String, adSize: MAdSize) {
      * initiates the ad loading by doing bid request call
      */
     fun loadAd() {
-        if(MediaNetAdSDK.isSdkOnVacation() || MediaNetAdSDK.isConfigEmpty()){
-            CustomLogger.error(SDK_ON_VACATION_LOG_TAG, SDK_ON_VACATION_LOG_MSG)
-            bannerAdListener?.onAdFailed(com.medianet.android.adsdk.base.Error.CONFIG_ERROR)
+
+        if (MediaNetAdSDK.isConfigEmpty()) {
+            CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
+            bannerAdListener?.onAdFailed(com.medianet.android.adsdk.base.Error.CONFIG_ERROR_CONFIG_FAILURE)
+            return
+        } else if (MediaNetAdSDK.isSdkOnVacation()) {
+            CustomLogger.error(CONFIG_ERROR_TAG, SDK_ON_VACATION_LOG_MSG)
+            bannerAdListener?.onAdFailed(com.medianet.android.adsdk.base.Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
             return
         }
 
