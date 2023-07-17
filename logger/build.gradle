@@ -45,7 +45,7 @@ project.afterEvaluate {
                 setGroupId 'com.media.net'
                 //You can either define these here or get them from project conf elsewhere
                 setArtifactId 'logger'
-                version '0.0.1'
+                version '0.0.2'
                 artifact bundleReleaseAar //aar artifact you want to publish
 
                 pom.withXml {
