@@ -38,6 +38,7 @@ internal object Constants {
         const val PE_PROJECT_TYPE = "mobile_sdk"
 
         const val AP_LOG_ID = "aplog"
+        const val PV_ID = "pvid"
     }
 
 }
