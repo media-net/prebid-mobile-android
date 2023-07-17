@@ -312,8 +312,14 @@ public class BasicParameterBuilder extends ParameterBuilder {
                 banner.addFormat(size.getWidth(), size.getHeight());
             }
         } else if (adConfiguration.isAdType(AdFormat.INTERSTITIAL) && resources != null) {
-            Configuration deviceConfiguration = resources.getConfiguration();
-            banner.addFormat(deviceConfiguration.screenWidthDp, deviceConfiguration.screenHeightDp);
+            // This change is made for interstitial ads of HPN publisher, for testing purposes.
+            // TODO Remove the static values once the testing is done and SDK is ready to go live.
+
+            // Configuration deviceConfiguration = resources.getConfiguration();
+            // banner.addFormat(deviceConfiguration.screenWidthDp, deviceConfiguration.screenHeightDp);
+            int INTERSTITIAL_WIDTH = 320;
+            int INTERSTITIAL_HEIGHT = 480;
+            banner.addFormat(INTERSTITIAL_WIDTH, INTERSTITIAL_HEIGHT);
         }
 
         if (adConfiguration.isAdPositionValid()) {
