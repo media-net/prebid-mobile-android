@@ -9,5 +9,6 @@ object Constant {
         const val DEFAULT_DTYPE_ID_VALUE = "3"
         const val MOBILE_SDK = "MOBILE_SDK"
         const val DEFAULT_TO_CONSIDER_VALUE = "1"
+        const val DEFAULT_OPPORTUNITY_EVENT_PVID_VALUE = "-2"
     }
 }

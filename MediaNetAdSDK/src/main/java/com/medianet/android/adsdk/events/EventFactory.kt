@@ -2,6 +2,7 @@ package com.medianet.android.adsdk.events
 
 import com.app.analytics.Event
 import com.app.analytics.utils.Constant.Providers.DEFAULT_DTYPE_ID_VALUE
+import com.app.analytics.utils.Constant.Providers.DEFAULT_OPPORTUNITY_EVENT_PVID_VALUE
 import com.app.analytics.utils.Constant.Providers.DEFAULT_TO_CONSIDER_VALUE
 import com.app.analytics.utils.Constant.Providers.DEFAULT_UGD_VALUE
 import com.app.analytics.utils.Constant.Providers.MOBILE_SDK
@@ -25,6 +26,7 @@ import com.medianet.android.adsdk.events.Constants.Keys.PE_EVT_ID
 import com.medianet.android.adsdk.events.Constants.Keys.PE_LOG_ID
 import com.medianet.android.adsdk.events.Constants.Keys.PE_PROJECT_TYPE
 import com.medianet.android.adsdk.events.Constants.Keys.PROJECT_TYPE
+import com.medianet.android.adsdk.events.Constants.Keys.PV_ID
 import com.medianet.android.adsdk.events.Constants.Keys.SDK_VERSION
 import com.medianet.android.adsdk.events.Constants.Keys.TO_CONSIDER
 import com.medianet.android.adsdk.events.Constants.Keys.UGD
@@ -49,6 +51,7 @@ internal object EventFactory {
         opportunityEventParams.apply {
             put(LOG_ID, AP_LOG_ID)
             put(TO_CONSIDER, DEFAULT_TO_CONSIDER_VALUE)
+            put(PV_ID, DEFAULT_OPPORTUNITY_EVENT_PVID_VALUE)
         }
     }
 
