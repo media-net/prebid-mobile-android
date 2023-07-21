@@ -1,6 +1,9 @@
 package com.medianet.android.adsdk.model.sdkconfig
 
+import android.os.Build
 import com.medianet.android.adsdk.BuildConfig
+import com.medianet.android.adsdk.MediaNetAdSDK
+import org.prebid.mobile.PrebidMobile
 
 /**
  *  mapper class for ConfigResponse.kt class
@@ -21,12 +24,14 @@ internal data class SdkConfiguration(
     val opportunityEventUrl: String,
     val configExpiryMillis: Long = -1,
     val timeStamp: Long = System.currentTimeMillis(),
-    val sdkVersion: String = BuildConfig.VERSION_NAME
+    val sdkVersion: String = BuildConfig.VERSION_NAME,
+    val osVersion: String = Build.VERSION.RELEASE,
+    val prebidVersion: String = PrebidMobile.SDK_VERSION,
+    val isSubjectToGDPR: Boolean = MediaNetAdSDK.isSubjectToGDPR() ?: false,
 ) {
     fun getCrId(dfpAdId: String): String {
         return dpfToCrIdMap[dfpAdId] ?: dummyCCrId
     }
 
     fun isConfigExpired() = ((System.currentTimeMillis() - timeStamp) >= configExpiryMillis)
-
 }

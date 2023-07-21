@@ -10,6 +10,7 @@ import org.prebid.mobile.AdUnit
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.ResultCode
 import org.prebid.mobile.api.rendering.listeners.MediaEventListener
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
 
 /**
  * base ad class for banner, interstitial and native ads
@@ -17,7 +18,7 @@ import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 abstract class Ad(val adUnit: AdUnit) {
 
     abstract val adType: AdType
-    companion object{
+    companion object {
         private const val ADSIZE_ADJUSTMENT_ERROR_TAG = "AdSizeAdjustmentError"
     }
 
@@ -25,21 +26,23 @@ abstract class Ad(val adUnit: AdUnit) {
         override fun onBidRequest() {
             EventManager.sendBidRequestEvent(
                 dfpDivId = adUnit.configuration.configId,
-                sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes()
+                sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes(),
             )
         }
 
         override fun onBidRequestTimeout() {
             EventManager.sendTimeoutEvent(
                 dfpDivId = adUnit.configuration.configId,
-                sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes()
+                sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes(),
             )
         }
 
-        override fun onRequestSentToGam() {
+        override fun onRequestSentToGam(bidResponse: BidResponse?) {
             EventManager.sendAdRequestToGamEvent(
                 dfpDivId = adUnit.configuration.configId,
-                sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes()
+                sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes(),
+                adType = adType,
+                bidResponse = bidResponse,
             )
         }
 
@@ -61,8 +64,9 @@ abstract class Ad(val adUnit: AdUnit) {
     fun setAutoRefreshIntervalInSeconds(
         @IntRange(
             from = (PrebidMobile.AUTO_REFRESH_DELAY_MIN / 1000).toLong(),
-            to = (PrebidMobile.AUTO_REFRESH_DELAY_MAX / 1000).toLong()
-        ) seconds: Int) = apply {
+            to = (PrebidMobile.AUTO_REFRESH_DELAY_MAX / 1000).toLong(),
+        ) seconds: Int,
+    ) = apply {
         adUnit.setAutoRefreshInterval(seconds)
     }
 
@@ -98,7 +102,7 @@ abstract class Ad(val adUnit: AdUnit) {
     fun clearContextData() = apply { adUnit.clearContextData() }
 
     fun getPrebidAdSlot() = adUnit.pbAdSlot
-    fun setPrebidAdSlot(slot: String) = apply { adUnit.pbAdSlot =  slot }
+    fun setPrebidAdSlot(slot: String) = apply { adUnit.pbAdSlot = slot }
 
     /**
      * sends Event Of Ad Loaded to Analytics
@@ -106,7 +110,7 @@ abstract class Ad(val adUnit: AdUnit) {
     fun sendAdLoadedEvent() {
         EventManager.sendAdLoadedEvent(
             dfpDivId = adUnit.configuration.configId,
-            sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes()
+            sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes(),
         )
     }
 
@@ -117,16 +121,16 @@ abstract class Ad(val adUnit: AdUnit) {
      */
     protected fun fetchDemand(adRequest: AdManagerAdRequest, listener: OnBidCompletionListener) {
         adUnit.fetchDemand(adRequest) {
-        resultCode ->
-                when(resultCode) {
-                    ResultCode.SUCCESS -> {
-                        listener.onSuccess(null)
-                    }
-                    else -> {
-                        val error =  resultCode.mapResultCodeToError()
-                        listener.onError(error)
-                    }
+                resultCode ->
+            when (resultCode) {
+                ResultCode.SUCCESS -> {
+                    listener.onSuccess(null)
                 }
+                else -> {
+                    val error = resultCode.mapResultCodeToError()
+                    listener.onError(error)
+                }
+            }
         }
     }
 }

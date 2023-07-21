@@ -1,36 +1,45 @@
 package com.medianet.android.adsdk.events
 
 import com.app.analytics.Event
-import com.app.analytics.utils.Constant.Providers.DEFAULT_DTYPE_ID_VALUE
-import com.app.analytics.utils.Constant.Providers.DEFAULT_OPPORTUNITY_EVENT_PVID_VALUE
-import com.app.analytics.utils.Constant.Providers.DEFAULT_TO_CONSIDER_VALUE
-import com.app.analytics.utils.Constant.Providers.DEFAULT_UGD_VALUE
-import com.app.analytics.utils.Constant.Providers.MOBILE_SDK
 import com.medianet.android.adsdk.base.MAdSize
+import com.medianet.android.adsdk.events.Constants.AP_LOG_ID
+import com.medianet.android.adsdk.events.Constants.DEFAULT_DBF_VALUE
+import com.medianet.android.adsdk.events.Constants.DEFAULT_DTYPE_ID_VALUE
+import com.medianet.android.adsdk.events.Constants.DEFAULT_OPPORTUNITY_EVENT_PVID_VALUE
+import com.medianet.android.adsdk.events.Constants.DEFAULT_PTYPE_VALUE
+import com.medianet.android.adsdk.events.Constants.DEFAULT_TO_CONSIDER_VALUE
+import com.medianet.android.adsdk.events.Constants.DEFAULT_UGD_VALUE
 import com.medianet.android.adsdk.events.Constants.Keys.AD_SIZE
 import com.medianet.android.adsdk.events.Constants.Keys.AD_SIZES
-import com.medianet.android.adsdk.events.Constants.Keys.AP_LOG_ID
 import com.medianet.android.adsdk.events.Constants.Keys.COUNTRY_CODE
 import com.medianet.android.adsdk.events.Constants.Keys.CR_ID
 import com.medianet.android.adsdk.events.Constants.Keys.CUSTOMER_ID
+import com.medianet.android.adsdk.events.Constants.Keys.DBF
+import com.medianet.android.adsdk.events.Constants.Keys.DFP_AD_PATH
 import com.medianet.android.adsdk.events.Constants.Keys.DFP_DIV_ID
 import com.medianet.android.adsdk.events.Constants.Keys.DOMAIN_NAME
 import com.medianet.android.adsdk.events.Constants.Keys.DTYPE_ID
 import com.medianet.android.adsdk.events.Constants.Keys.EVENT_NAME
 import com.medianet.android.adsdk.events.Constants.Keys.EVT_ID
+import com.medianet.android.adsdk.events.Constants.Keys.GDPR
 import com.medianet.android.adsdk.events.Constants.Keys.ITYPE
 import com.medianet.android.adsdk.events.Constants.Keys.LOGGING_PER
 import com.medianet.android.adsdk.events.Constants.Keys.LOG_ID
+import com.medianet.android.adsdk.events.Constants.Keys.OS_VERSION
 import com.medianet.android.adsdk.events.Constants.Keys.PARTNER_ID
-import com.medianet.android.adsdk.events.Constants.Keys.PE_EVT_ID
-import com.medianet.android.adsdk.events.Constants.Keys.PE_LOG_ID
-import com.medianet.android.adsdk.events.Constants.Keys.PE_PROJECT_TYPE
+import com.medianet.android.adsdk.events.Constants.Keys.PREBID_VERSION
 import com.medianet.android.adsdk.events.Constants.Keys.PROJECT_TYPE
 import com.medianet.android.adsdk.events.Constants.Keys.PV_ID
+import com.medianet.android.adsdk.events.Constants.Keys.P_TYPE
 import com.medianet.android.adsdk.events.Constants.Keys.SDK_VERSION
 import com.medianet.android.adsdk.events.Constants.Keys.TO_CONSIDER
 import com.medianet.android.adsdk.events.Constants.Keys.UGD
+import com.medianet.android.adsdk.events.Constants.MOBILE_SDK
+import com.medianet.android.adsdk.events.Constants.PE_EVT_ID
+import com.medianet.android.adsdk.events.Constants.PE_LOG_ID
+import com.medianet.android.adsdk.events.Constants.PE_PROJECT_TYPE
 import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
+import com.medianet.android.adsdk.utils.MapperUtils.getSizeString
 
 /**
  * factory class to create different types of events
@@ -52,6 +61,8 @@ internal object EventFactory {
             put(LOG_ID, AP_LOG_ID)
             put(TO_CONSIDER, DEFAULT_TO_CONSIDER_VALUE)
             put(PV_ID, DEFAULT_OPPORTUNITY_EVENT_PVID_VALUE)
+            put(DBF, DEFAULT_DBF_VALUE)
+            put(P_TYPE, DEFAULT_PTYPE_VALUE)
         }
     }
 
@@ -67,20 +78,11 @@ internal object EventFactory {
         dfpDivId: String,
         sizes: List<MAdSize>?,
         eventType: LoggingEvents,
+        eventParams: Map<String, String>,
     ): Event {
         val params = commonParams.toMutableMap()
+        params.putAll(eventParams)
         var baseUrl = ""
-        when (eventType) {
-            LoggingEvents.PROJECT -> {
-                params.putAll(projectEventParams)
-                params[EVENT_NAME] = eventName
-                baseUrl = sdkConfig?.projectEventUrl ?: ""
-            }
-            LoggingEvents.OPPORTUNITY -> {
-                params.putAll(opportunityEventParams)
-                baseUrl = sdkConfig?.opportunityEventUrl ?: ""
-            }
-        }
         params[EVENT_NAME] = eventName
         params[DFP_DIV_ID] = dfpDivId
         sdkConfig?.let {
@@ -95,28 +97,30 @@ internal object EventFactory {
             }
         }
 
+        when (eventType) {
+            LoggingEvents.PROJECT -> {
+                params.putAll(projectEventParams)
+                params[EVENT_NAME] = eventName
+                baseUrl = sdkConfig?.projectEventUrl ?: ""
+            }
+            LoggingEvents.OPPORTUNITY -> {
+                params.putAll(opportunityEventParams)
+                baseUrl = sdkConfig?.opportunityEventUrl ?: ""
+                params[DFP_AD_PATH] = dfpDivId
+                sdkConfig?.let {
+                    params[PREBID_VERSION] = it.prebidVersion
+                    params[OS_VERSION] = it.osVersion
+                    params[GDPR] = if (it.isSubjectToGDPR) "1" else "0"
+                }
+            }
+        }
+
         return Event(
             name = eventName,
             type = eventType.type,
             params = params,
             baseUrl = baseUrl,
         )
-    }
-
-    /**
-     * converts list of MAdSize Objects to a plain string
-     * @param sizes list of MAdSize objects
-     * @return converted string result (Eg: 320X420|200X100)
-     */
-    private fun getSizeString(sizes: List<MAdSize>): String {
-        val sb = StringBuilder()
-        sizes.forEachIndexed { index, size ->
-            if (index != 0) {
-                sb.append("|")
-            }
-            sb.append(size.width).append("X").append(size.height)
-        }
-        return sb.toString()
     }
 
     /**
