@@ -334,6 +334,7 @@ public abstract class BaseInterstitialAdUnit {
             public void onError(AdException exception) {
                 bidResponse = null;
                 requestAdWithBid(null);
+                mediaEventListener.onRequestSentToGam(null);
             }
         };
     }

@@ -295,6 +295,7 @@ public abstract class AdUnit {
             public void onError(AdException exception) {
                 Util.apply(null, adObject);
                 originalListener.onComplete(convertToResultCode(exception));
+                mediaEventListener.onRequestSentToGam(null);
             }
         };
     }
