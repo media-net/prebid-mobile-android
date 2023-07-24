@@ -134,6 +134,7 @@ public class BannerView extends FrameLayout {
         public void onError(AdException exception) {
             bidResponse = null;
             eventHandler.requestAdWithBid(null);
+            mediaEventListener.onRequestSentToGam(null);
         }
     };
 
