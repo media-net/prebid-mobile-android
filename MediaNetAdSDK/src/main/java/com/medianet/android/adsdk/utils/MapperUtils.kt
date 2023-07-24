@@ -1,26 +1,33 @@
 package com.medianet.android.adsdk.utils
 
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
-import com.medianet.android.adsdk.*
-import com.medianet.android.adsdk.base.AdType
-import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.ad.nativead.EventTracker
 import com.medianet.android.adsdk.ad.nativead.NativeAd
+import com.medianet.android.adsdk.ad.nativead.assets.DataAsset
+import com.medianet.android.adsdk.ad.nativead.assets.ImageAsset
+import com.medianet.android.adsdk.ad.nativead.assets.NativeAdAsset
+import com.medianet.android.adsdk.ad.nativead.assets.TitleAsset
+import com.medianet.android.adsdk.base.AdType
+import com.medianet.android.adsdk.base.Error
+import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.base.MLogLevel
 import com.medianet.android.adsdk.model.banner.ContentModel
 import com.medianet.android.adsdk.model.banner.DataModel
 import com.medianet.android.adsdk.model.banner.ProducerModel
 import com.medianet.android.adsdk.model.banner.SegmentModel
-import com.medianet.android.adsdk.ad.nativead.assets.DataAsset
-import com.medianet.android.adsdk.ad.nativead.assets.ImageAsset
-import com.medianet.android.adsdk.ad.nativead.assets.NativeAdAsset
-import com.medianet.android.adsdk.ad.nativead.assets.TitleAsset
-import org.prebid.mobile.*
+import org.prebid.mobile.ContentObject
+import org.prebid.mobile.DataObject
+import org.prebid.mobile.NativeAdUnit
+import org.prebid.mobile.NativeAsset
+import org.prebid.mobile.NativeDataAsset
+import org.prebid.mobile.NativeEventTracker
+import org.prebid.mobile.NativeImageAsset
+import org.prebid.mobile.NativeTitleAsset
+import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.ResultCode
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.exceptions.AdException
-import java.util.*
-import com.medianet.android.adsdk.base.Error
+import java.util.EnumSet
 
 object MapperUtils {
 
@@ -128,7 +135,7 @@ object MapperUtils {
         }
     }
 
-    //Rendering Interstitial Ad format
+    // Rendering Interstitial Ad format
     fun EnumSet<AdType>.mapInterstitialAdFormat(): EnumSet<AdUnitFormat> {
         val enumSetOfAdUnitFormat = EnumSet.noneOf(AdUnitFormat::class.java)
         for (format in this) {
@@ -141,7 +148,7 @@ object MapperUtils {
         return enumSetOfAdUnitFormat
     }
 
-    //Ad Exception to Error class
+    // Ad Exception to Error class
     fun AdException?.mapAdExceptionToError(): Error {
         return when (this?.message) {
             AdException.INIT_ERROR -> Error.INIT_ERROR
@@ -153,7 +160,7 @@ object MapperUtils {
         }
     }
 
-    //To convert AdSize
+    // To convert AdSize
     fun MAdSize.getPrebidAdSizeFromMediaNetAdSize(): org.prebid.mobile.AdSize {
         return org.prebid.mobile.AdSize(width, height)
     }
@@ -256,7 +263,7 @@ object MapperUtils {
                     EventTracker.EventTrackingMethods.IMAGE -> NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE
                     EventTracker.EventTrackingMethods.JS -> NativeEventTracker.EVENT_TRACKING_METHOD.JS
                     else -> NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM
-                }
+                },
             )
         }
         return methodsArray
@@ -303,8 +310,34 @@ object MapperUtils {
 
     fun EventTracker.getPrebidEventTracker(): NativeEventTracker {
         return NativeEventTracker(
-            this.type.getPrebidEventType(), this.methods.getPrebidTrackingMethodTypeArray()
+            this.type.getPrebidEventType(),
+            this.methods.getPrebidTrackingMethodTypeArray(),
         )
     }
 
+    fun AdType.toEventParamValue(): Int {
+        return when (this) {
+            AdType.BANNER -> 0
+            AdType.INTERSTITIAL -> 0
+            AdType.NATIVE -> 1
+            AdType.VIDEO -> 2
+            AdType.DISPLAY -> 3
+        }
+    }
+
+    /**
+     * converts list of MAdSize Objects to a plain string
+     * @param sizes list of MAdSize objects
+     * @return converted string result (Eg: 320X420|200X100)
+     */
+    fun getSizeString(sizes: List<MAdSize>): String {
+        val sb = StringBuilder()
+        sizes.forEachIndexed { index, size ->
+            if (index != 0) {
+                sb.append("|")
+            }
+            sb.append(size.width).append("X").append(size.height)
+        }
+        return sb.toString()
+    }
 }

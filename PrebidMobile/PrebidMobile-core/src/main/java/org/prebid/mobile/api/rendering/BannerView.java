@@ -127,7 +127,7 @@ public class BannerView extends FrameLayout {
 
             isPrimaryAdServerRequestInProgress = true;
             eventHandler.requestAdWithBid(getWinnerBid());
-            mediaEventListener.onRequestSentToGam();
+            mediaEventListener.onRequestSentToGam(response);
         }
 
         @Override

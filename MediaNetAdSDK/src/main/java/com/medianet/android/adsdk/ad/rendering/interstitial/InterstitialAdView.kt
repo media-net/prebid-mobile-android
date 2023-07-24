@@ -14,20 +14,26 @@ import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.medianet.android.adsdk.utils.MapperUtils.getPrebidAdSizeFromMediaNetAdSize
 import com.medianet.android.adsdk.utils.MapperUtils.mapAdExceptionToError
 import com.medianet.android.adsdk.utils.MapperUtils.mapInterstitialAdFormat
-import java.util.EnumSet
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
+import java.util.EnumSet
 
 /**
  * interstitial ad class for rendering type
  */
 class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: EnumSet<AdType>) {
 
-    constructor(context: Context, adUnitId: String): this(context, adUnitId, EnumSet.of(
-        AdType.DISPLAY))
+    constructor(context: Context, adUnitId: String) : this(
+        context,
+        adUnitId,
+        EnumSet.of(
+            AdType.DISPLAY,
+        ),
+    )
 
     private val gamInterstitialEventHandler = GamInterstitialEventHandler(context as Activity?, adUnitId)
 
@@ -38,28 +44,30 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
         override fun onBidRequest() {
             EventManager.sendBidRequestEvent(
                 dfpDivId = adUnitId,
-                sizes = null
+                sizes = null,
             )
         }
 
         override fun onBidRequestTimeout() {
             EventManager.sendTimeoutEvent(
                 dfpDivId = adUnitId,
-                sizes = null
+                sizes = null,
             )
         }
 
-        override fun onRequestSentToGam() {
+        override fun onRequestSentToGam(bidResponse: BidResponse?) {
             EventManager.sendAdRequestToGamEvent(
                 dfpDivId = adUnitId,
-                sizes = null
+                sizes = null,
+                adType = AdType.INTERSTITIAL,
+                bidResponse = bidResponse,
             )
         }
 
         override fun onAdLoaded() {
             EventManager.sendAdLoadedEvent(
                 dfpDivId = adUnitId,
-                sizes = null
+                sizes = null,
             )
         }
     }
@@ -74,7 +82,7 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
      */
     fun setInterstitialAdListener(listener: AdEventListener) {
         interstitialAdListener = listener
-        mInterstitialAdUnit.setInterstitialAdUnitListener(object: InterstitialAdUnitListener {
+        mInterstitialAdUnit.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
                 interstitialAdListener?.onAdLoaded()
                 mediaEventListener.onAdLoaded()
@@ -86,7 +94,7 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
 
             override fun onAdFailed(
                 interstitialAdUnit: InterstitialAdUnit?,
-                exception: AdException?
+                exception: AdException?,
             ) {
                 interstitialAdListener?.onAdFailed(exception.mapAdExceptionToError())
             }
@@ -98,7 +106,6 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
             override fun onAdClosed(interstitialAdUnit: InterstitialAdUnit?) {
                 interstitialAdListener?.onAdClosed()
             }
-
         })
     }
 
@@ -122,7 +129,6 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
      * initiates the ad loading by doing bid request call
      */
     fun loadAd() {
-
         if (MediaNetAdSDK.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
             interstitialAdListener?.onAdFailed(com.medianet.android.adsdk.base.Error.CONFIG_ERROR_CONFIG_FAILURE)

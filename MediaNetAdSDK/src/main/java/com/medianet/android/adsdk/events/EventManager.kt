@@ -1,12 +1,20 @@
 package com.medianet.android.adsdk.events
 
 import com.app.analytics.AnalyticsSDK
+import com.medianet.android.adsdk.base.AdType
 import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.events.Constants.EventName.AD_LOADED
 import com.medianet.android.adsdk.events.Constants.EventName.AD_REQUEST_TO_GAM
 import com.medianet.android.adsdk.events.Constants.EventName.BID_REQUEST
 import com.medianet.android.adsdk.events.Constants.EventName.TIME_OUT
+import com.medianet.android.adsdk.events.Constants.Keys.AD_TYPES
+import com.medianet.android.adsdk.events.Constants.Keys.REQUEST_ID
+import com.medianet.android.adsdk.events.Constants.Keys.REQ_MTYPE
+import com.medianet.android.adsdk.events.Constants.Keys.RESPONSE_SIZE
 import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
+import com.medianet.android.adsdk.utils.MapperUtils.getSizeString
+import com.medianet.android.adsdk.utils.MapperUtils.toEventParamValue
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
 
 /**
  * manager class that handles events transmission to analytics sdk
@@ -27,7 +35,7 @@ internal object EventManager {
             eventName = BID_REQUEST,
             eventType = LoggingEvents.PROJECT,
             dfpDivId = dfpDivId,
-            sizes = sizes
+            sizes = sizes,
         )
     }
 
@@ -41,7 +49,7 @@ internal object EventManager {
             eventName = TIME_OUT,
             eventType = LoggingEvents.PROJECT,
             dfpDivId = dfpDivId,
-            sizes = sizes
+            sizes = sizes,
         )
     }
 
@@ -50,12 +58,26 @@ internal object EventManager {
      * @param dfpDivId is the adUnit's configuration config id
      * @param sizes are the sizes set for the ad slot
      */
-    fun sendAdRequestToGamEvent(dfpDivId: String, sizes: List<MAdSize>?) {
+    fun sendAdRequestToGamEvent(dfpDivId: String, sizes: List<MAdSize>?, adType: AdType, bidResponse: BidResponse?) {
+        val type = adType.toEventParamValue().toString()
+        val params = mutableMapOf(
+            REQ_MTYPE to type,
+            AD_TYPES to type,
+        )
+
+        bidResponse?.id?.let {
+            params[REQUEST_ID] = it
+        }
+        bidResponse?.winningBid?.let {
+            params[RESPONSE_SIZE] = getSizeString(listOf(MAdSize(width = it.width, height = it.height)))
+        }
+
         sendEvent(
             eventName = AD_REQUEST_TO_GAM,
             eventType = LoggingEvents.OPPORTUNITY,
             dfpDivId = dfpDivId,
-            sizes = sizes
+            sizes = sizes,
+            params = params,
         )
     }
 
@@ -69,7 +91,7 @@ internal object EventManager {
             eventName = AD_LOADED,
             eventType = LoggingEvents.PROJECT,
             dfpDivId = dfpDivId,
-            sizes = sizes
+            sizes = sizes,
         )
     }
 
@@ -80,12 +102,13 @@ internal object EventManager {
      * @param dfpDivId is the adUnit's configuration config ID
      * @param sizes are the sizes set for the ad slot
      */
-    private fun sendEvent(eventName: String, eventType: LoggingEvents, dfpDivId: String, sizes: List<MAdSize>?) {
+    private fun sendEvent(eventName: String, eventType: LoggingEvents, dfpDivId: String, sizes: List<MAdSize>?, params: MutableMap<String, String> = mutableMapOf()) {
         val event = EventFactory.getEvent(
             eventName = eventName,
             dfpDivId = dfpDivId,
             sizes = sizes,
-            eventType = eventType
+            eventType = eventType,
+            eventParams = params,
         )
         AnalyticsSDK.pushEvent(event)
     }
