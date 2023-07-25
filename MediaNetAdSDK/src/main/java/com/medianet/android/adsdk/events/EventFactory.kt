@@ -9,8 +9,6 @@ import com.medianet.android.adsdk.events.Constants.DEFAULT_OPPORTUNITY_EVENT_PVI
 import com.medianet.android.adsdk.events.Constants.DEFAULT_PTYPE_VALUE
 import com.medianet.android.adsdk.events.Constants.DEFAULT_TO_CONSIDER_VALUE
 import com.medianet.android.adsdk.events.Constants.DEFAULT_UGD_VALUE
-import com.medianet.android.adsdk.events.Constants.Keys.AD_SIZE
-import com.medianet.android.adsdk.events.Constants.Keys.AD_SIZES
 import com.medianet.android.adsdk.events.Constants.Keys.COUNTRY_CODE
 import com.medianet.android.adsdk.events.Constants.Keys.CR_ID
 import com.medianet.android.adsdk.events.Constants.Keys.CUSTOMER_ID
@@ -31,6 +29,7 @@ import com.medianet.android.adsdk.events.Constants.Keys.PREBID_VERSION
 import com.medianet.android.adsdk.events.Constants.Keys.PROJECT_TYPE
 import com.medianet.android.adsdk.events.Constants.Keys.PV_ID
 import com.medianet.android.adsdk.events.Constants.Keys.P_TYPE
+import com.medianet.android.adsdk.events.Constants.Keys.REQUEST_AD_SIZE
 import com.medianet.android.adsdk.events.Constants.Keys.SDK_VERSION
 import com.medianet.android.adsdk.events.Constants.Keys.TO_CONSIDER
 import com.medianet.android.adsdk.events.Constants.Keys.UGD
@@ -90,11 +89,7 @@ internal object EventFactory {
         }
         if (sizes != null && sizes.isNotEmpty()) {
             val sizeStr = getSizeString(sizes)
-            if (sizes.size > 1) {
-                params[AD_SIZE] = sizeStr
-            } else {
-                params[AD_SIZES] = sizeStr
-            }
+            params[REQUEST_AD_SIZE] = sizeStr
         }
 
         when (eventType) {

@@ -2,6 +2,7 @@ package com.medianet.android.adsdk.events
 
 import com.app.analytics.AnalyticsSDK
 import com.medianet.android.adsdk.base.AdType
+import com.medianet.android.adsdk.base.Error
 import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.events.Constants.EventName.AD_LOADED
 import com.medianet.android.adsdk.events.Constants.EventName.AD_REQUEST_TO_GAM
@@ -10,10 +11,16 @@ import com.medianet.android.adsdk.events.Constants.EventName.TIME_OUT
 import com.medianet.android.adsdk.events.Constants.Keys.AD_TYPES
 import com.medianet.android.adsdk.events.Constants.Keys.REQUEST_ID
 import com.medianet.android.adsdk.events.Constants.Keys.REQ_MTYPE
-import com.medianet.android.adsdk.events.Constants.Keys.RESPONSE_SIZE
+import com.medianet.android.adsdk.events.Constants.Keys.RESPONSE_AD_SIZES
+import com.medianet.android.adsdk.events.Constants.Keys.SNM
+import com.medianet.android.adsdk.events.Constants.SNM_ERROR_VALUE
+import com.medianet.android.adsdk.events.Constants.SNM_NO_BIDS_VALUE
+import com.medianet.android.adsdk.events.Constants.SNM_SUCCESS_VALUE
 import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
 import com.medianet.android.adsdk.utils.MapperUtils.getSizeString
+import com.medianet.android.adsdk.utils.MapperUtils.mapAdExceptionToError
 import com.medianet.android.adsdk.utils.MapperUtils.toEventParamValue
+import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
 
 /**
@@ -58,7 +65,7 @@ internal object EventManager {
      * @param dfpDivId is the adUnit's configuration config id
      * @param sizes are the sizes set for the ad slot
      */
-    fun sendAdRequestToGamEvent(dfpDivId: String, sizes: List<MAdSize>?, adType: AdType, bidResponse: BidResponse?) {
+    fun sendAdRequestToGamEvent(dfpDivId: String, sizes: List<MAdSize>?, adType: AdType, bidResponse: BidResponse?, exception: AdException?) {
         val type = adType.toEventParamValue().toString()
         val params = mutableMapOf(
             REQ_MTYPE to type,
@@ -69,7 +76,17 @@ internal object EventManager {
             params[REQUEST_ID] = it
         }
         bidResponse?.winningBid?.let {
-            params[RESPONSE_SIZE] = getSizeString(listOf(MAdSize(width = it.width, height = it.height)))
+            params[RESPONSE_AD_SIZES] = getSizeString(listOf(MAdSize(width = it.width, height = it.height)))
+        }
+
+        params[SNM] = if (bidResponse != null) {
+            SNM_SUCCESS_VALUE
+        } else {
+            if (exception.mapAdExceptionToError() == Error.NO_BIDS) {
+                SNM_NO_BIDS_VALUE
+            } else {
+                SNM_ERROR_VALUE
+            }
         }
 
         sendEvent(

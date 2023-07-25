@@ -51,12 +51,13 @@ class BannerAdView(context: Context, val adUnitId: String, adSize: MAdSize) {
                 )
             }
 
-            override fun onRequestSentToGam(bidResponse: BidResponse?) {
+            override fun onRequestSentToGam(bidResponse: BidResponse?, exception: AdException) {
                 EventManager.sendAdRequestToGamEvent(
                     dfpDivId = adUnitId,
                     sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes(),
                     adType = AdType.BANNER,
                     bidResponse = bidResponse,
+                    exception = exception,
                 )
             }
 

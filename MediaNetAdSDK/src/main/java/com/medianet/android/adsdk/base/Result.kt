@@ -2,7 +2,7 @@ package com.medianet.android.adsdk.base
 
 sealed class Result
 
-sealed class Error(var errorCode: Int, var errorMessage: String): Result() {
+sealed class Error(var errorCode: Int, var errorMessage: String) : Result() {
 
     /**
      * The ad request failed due to empty account id
@@ -78,5 +78,3 @@ sealed class Error(var errorCode: Int, var errorMessage: String): Result() {
     object CONFIG_ERROR_CONFIG_KILL_SWITCH : Error(149, "SDK Config error: Your Contract with MediaNetAdSdk has ended")
     object CONFIG_ERROR_CONFIG_FAILURE : Error(149, "SDK Config error: Config failure")
 }
-
-

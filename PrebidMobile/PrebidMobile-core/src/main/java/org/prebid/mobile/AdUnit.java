@@ -288,14 +288,14 @@ public abstract class AdUnit {
                 HashMap<String, String> keywords = response.getTargeting();
                 Util.apply(keywords, adObject);
                 originalListener.onComplete(ResultCode.SUCCESS);
-                mediaEventListener.onRequestSentToGam(response);
+                mediaEventListener.onRequestSentToGam(response, null);
             }
 
             @Override
             public void onError(AdException exception) {
                 Util.apply(null, adObject);
                 originalListener.onComplete(convertToResultCode(exception));
-                mediaEventListener.onRequestSentToGam(null);
+                mediaEventListener.onRequestSentToGam(null, exception);
             }
         };
     }
