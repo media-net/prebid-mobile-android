@@ -59,6 +59,6 @@ internal object Constants {
     const val DEFAULT_DBF_VALUE = "1"
     const val DEFAULT_PTYPE_VALUE = "42"
     const val SNM_SUCCESS_VALUE = "SUCCESS"
-    const val SNM_NO_BIDS_VALUE = "NO_BIDS"
+    const val SNM_NO_BIDS_VALUE = "NOBIDS"
     const val SNM_ERROR_VALUE = "ERROR"
 }
