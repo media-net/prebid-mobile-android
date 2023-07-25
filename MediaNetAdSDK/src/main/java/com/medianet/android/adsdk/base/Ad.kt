@@ -9,6 +9,7 @@ import com.medianet.android.adsdk.utils.MapperUtils.mapResultCodeToError
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.ResultCode
+import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
 
@@ -37,12 +38,13 @@ abstract class Ad(val adUnit: AdUnit) {
             )
         }
 
-        override fun onRequestSentToGam(bidResponse: BidResponse?) {
+        override fun onRequestSentToGam(bidResponse: BidResponse?, exception: AdException?) {
             EventManager.sendAdRequestToGamEvent(
                 dfpDivId = adUnit.configuration.configId,
                 sizes = adUnit.configuration.sizes.mapAdSizesToMAdSizes(),
                 adType = adType,
                 bidResponse = bidResponse,
+                exception = exception,
             )
         }
 

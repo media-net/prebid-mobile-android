@@ -21,8 +21,7 @@ internal object Constants {
         const val DTYPE_ID = "dtype_id"
         const val COUNTRY_CODE = "cc"
         const val PARTNER_ID = "pid"
-        const val AD_SIZE = "size"
-        const val AD_SIZES = "szs"
+        const val REQUEST_AD_SIZE = "szs"
         const val RANDOM_DATA = "rd"
         const val SDK_VERSION = "sdkversion"
         const val LOGGING_PER = "lper"
@@ -43,8 +42,9 @@ internal object Constants {
         const val REQ_MTYPE = "req_mtype"
         const val AD_TYPES = "adtypes"
         const val REQUEST_ID = "acid"
-        const val RESPONSE_SIZE = "r_size"
+        const val RESPONSE_AD_SIZES = "size"
         const val GDPR = "gdpr"
+        const val SNM = "snm"
     }
 
     const val PE_LOG_ID = "kfk"
@@ -58,4 +58,7 @@ internal object Constants {
     const val DEFAULT_DTYPE_ID_VALUE = "3"
     const val DEFAULT_DBF_VALUE = "1"
     const val DEFAULT_PTYPE_VALUE = "42"
+    const val SNM_SUCCESS_VALUE = "SUCCESS"
+    const val SNM_NO_BIDS_VALUE = "NOBIDS"
+    const val SNM_ERROR_VALUE = "ERROR"
 }

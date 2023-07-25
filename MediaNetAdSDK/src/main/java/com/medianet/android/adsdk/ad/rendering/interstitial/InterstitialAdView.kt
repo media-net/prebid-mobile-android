@@ -14,13 +14,13 @@ import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.medianet.android.adsdk.utils.MapperUtils.getPrebidAdSizeFromMediaNetAdSize
 import com.medianet.android.adsdk.utils.MapperUtils.mapAdExceptionToError
 import com.medianet.android.adsdk.utils.MapperUtils.mapInterstitialAdFormat
+import java.util.EnumSet
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
-import java.util.EnumSet
 
 /**
  * interstitial ad class for rendering type
@@ -55,12 +55,13 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
             )
         }
 
-        override fun onRequestSentToGam(bidResponse: BidResponse?) {
+        override fun onRequestSentToGam(bidResponse: BidResponse?, exception: AdException?) {
             EventManager.sendAdRequestToGamEvent(
                 dfpDivId = adUnitId,
                 sizes = null,
                 adType = AdType.INTERSTITIAL,
                 bidResponse = bidResponse,
+                exception = exception,
             )
         }
 

@@ -15,6 +15,7 @@ import com.medianet.android.adsdk.model.banner.ContentModel
 import com.medianet.android.adsdk.model.banner.DataModel
 import com.medianet.android.adsdk.model.banner.ProducerModel
 import com.medianet.android.adsdk.model.banner.SegmentModel
+import java.util.EnumSet
 import org.prebid.mobile.ContentObject
 import org.prebid.mobile.DataObject
 import org.prebid.mobile.NativeAdUnit
@@ -26,8 +27,8 @@ import org.prebid.mobile.NativeTitleAsset
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.ResultCode
 import org.prebid.mobile.api.data.AdUnitFormat
+import org.prebid.mobile.api.data.FetchDemandResult.NO_BIDS_MESSAGE
 import org.prebid.mobile.api.exceptions.AdException
-import java.util.EnumSet
 
 object MapperUtils {
 
@@ -156,7 +157,25 @@ object MapperUtils {
             AdException.INTERNAL_ERROR -> Error.INTERNAL_ERROR
             AdException.SERVER_ERROR -> Error.SERVER_ERROR
             AdException.THIRD_PARTY -> Error.THIRD_PARTY
-            else -> Error.MISCELLANIOUS_ERROR
+            else -> { getErrorFromMessage(this) }
+        }
+    }
+
+    /**
+     * This method is to map AdException to Error
+     * Note: This method is not exhaustive we can add/ map error according to requirement
+     * For reference please check parseErrorMessage() method in FetchDemandResult class
+     */
+    private fun getErrorFromMessage(adException: AdException?): Error {
+        if (adException == null || adException.message.isNullOrEmpty()) return Error.MISCELLANIOUS_ERROR
+
+        return with(adException.message ?: "") {
+            when {
+                (contains("No bids") or equals(NO_BIDS_MESSAGE)) -> { Error.NO_BIDS }
+                (contains("Timeout")) -> { Error.REQUEST_TIMEOUT }
+                (contains("Network Error")) -> { Error.NETWORK_ERROR }
+                else -> Error.MISCELLANIOUS_ERROR
+            }
         }
     }
 
