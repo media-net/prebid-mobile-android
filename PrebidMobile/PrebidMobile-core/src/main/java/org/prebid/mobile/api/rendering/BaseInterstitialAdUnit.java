@@ -16,10 +16,17 @@
 
 package org.prebid.mobile.api.rendering;
 
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.LOADING;
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID;
+
 import android.content.Context;
+
 import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
@@ -38,8 +45,6 @@ import org.prebid.mobile.rendering.models.AdPosition;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Set;
-
-import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.*;
 
 public abstract class BaseInterstitialAdUnit {
 
@@ -322,13 +327,14 @@ public abstract class BaseInterstitialAdUnit {
 
                 changeInterstitialAdUnitState(LOADING);
                 requestAdWithBid(getWinnerBid());
-                mediaEventListener.onRequestSentToGam();
+                mediaEventListener.onRequestSentToGam(response, null);
             }
 
             @Override
             public void onError(AdException exception) {
                 bidResponse = null;
                 requestAdWithBid(null);
+                mediaEventListener.onRequestSentToGam(null, exception);
             }
         };
     }

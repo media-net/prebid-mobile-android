@@ -37,5 +37,7 @@ message StoredSdkConfig {
   string sdkVersion = 14;
   map<string, string> dpfToCrIdMap = 15;
   int64 timeStamp = 16;
-
+  string osVersion = 17;
+  string prebidVersion = 18;
+  bool isSubjectToGDPR = 19;
 }

@@ -23,7 +23,7 @@ import org.prebid.mobile.prebidkotlindemo.utils.Settings
 class CustomApplication : Application() {
 
     companion object {
-        private const val TEMP_ACCOUNT_ID = "8CUC55ZG3"
+        private const val TEMP_ACCOUNT_ID = "8CURM5854"
     }
 
     override fun onCreate() {
@@ -31,5 +31,4 @@ class CustomApplication : Application() {
         MediaNetAdSDK.init(this, accountId = TEMP_ACCOUNT_ID)
         Settings.init(this)
     }
-
 }

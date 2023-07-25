@@ -16,15 +16,20 @@
 
 package org.prebid.mobile;
 
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
+
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -35,10 +40,12 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
-import java.util.*;
-
-import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
-import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class AdUnit {
 
@@ -281,13 +288,14 @@ public abstract class AdUnit {
                 HashMap<String, String> keywords = response.getTargeting();
                 Util.apply(keywords, adObject);
                 originalListener.onComplete(ResultCode.SUCCESS);
-                mediaEventListener.onRequestSentToGam();
+                mediaEventListener.onRequestSentToGam(response, null);
             }
 
             @Override
             public void onError(AdException exception) {
                 Util.apply(null, adObject);
                 originalListener.onComplete(convertToResultCode(exception));
+                mediaEventListener.onRequestSentToGam(null, exception);
             }
         };
     }

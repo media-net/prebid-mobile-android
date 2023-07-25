@@ -5,6 +5,7 @@ import android.widget.FrameLayout
 import com.app.logger.CustomLogger
 import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.ad.rendering.AdEventListener
+import com.medianet.android.adsdk.base.AdType
 import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.model.banner.ContentModel
@@ -20,6 +21,7 @@ import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.api.rendering.listeners.MediaEventListener
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
 
 /**
  * banner ad class for rendering type
@@ -30,35 +32,43 @@ class BannerAdView(context: Context, val adUnitId: String, adSize: MAdSize) {
 
     private val bannerEventHandler = GamBannerEventHandler(context, adUnitId, adSize.getPrebidAdSizeFromMediaNetAdSize())
 
-    private val bannerView = BannerView(context, adUnitId, bannerEventHandler, object : MediaEventListener{
-        override fun onBidRequest() {
-            EventManager.sendBidRequestEvent(
-                dfpDivId = adUnitId,
-                sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes()
-            )
-        }
+    private val bannerView = BannerView(
+        context,
+        adUnitId,
+        bannerEventHandler,
+        object : MediaEventListener {
+            override fun onBidRequest() {
+                EventManager.sendBidRequestEvent(
+                    dfpDivId = adUnitId,
+                    sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes(),
+                )
+            }
 
-        override fun onBidRequestTimeout() {
-            EventManager.sendTimeoutEvent(
-                dfpDivId = adUnitId,
-                sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes()
-            )
-        }
+            override fun onBidRequestTimeout() {
+                EventManager.sendTimeoutEvent(
+                    dfpDivId = adUnitId,
+                    sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes(),
+                )
+            }
 
-        override fun onRequestSentToGam() {
-            EventManager.sendAdRequestToGamEvent(
-                dfpDivId = adUnitId,
-                sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes()
-            )
-        }
+            override fun onRequestSentToGam(bidResponse: BidResponse?, exception: AdException) {
+                EventManager.sendAdRequestToGamEvent(
+                    dfpDivId = adUnitId,
+                    sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes(),
+                    adType = AdType.BANNER,
+                    bidResponse = bidResponse,
+                    exception = exception,
+                )
+            }
 
-        override fun onAdLoaded() {
-            EventManager.sendAdLoadedEvent(
-                dfpDivId = adUnitId,
-                sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes()
-            )
-        }
-    })
+            override fun onAdLoaded() {
+                EventManager.sendAdLoadedEvent(
+                    dfpDivId = adUnitId,
+                    sizes = bannerEventHandler.adSizeArray.toHashSet().mapAdSizesToMAdSizes(),
+                )
+            }
+        },
+    )
 
     private var bannerAdListener: AdEventListener? = null
 
@@ -68,7 +78,7 @@ class BannerAdView(context: Context, val adUnitId: String, adSize: MAdSize) {
      */
     fun setBannerAdListener(listener: AdEventListener) = apply {
         bannerAdListener = listener
-        bannerView.setBannerListener(object: BannerViewListener {
+        bannerView.setBannerListener(object : BannerViewListener {
             override fun onAdLoaded(view: BannerView?) {
                 bannerAdListener?.onAdLoaded()
                 bannerView.mediaEventListener?.onAdLoaded()
@@ -89,7 +99,6 @@ class BannerAdView(context: Context, val adUnitId: String, adSize: MAdSize) {
             override fun onAdClosed(bannerView: BannerView?) {
                 bannerAdListener?.onAdClosed()
             }
-
         })
     }
 
@@ -104,7 +113,7 @@ class BannerAdView(context: Context, val adUnitId: String, adSize: MAdSize) {
      * sets the interval in which the ad needs to be refreshed
      * @param delay is the interval time in seconds
      */
-    fun setAutoRefreshInterval(delay: Int)  = apply {
+    fun setAutoRefreshInterval(delay: Int) = apply {
         bannerView.setAutoRefreshDelay(delay)
     }
 
@@ -112,7 +121,6 @@ class BannerAdView(context: Context, val adUnitId: String, adSize: MAdSize) {
      * initiates the ad loading by doing bid request call
      */
     fun loadAd() {
-
         if (MediaNetAdSDK.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
             bannerAdListener?.onAdFailed(com.medianet.android.adsdk.base.Error.CONFIG_ERROR_CONFIG_FAILURE)
