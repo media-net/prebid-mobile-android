@@ -10,16 +10,18 @@ import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.base.Ad
 import com.medianet.android.adsdk.base.AdType
 import com.medianet.android.adsdk.base.Error
+import com.medianet.android.adsdk.base.MSignal
 import com.medianet.android.adsdk.base.listeners.GamEventListener
 import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
 import com.medianet.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
 import com.medianet.android.adsdk.utils.Constants.CONFIG_FAILURE_MSG
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.medianet.android.adsdk.utils.MapperUtils.mapGamLoadAdErrorToError
+import com.medianet.android.adsdk.utils.MapperUtils.toSingnalApi
 import org.prebid.mobile.BannerAdUnit
+import org.prebid.mobile.BannerBaseAdUnit
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
-
 
 /**
  * banner ad class for original type of loading where bid request call is made
@@ -32,7 +34,7 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
 
     private val bannerAdUnit: BannerAdUnit = adUnit as BannerAdUnit
     override val adType: AdType = AdType.BANNER
-
+    private var parameterApis = listOf<MSignal.Api>()
 
     /**
      * allows us to add multiple sizes to the ad
@@ -58,7 +60,7 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
      */
     fun fetchDemandForAd(
         adRequest: AdManagerAdRequest,
-        listener: OnBidCompletionListener
+        listener: OnBidCompletionListener,
     ) {
         if (MediaNetAdSDK.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
@@ -81,8 +83,9 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
     private fun fetchDemandAndLoad(
         adView: AdManagerAdView,
         adRequest: AdManagerAdRequest,
-        listener: GamEventListener
+        listener: GamEventListener,
     ) {
+        bannerAdUnit.parameters
         if (MediaNetAdSDK.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_FAILURE)
@@ -96,14 +99,17 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 // Update ad view
-                AdViewUtils.findPrebidCreativeSize(adView, object : AdViewUtils.PbFindSizeListener {
-                    override fun success(width: Int, height: Int) {
-                        adView.setAdSizes(AdSize(width, height))
-                    }
+                AdViewUtils.findPrebidCreativeSize(
+                    adView,
+                    object : AdViewUtils.PbFindSizeListener {
+                        override fun success(width: Int, height: Int) {
+                            adView.setAdSizes(AdSize(width, height))
+                        }
 
-                    override fun failure(error: PbFindSizeError) {
-                    }
-                })
+                        override fun failure(error: PbFindSizeError) {
+                        }
+                    },
+                )
                 sendAdLoadedEvent()
                 listener.onAdLoaded()
             }
@@ -129,16 +135,28 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
             }
         }
 
-        fetchDemand(adRequest, object : OnBidCompletionListener {
-            override fun onSuccess(keywordMap: Map<String, String>?) {
-                listener.onSuccess(keywordMap)
-                adView.loadAd(adRequest)
-            }
+        fetchDemand(
+            adRequest,
+            object : OnBidCompletionListener {
+                override fun onSuccess(keywordMap: Map<String, String>?) {
+                    listener.onSuccess(keywordMap)
+                    adView.loadAd(adRequest)
+                }
 
-            override fun onError(error: Error) {
-                listener.onError(error)
-                adView.loadAd(adRequest)
-            }
-        })
+                override fun onError(error: Error) {
+                    listener.onError(error)
+                    adView.loadAd(adRequest)
+                }
+            },
+        )
     }
+
+    fun setParameters(apis: List<MSignal.Api>) {
+        parameterApis = apis
+        val params = BannerBaseAdUnit.Parameters()
+        params.api = apis.toSingnalApi()
+        bannerAdUnit.parameters = params
+    }
+
+    fun getParameters() = parameterApis
 }
