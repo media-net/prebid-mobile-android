@@ -15,6 +15,9 @@ android {
         multiDexEnabled true
     }
     buildTypes {
+        release {
+            signingConfig signingConfigs.debug
+        }
         debug {
             minifyEnabled false
         }
