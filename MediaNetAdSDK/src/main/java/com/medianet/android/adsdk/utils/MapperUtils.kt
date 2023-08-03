@@ -11,6 +11,7 @@ import com.medianet.android.adsdk.base.AdType
 import com.medianet.android.adsdk.base.Error
 import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.base.MLogLevel
+import com.medianet.android.adsdk.base.MSignal
 import com.medianet.android.adsdk.model.banner.ContentModel
 import com.medianet.android.adsdk.model.banner.DataModel
 import com.medianet.android.adsdk.model.banner.ProducerModel
@@ -26,6 +27,7 @@ import org.prebid.mobile.NativeImageAsset
 import org.prebid.mobile.NativeTitleAsset
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.ResultCode
+import org.prebid.mobile.Signals
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.data.FetchDemandResult.NO_BIDS_MESSAGE
 import org.prebid.mobile.api.exceptions.AdException
@@ -358,5 +360,19 @@ object MapperUtils {
             sb.append(size.width).append("X").append(size.height)
         }
         return sb.toString()
+    }
+
+    fun List<MSignal.Api>.toSingnalApi(): List<Signals.Api> {
+        return  this.map {
+            when (it) {
+                MSignal.Api.VPAID_1 -> Signals.Api.VPAID_1
+                MSignal.Api.VPAID_2 -> Signals.Api.VPAID_2
+                MSignal.Api.MRAID_1 -> Signals.Api.MRAID_1
+                MSignal.Api.ORMMA -> Signals.Api.ORMMA
+                MSignal.Api.MRAID_2 -> Signals.Api.MRAID_2
+                MSignal.Api.MRAID_3 -> Signals.Api.MRAID_3
+                MSignal.Api.OMID_1 -> Signals.Api.OMID_1
+            }
+        }.toList()
     }
 }

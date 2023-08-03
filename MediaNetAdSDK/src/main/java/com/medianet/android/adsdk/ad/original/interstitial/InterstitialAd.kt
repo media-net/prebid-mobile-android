@@ -10,13 +10,16 @@ import com.medianet.android.adsdk.MediaNetAdSDK
 import com.medianet.android.adsdk.base.Ad
 import com.medianet.android.adsdk.base.AdType
 import com.medianet.android.adsdk.base.Error
+import com.medianet.android.adsdk.base.MSignal
 import com.medianet.android.adsdk.base.listeners.GamEventListener
 import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
 import com.medianet.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
 import com.medianet.android.adsdk.utils.Constants.CONFIG_FAILURE_MSG
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.medianet.android.adsdk.utils.MapperUtils.mapGamLoadAdErrorToError
+import com.medianet.android.adsdk.utils.MapperUtils.toSingnalApi
 import org.prebid.mobile.AdSize
+import org.prebid.mobile.BannerBaseAdUnit
 import org.prebid.mobile.InterstitialAdUnit
 
 /**
@@ -31,6 +34,7 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
     }
 
     override val adType: AdType = AdType.INTERSTITIAL
+    private var parameterApis = listOf<MSignal.Api>()
 
     /**
      * starts the bid request call
@@ -39,9 +43,8 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
      */
     fun fetchDemandForAd(
         adRequest: AdManagerAdRequest,
-        listener: OnBidCompletionListener
+        listener: OnBidCompletionListener,
     ) {
-
         if (MediaNetAdSDK.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_FAILURE)
@@ -55,7 +58,6 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
         fetchDemand(adRequest, listener)
     }
 
-
     /**
      * starts the bid request call and loads the
      * @param context specifies context of view on which ad loads
@@ -65,9 +67,8 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
     private fun fetchDemandAndLoad(
         context: Context,
         adRequest: AdManagerAdRequest,
-        listener: GamEventListener
+        listener: GamEventListener,
     ) {
-
         if (MediaNetAdSDK.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_FAILURE)
@@ -78,16 +79,19 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
             return
         }
 
-        fetchDemand(adRequest, object : OnBidCompletionListener {
-            override fun onSuccess(keywordMap: Map<String, String>?) {
-                listener.onSuccess(keywordMap)
-                loadAd(context, adUnitId, adRequest, listener)
-            }
+        fetchDemand(
+            adRequest,
+            object : OnBidCompletionListener {
+                override fun onSuccess(keywordMap: Map<String, String>?) {
+                    listener.onSuccess(keywordMap)
+                    loadAd(context, adUnitId, adRequest, listener)
+                }
 
-            override fun onError(error: Error) {
-                listener.onError(error)
-            }
-        })
+                override fun onError(error: Error) {
+                    listener.onError(error)
+                }
+            },
+        )
     }
 
     /**
@@ -101,12 +105,13 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
         context: Context,
         adUnitId: String,
         adRequest: AdManagerAdRequest,
-        adLoadCallback: GamEventListener
+        adLoadCallback: GamEventListener,
     ) {
         AdManagerInterstitialAd.load(
             context,
             adUnitId,
-            adRequest, object : AdManagerInterstitialAdLoadCallback() {
+            adRequest,
+            object : AdManagerInterstitialAdLoadCallback() {
                 override fun onAdLoaded(adManagerInterstitialAd: AdManagerInterstitialAd) {
                     super.onAdLoaded(adManagerInterstitialAd)
                     sendAdLoadedEvent()
@@ -117,6 +122,16 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
                     super.onAdFailedToLoad(error)
                     adLoadCallback.onAdFailedToLoad(error.mapGamLoadAdErrorToError())
                 }
-            })
+            },
+        )
     }
+
+    fun setParameters(apis: List<MSignal.Api>) {
+        parameterApis = apis
+        val params = BannerBaseAdUnit.Parameters()
+        params.api = apis.toSingnalApi()
+        mInterstitialAdUnit.parameters = params
+    }
+
+    fun getParameters() = parameterApis
 }
