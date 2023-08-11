@@ -135,4 +135,16 @@ abstract class Ad(val adUnit: AdUnit) {
             }
         }
     }
+
+    /**
+     * Method to log GAM error on publisher side, to track dropout due to GAM errors
+     * This is a temporary method might not go in release
+     */
+    fun sendGAMErrorEvent(errorCode: Int, errorMessage: String) {
+        EventManager.sendGAMErrorEvent(
+            dfpDivId = adUnit.configuration.configId,
+            errorMessage = errorMessage,
+            errorCode = errorCode,
+        )
+    }
 }

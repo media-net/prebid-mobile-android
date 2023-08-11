@@ -149,4 +149,16 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
     fun destroy() {
         mInterstitialAdUnit.destroy()
     }
+
+    /**
+     * Method to log GAM error on publisher side, to track dropout due to GAM errors
+     * This is a temporary method might not go in release
+     */
+    fun sendGAMErrorEvent(adUnit: String, errorCode: Int, errorMessage: String, errorCause: String = "") {
+        EventManager.sendGAMErrorEvent(
+            dfpDivId = adUnit,
+            errorMessage = errorMessage,
+            errorCode = errorCode,
+        )
+    }
 }

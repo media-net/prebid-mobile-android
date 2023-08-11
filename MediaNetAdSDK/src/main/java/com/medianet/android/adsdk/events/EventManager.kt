@@ -7,8 +7,11 @@ import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.events.Constants.EventName.AD_LOADED
 import com.medianet.android.adsdk.events.Constants.EventName.AD_REQUEST_TO_GAM
 import com.medianet.android.adsdk.events.Constants.EventName.BID_REQUEST
+import com.medianet.android.adsdk.events.Constants.EventName.GAM_ERROR
 import com.medianet.android.adsdk.events.Constants.EventName.TIME_OUT
 import com.medianet.android.adsdk.events.Constants.Keys.AD_TYPES
+import com.medianet.android.adsdk.events.Constants.Keys.ERROR_CODE
+import com.medianet.android.adsdk.events.Constants.Keys.ERROR_MSG
 import com.medianet.android.adsdk.events.Constants.Keys.REQUEST_ID
 import com.medianet.android.adsdk.events.Constants.Keys.REQ_MTYPE
 import com.medianet.android.adsdk.events.Constants.Keys.RESPONSE_AD_SIZES
@@ -109,6 +112,25 @@ internal object EventManager {
             eventType = LoggingEvents.PROJECT,
             dfpDivId = dfpDivId,
             sizes = sizes,
+        )
+    }
+
+    /**
+     * sends event to analytics when GAM error occurs during ad load
+     * @param errorCode
+     * @param errorMessage
+     */
+    fun sendGAMErrorEvent(dfpDivId: String, errorCode: Int, errorMessage: String) {
+        val params = mutableMapOf(
+            ERROR_MSG to errorMessage,
+            ERROR_CODE to errorCode.toString(),
+        )
+        sendEvent(
+            eventName = GAM_ERROR,
+            eventType = LoggingEvents.PROJECT,
+            dfpDivId = dfpDivId,
+            sizes = null,
+            params = params
         )
     }
 

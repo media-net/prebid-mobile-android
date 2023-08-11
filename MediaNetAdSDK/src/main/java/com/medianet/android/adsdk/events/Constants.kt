@@ -7,6 +7,7 @@ internal object Constants {
         const val BID_REQUEST = "BID_REQUEST_TO_SERVER" // PE
         const val AD_REQUEST_TO_GAM = "AD_REQUEST_TO_GAM" // AP
         const val AD_LOADED = "AD_LOADED_EVENT" // PE
+        const val GAM_ERROR = "GAM_ERROR" // PE
     }
 
     object Keys {
@@ -45,6 +46,10 @@ internal object Constants {
         const val RESPONSE_AD_SIZES = "size"
         const val GDPR = "gdpr"
         const val SNM = "snm"
+
+        // Error Event params
+        const val ERROR_MSG = "error"
+        const val ERROR_CODE = "code"
     }
 
     const val PE_LOG_ID = "kfk"
