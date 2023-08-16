@@ -33,12 +33,14 @@ import com.medianet.android.adsdk.events.Constants.Keys.REQUEST_AD_SIZE
 import com.medianet.android.adsdk.events.Constants.Keys.SDK_VERSION
 import com.medianet.android.adsdk.events.Constants.Keys.TO_CONSIDER
 import com.medianet.android.adsdk.events.Constants.Keys.UGD
+import com.medianet.android.adsdk.events.Constants.Keys.UNIQUE_ID
 import com.medianet.android.adsdk.events.Constants.MOBILE_SDK
 import com.medianet.android.adsdk.events.Constants.PE_EVT_ID
 import com.medianet.android.adsdk.events.Constants.PE_LOG_ID
 import com.medianet.android.adsdk.events.Constants.PE_PROJECT_TYPE
 import com.medianet.android.adsdk.model.sdkconfig.SdkConfiguration
 import com.medianet.android.adsdk.utils.MapperUtils.getSizeString
+import java.util.UUID
 
 /**
  * factory class to create different types of events
@@ -96,6 +98,7 @@ internal object EventFactory {
             LoggingEvents.PROJECT -> {
                 params.putAll(projectEventParams)
                 params[EVENT_NAME] = eventName
+                params[UNIQUE_ID] = UUID.randomUUID().toString()
                 baseUrl = sdkConfig?.projectEventUrl ?: ""
             }
             LoggingEvents.OPPORTUNITY -> {
