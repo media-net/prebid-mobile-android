@@ -31,6 +31,7 @@ internal object Constants {
         // custom params PE
         const val EVT_ID = "evtid"
         const val PROJECT_TYPE = "project"
+        const val UNIQUE_ID = "commit_id"
 
         // custom params AP
         const val TO_CONSIDER = "toconsider"
