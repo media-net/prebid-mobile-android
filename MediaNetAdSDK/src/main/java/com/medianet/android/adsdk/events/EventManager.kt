@@ -8,6 +8,7 @@ import com.medianet.android.adsdk.events.Constants.EventName.AD_LOADED
 import com.medianet.android.adsdk.events.Constants.EventName.AD_REQUEST_TO_GAM
 import com.medianet.android.adsdk.events.Constants.EventName.BID_REQUEST
 import com.medianet.android.adsdk.events.Constants.EventName.GAM_ERROR
+import com.medianet.android.adsdk.events.Constants.EventName.PREBID_ERROR
 import com.medianet.android.adsdk.events.Constants.EventName.TIME_OUT
 import com.medianet.android.adsdk.events.Constants.Keys.AD_TYPES
 import com.medianet.android.adsdk.events.Constants.Keys.ERROR_CODE
@@ -92,6 +93,14 @@ internal object EventManager {
             }
         }
 
+        // Error event to track server errors
+        if (exception != null) {
+            sendErrorEvent(
+                dfpDivId = dfpDivId,
+                exception = exception,
+            )
+        }
+
         sendEvent(
             eventName = AD_REQUEST_TO_GAM,
             eventType = LoggingEvents.OPPORTUNITY,
@@ -130,7 +139,24 @@ internal object EventManager {
             eventType = LoggingEvents.PROJECT,
             dfpDivId = dfpDivId,
             sizes = null,
-            params = params
+            params = params,
+        )
+    }
+
+    /**
+     * sends event to analytics when we receive error in bid request
+     * @param errorMessage
+     */
+    fun sendErrorEvent(dfpDivId: String, exception: AdException?) {
+        val params = mutableMapOf(
+            ERROR_MSG to (exception?.message ?: ""),
+        )
+        sendEvent(
+            eventName = PREBID_ERROR,
+            eventType = LoggingEvents.PROJECT,
+            dfpDivId = dfpDivId,
+            sizes = null,
+            params = params,
         )
     }
 

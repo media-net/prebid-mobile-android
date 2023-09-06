@@ -15,6 +15,8 @@ import com.medianet.android.adsdk.base.listeners.GamEventListener
 import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
 import com.medianet.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
 import com.medianet.android.adsdk.utils.Constants.CONFIG_FAILURE_MSG
+import com.medianet.android.adsdk.utils.Constants.INTERSTITIAL_MIN_HEIGHT_PERCENTAGE
+import com.medianet.android.adsdk.utils.Constants.INTERSTITIAL_MIN_WIDTH_PERCENTAGE
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.medianet.android.adsdk.utils.MapperUtils.mapGamLoadAdErrorToError
 import com.medianet.android.adsdk.utils.MapperUtils.toSingnalApi
@@ -36,6 +38,10 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
     override val adType: AdType = AdType.INTERSTITIAL
     private var parameterApis = listOf<MSignal.Api>()
 
+    init {
+        mInterstitialAdUnit.configuration.minSizePercentage = AdSize(
+            INTERSTITIAL_MIN_WIDTH_PERCENTAGE, INTERSTITIAL_MIN_HEIGHT_PERCENTAGE)
+    }
     /**
      * starts the bid request call
      * @param adRequest is the ad request for ad manager
