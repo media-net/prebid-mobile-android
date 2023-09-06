@@ -46,7 +46,7 @@ project.afterEvaluate {
                 setGroupId 'com.media.net'
                 //You can either define these here or get them from project conf elsewhere
                 setArtifactId 'PrebidMobile-core'
-                version "0.0.3"
+                version "0.0.4"
                 artifact bundleReleaseAar //aar artifact you want to publish
 
                 pom.withXml {
