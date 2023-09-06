@@ -10,6 +10,8 @@ import com.medianet.android.adsdk.base.MAdSize
 import com.medianet.android.adsdk.events.EventManager
 import com.medianet.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
 import com.medianet.android.adsdk.utils.Constants.CONFIG_FAILURE_MSG
+import com.medianet.android.adsdk.utils.Constants.INTERSTITIAL_MIN_HEIGHT_PERCENTAGE
+import com.medianet.android.adsdk.utils.Constants.INTERSTITIAL_MIN_WIDTH_PERCENTAGE
 import com.medianet.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.medianet.android.adsdk.utils.MapperUtils.getPrebidAdSizeFromMediaNetAdSize
 import com.medianet.android.adsdk.utils.MapperUtils.mapAdExceptionToError
@@ -75,6 +77,7 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
 
     init {
         mInterstitialAdUnit = InterstitialAdUnit(context, adUnitId, adUnitFormats.mapInterstitialAdFormat(), gamInterstitialEventHandler, mediaEventListener)
+        setMinSizePercentage(MAdSize(INTERSTITIAL_MIN_WIDTH_PERCENTAGE, INTERSTITIAL_MIN_HEIGHT_PERCENTAGE))
     }
 
     /**
