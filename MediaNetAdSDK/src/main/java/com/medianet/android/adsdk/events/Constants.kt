@@ -8,6 +8,7 @@ internal object Constants {
         const val AD_REQUEST_TO_GAM = "AD_REQUEST_TO_GAM" // AP
         const val AD_LOADED = "AD_LOADED_EVENT" // PE
         const val GAM_ERROR = "GAM_ERROR" // PE
+        const val PREBID_ERROR = "PREBID_ERROR" // PE
     }
 
     object Keys {
