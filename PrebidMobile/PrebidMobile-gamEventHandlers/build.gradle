@@ -6,21 +6,24 @@ apply from: '../android.gradle'
 apply from: '../publisher.gradle'
 apply from: '../tests.gradle'
 
+ext {
+    gam_event_handler_version = "1.0.0"
+}
 
 android {
     defaultConfig {
         minSdkVersion 19
-        versionName "0.0.1"
+        versionName gam_event_handler_version
     }
 }
 
 artifactory {
-    contextUrl = 'https://mobilesdk.jfrog.io/artifactory/'
+    contextUrl = 'https://mediaadsdk.jfrog.io/artifactory/'
     publish {
         repository {
             repoKey = "adsdk"
-            username = "sdk-dev@ad.tech"
-            password = "Androiddev1"
+            username = "nikhil.a@media.net"
+            password = "Password@Jfrog064"
         }
     }
 }
@@ -33,7 +36,7 @@ project.afterEvaluate {
                 setGroupId 'com.media.net'
                 //You can either define these here or get them from project conf elsewhere
                 setArtifactId 'PrebidMobile-gamEventHandlers'
-                version "0.0.1"
+                version gam_event_handler_version
                 artifact bundleReleaseAar //aar artifact you want to publish
             }
         }

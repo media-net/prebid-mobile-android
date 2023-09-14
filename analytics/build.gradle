@@ -6,6 +6,10 @@ plugins {
     id "com.jfrog.artifactory"
 }
 
+ext {
+    analytics_version = "1.0.0"
+}
+
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
@@ -13,7 +17,7 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSDKVersion
         targetSdkVersion rootProject.targetSDKVersion
-        versionName "0.0.1"
+        versionName analytics_version
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -28,12 +32,12 @@ android {
 }
 
 artifactory {
-    contextUrl = 'https://mobilesdk.jfrog.io/artifactory/'
+    contextUrl = 'https://mediaadsdk.jfrog.io/artifactory/'
     publish {
         repository {
             repoKey = "adsdk"
-            username = "sdk-dev@ad.tech"
-            password = "Androiddev1"
+            username = "nikhil.a@media.net"
+            password = "Password@Jfrog064"
         }
     }
 }
@@ -46,7 +50,7 @@ project.afterEvaluate {
                 setGroupId 'com.media.net'
                 //You can either define these here or get them from project conf elsewhere
                 setArtifactId 'analytics'
-                version '0.0.1'
+                version analytics_version
                 artifact bundleReleaseAar //aar artifact you want to publish
 
                 pom.withXml {

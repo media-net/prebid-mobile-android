@@ -55,10 +55,10 @@ allprojects {
         maven { url 'https://jitpack.io' }
         maven { url "https://oss.sonatype.org/content/repositories/orgprebid-1093" }
         maven {
-            url = uri("https://mobilesdk.jfrog.io/artifactory/adsdk/")
+            url = uri("https://mediaadsdk.jfrog.io/artifactory/adsdk/")
             credentials {
-                username = "sdk-dev@ad.tech"
-                password = "Androiddev1"
+                username = "nikhil.a@media.net"
+                password = "cmVmdGtuOjAxOjE3MjYyMDc5MDg6eTQ4U0RuMmZ2MW1IWktVZHFsNWJQRm5uNTJB"
             }
         }
     }

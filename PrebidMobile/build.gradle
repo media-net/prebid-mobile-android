@@ -5,9 +5,12 @@ plugins {
 apply from: 'android.gradle'
 apply from: 'publisher.gradle'
 
+ext {
+    prebid_mobile_version = "1.0.0"
+}
 android {
     defaultConfig{
-        versionName "0.0.1"
+        versionName prebid_mobile_version
     }
 }
 
@@ -16,12 +19,12 @@ dependencies {
 }
 
 artifactory {
-    contextUrl = 'https://mobilesdk.jfrog.io/artifactory/'
+    contextUrl = 'https://mediaadsdk.jfrog.io/artifactory/'
     publish {
         repository {
             repoKey = "adsdk"
-            username = "sdk-dev@ad.tech"
-            password = "Androiddev1"
+            username = "nikhil.a@media.net"
+            password = "Password@Jfrog064"
         }
     }
 }
@@ -34,7 +37,7 @@ project.afterEvaluate {
                 setGroupId 'com.media.net'
                 //You can either define these here or get them from project conf elsewhere
                 setArtifactId 'PrebidMobile'
-                version '0.0.1'
+                version prebid_mobile_version
                 artifact bundleReleaseAar //aar artifact you want to publish
 
             }

@@ -1,9 +1,14 @@
+
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id "maven-publish"
     id "com.jfrog.artifactory"
+}
+
+ext {
+    network_version = "1.0.0"
 }
 
 android {
@@ -13,7 +18,7 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSDKVersion
         targetSdkVersion rootProject.targetSDKVersion
-        versionName "0.0.1"
+        versionName network_version
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -27,12 +32,12 @@ android {
     }
 }
 artifactory {
-    contextUrl = 'https://mobilesdk.jfrog.io/artifactory/'
+    contextUrl = 'https://mediaadsdk.jfrog.io/artifactory/'
     publish {
         repository {
             repoKey = "adsdk"
-            username = "sdk-dev@ad.tech"
-            password = "Androiddev1"
+            username = "nikhil.a@media.net"
+            password = "Password@Jfrog064"
         }
     }
 }
@@ -45,7 +50,7 @@ project.afterEvaluate {
                 setGroupId 'com.media.net'
                 //You can either define these here or get them from project conf elsewhere
                 setArtifactId 'network'
-                version "0.0.1"
+                version network_version
                 artifact bundleReleaseAar //aar artifact you want to publish
 
                 pom.withXml {

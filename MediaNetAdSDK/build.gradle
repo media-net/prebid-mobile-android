@@ -1,12 +1,12 @@
 buildscript {
     ext {
-        medianet_ad_sdk_version = "0.0.8"
-        prebid_mobile_version = "0.0.1"
-        prebid_mobile_core_version = "0.0.4"
-        prebid_mobile_gam_eventhandlers_version = "0.0.1"
-        analytics_version = "0.0.1"
-        network_version = "0.0.1"
-        logger_version = "0.0.2"
+        medianet_ad_sdk_version = "1.0.0"
+        prebid_mobile_version = "1.0.0"
+        prebid_mobile_core_version = "1.0.0"
+        prebid_mobile_gam_eventhandlers_version = "1.0.0"
+        analytics_version = "1.0.0"
+        network_version = "1.0.0"
+        logger_version = "1.0.0"
     }
 }
 
@@ -27,7 +27,7 @@ android {
         minSdkVersion rootProject.minSDKVersion
         targetSdkVersion rootProject.targetSDKVersion
         versionCode 0
-        versionName "0.0.1"
+        versionName medianet_ad_sdk_version
         buildConfigField "int", "VERSION_CODE", "$versionCode"
         buildConfigField "String", "VERSION_NAME", '"' + versionName + '"'
     }
@@ -49,12 +49,12 @@ android {
 }
 
 artifactory {
-    contextUrl = 'https://mobilesdk.jfrog.io/artifactory/'
+    contextUrl = 'https://mediaadsdk.jfrog.io/artifactory/'
     publish {
         repository {
             repoKey = "adsdk"
-            username = "sdk-dev@ad.tech"
-            password = "Androiddev1"
+            username = "nikhil.a@media.net"
+            password = "Password@Jfrog064"
         }
     }
 }
