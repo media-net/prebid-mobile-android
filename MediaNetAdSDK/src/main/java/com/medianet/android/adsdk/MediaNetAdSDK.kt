@@ -95,9 +95,10 @@ object MediaNetAdSDK {
             LogUtil.setBaseTag(TAG)
             MediaNetAdSDK.accountId = accountId
             initialiseSdkConfig(applicationContext)
-            if (accountId == Constants.TEST_CUSTOMER_ID) {
+            // Removing this code as was only for tersting , in future we will take is as task which provide test feature
+            /*if (accountId == Constants.TEST_CUSTOMER_ID) {
                 PrebidMobile.setUserAgentParam(Constants.FORCE_BID_PARAM)
-            }
+            }*/
             PrebidMobile.initializeSdk(applicationContext, prebidSdkInitializationListener)
             publisherSdkInitListener = sdkInitListener
         }
