@@ -1,9 +1,9 @@
 package com.medianet.android.adsdk.utils
 
-import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import com.google.protobuf.InvalidProtocolBufferException
+import com.app.logger.CustomLogger
 import com.medianet.android.adsdk.model.StoredConfigs.StoredSdkConfig
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -12,13 +12,16 @@ import java.io.OutputStream
  */
 internal object ConfigSerializer : Serializer<StoredSdkConfig> {
     override val defaultValue: StoredSdkConfig = StoredSdkConfig.getDefaultInstance()
+    const val TAG = "ConfigSerializer"
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun readFrom(input: InputStream): StoredSdkConfig {
         try {
             return StoredSdkConfig.parseFrom(input)
-        } catch (exception: InvalidProtocolBufferException) {
-            throw CorruptionException("Cannot read proto.", exception)
+        } catch (exception: IOException) {
+            CustomLogger.error(TAG, "Error while reading config from data store: ${exception.message}")
+            exception.printStackTrace()
+            return defaultValue
         }
     }
 
