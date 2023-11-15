@@ -2,7 +2,7 @@
 import android.content.Context
 import com.android.adsdk.AdSDKManager
 import com.android.adsdk.AdSdk
-import com.android.adsdk.base.MLogLevel
+import com.android.adsdk.base.LoggingLevel
 import com.android.adsdk.base.listeners.MSdkInitListener
 
 /**
@@ -41,7 +41,7 @@ object MediaNetAdSDK : AdSdk {
         return AdSDKManager.getStoredBidResponses()
     }
 
-    override fun setLogLevel(level: MLogLevel) {
+    override fun setLogLevel(level: LoggingLevel) {
          AdSDKManager.setLogLevel(level)
     }
 
