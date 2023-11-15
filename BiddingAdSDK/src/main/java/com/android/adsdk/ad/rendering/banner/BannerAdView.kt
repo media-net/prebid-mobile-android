@@ -2,8 +2,10 @@ package com.android.adsdk.ad.rendering.banner
 
 import android.content.Context
 import android.widget.FrameLayout
+import com.android.adsdk.AdSDKManager
 import com.android.adsdk.ad.rendering.AdEventListener
 import com.android.adsdk.base.AdViewSize
+import com.android.adsdk.base.Error
 import com.android.adsdk.events.EventManager
 import com.android.adsdk.model.banner.ContentModel
 import com.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
@@ -119,13 +121,13 @@ class BannerAdView(context: Context, val adUnitId: String, adSize: AdViewSize) {
      * initiates the ad loading by doing bid request call
      */
     fun loadAd() {
-        if (com.android.adsdk.AdSDKManager.isConfigEmpty()) {
+        if (AdSDKManager.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
-            bannerAdListener?.onAdFailed(com.android.adsdk.base.Error.CONFIG_ERROR_CONFIG_FAILURE)
+            bannerAdListener?.onAdFailed(Error.CONFIG_ERROR_CONFIG_FAILURE)
             return
-        } else if (com.android.adsdk.AdSDKManager.isSdkOnVacation()) {
+        } else if (AdSDKManager.isSdkOnVacation()) {
             CustomLogger.error(CONFIG_ERROR_TAG, SDK_ON_VACATION_LOG_MSG)
-            bannerAdListener?.onAdFailed(com.android.adsdk.base.Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
+            bannerAdListener?.onAdFailed(Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
             return
         }
 

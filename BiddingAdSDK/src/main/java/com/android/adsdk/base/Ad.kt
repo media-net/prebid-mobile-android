@@ -18,7 +18,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
  */
 abstract class Ad(val adUnit: AdUnit) {
 
-    abstract val adType: com.android.adsdk.base.AdType
+    abstract val adType: AdType
     companion object {
         private const val ADSIZE_ADJUSTMENT_ERROR_TAG = "AdSizeAdjustmentError"
     }

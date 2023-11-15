@@ -1,20 +1,21 @@
 package com.android.adsdk.utils
 
-import com.google.android.gms.ads.LoadAdError
 import com.android.adsdk.ad.nativead.EventTracker
 import com.android.adsdk.ad.nativead.NativeAd
 import com.android.adsdk.ad.nativead.assets.DataAsset
 import com.android.adsdk.ad.nativead.assets.ImageAsset
 import com.android.adsdk.ad.nativead.assets.NativeAdAsset
 import com.android.adsdk.ad.nativead.assets.TitleAsset
-import com.android.adsdk.base.Error
-import com.android.adsdk.base.AdViewSize
-import com.android.adsdk.base.LoggingLevel
 import com.android.adsdk.base.AdSignal
+import com.android.adsdk.base.AdType
+import com.android.adsdk.base.AdViewSize
+import com.android.adsdk.base.Error
+import com.android.adsdk.base.LoggingLevel
 import com.android.adsdk.model.banner.ContentModel
 import com.android.adsdk.model.banner.DataModel
 import com.android.adsdk.model.banner.ProducerModel
 import com.android.adsdk.model.banner.SegmentModel
+import com.google.android.gms.ads.LoadAdError
 import java.util.EnumSet
 import org.prebid.mobile.ContentObject
 import org.prebid.mobile.DataObject
@@ -138,12 +139,12 @@ object MapperUtils {
     }
 
     // Rendering Interstitial Ad format
-    fun EnumSet<com.android.adsdk.base.AdType>.mapInterstitialAdFormat(): EnumSet<AdUnitFormat> {
+    fun EnumSet<AdType>.mapInterstitialAdFormat(): EnumSet<AdUnitFormat> {
         val enumSetOfAdUnitFormat = EnumSet.noneOf(AdUnitFormat::class.java)
         for (format in this) {
             when (format) {
-                com.android.adsdk.base.AdType.DISPLAY -> enumSetOfAdUnitFormat.add(AdUnitFormat.DISPLAY)
-                com.android.adsdk.base.AdType.VIDEO -> enumSetOfAdUnitFormat.add(AdUnitFormat.VIDEO)
+                AdType.DISPLAY -> enumSetOfAdUnitFormat.add(AdUnitFormat.DISPLAY)
+                AdType.VIDEO -> enumSetOfAdUnitFormat.add(AdUnitFormat.VIDEO)
                 else -> enumSetOfAdUnitFormat.add(null)
             }
         }
@@ -335,13 +336,13 @@ object MapperUtils {
         )
     }
 
-    fun com.android.adsdk.base.AdType.toEventParamValue(): Int {
+    fun AdType.toEventParamValue(): Int {
         return when (this) {
-            com.android.adsdk.base.AdType.BANNER -> 0
-            com.android.adsdk.base.AdType.INTERSTITIAL -> 0
-            com.android.adsdk.base.AdType.NATIVE -> 1
-            com.android.adsdk.base.AdType.VIDEO -> 2
-            com.android.adsdk.base.AdType.DISPLAY -> 3
+            AdType.BANNER -> 0
+            AdType.INTERSTITIAL -> 0
+            AdType.NATIVE -> 1
+            AdType.VIDEO -> 2
+            AdType.DISPLAY -> 3
         }
     }
 

@@ -1,8 +1,8 @@
 package com.android.adsdk.events
 
-import com.app.analytics.AnalyticsSDK
-import com.android.adsdk.base.Error
+import com.android.adsdk.base.AdType
 import com.android.adsdk.base.AdViewSize
+import com.android.adsdk.base.Error
 import com.android.adsdk.events.Constants.EventName.AD_LOADED
 import com.android.adsdk.events.Constants.EventName.AD_REQUEST_TO_GAM
 import com.android.adsdk.events.Constants.EventName.BID_REQUEST
@@ -23,6 +23,7 @@ import com.android.adsdk.model.sdkconfig.SdkConfiguration
 import com.android.adsdk.utils.MapperUtils.getSizeString
 import com.android.adsdk.utils.MapperUtils.mapAdExceptionToError
 import com.android.adsdk.utils.MapperUtils.toEventParamValue
+import com.app.analytics.AnalyticsSDK
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
 
@@ -68,7 +69,7 @@ internal object EventManager {
      * @param dfpDivId is the adUnit's configuration config id
      * @param sizes are the sizes set for the ad slot
      */
-    fun sendAdRequestToGamEvent(dfpDivId: String, sizes: List<AdViewSize>?, adType: com.android.adsdk.base.AdType, bidResponse: BidResponse?, exception: AdException?) {
+    fun sendAdRequestToGamEvent(dfpDivId: String, sizes: List<AdViewSize>?, adType: AdType, bidResponse: BidResponse?, exception: AdException?) {
         val type = adType.toEventParamValue().toString()
         val params = mutableMapOf(
             REQ_MTYPE to type,

@@ -1,8 +1,8 @@
 package com.android.adsdk.model.sdkconfig
 
 import android.os.Build
-import com.android.adsdk.BuildConfig
 import com.android.adsdk.AdSDKManager
+import com.android.adsdk.BuildConfig
 import org.prebid.mobile.PrebidMobile
 
 /**
@@ -27,7 +27,7 @@ internal data class SdkConfiguration(
     val sdkVersion: String = BuildConfig.VERSION_NAME,
     val osVersion: String = Build.VERSION.RELEASE,
     val prebidVersion: String = PrebidMobile.SDK_VERSION,
-    val isSubjectToGDPR: Boolean = com.android.adsdk.AdSDKManager.isSubjectToGDPR() ?: false,
+    val isSubjectToGDPR: Boolean = AdSDKManager.isSubjectToGDPR() ?: false,
 ) {
     fun getCrId(dfpAdId: String): String {
         return dpfToCrIdMap[dfpAdId] ?: dummyCCrId

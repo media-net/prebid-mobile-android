@@ -8,6 +8,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.android.adsdk.AdSDKManager
 import com.app.logger.CustomLogger
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.Dispatchers
@@ -59,7 +60,7 @@ internal class SDKConfigSyncWorker(context: Context, params: WorkerParameters): 
     override suspend fun doWork() = withContext(Dispatchers.IO) {
         try {
             CustomLogger.debug(LOG_TAG, "refreshing config by fetching it from server")
-            com.android.adsdk.AdSDKManager.fetchConfigFromServer(applicationContext)
+            AdSDKManager.fetchConfigFromServer(applicationContext)
             Result.success()
         }catch (e: Exception){
             Result.failure()

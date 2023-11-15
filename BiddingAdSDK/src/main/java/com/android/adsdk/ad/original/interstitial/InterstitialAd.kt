@@ -1,14 +1,11 @@
 package com.android.adsdk.ad.original.interstitial
 
 import android.content.Context
-import com.app.logger.CustomLogger
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.admanager.AdManagerAdRequest
-import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
-import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
+import com.android.adsdk.AdSDKManager
 import com.android.adsdk.base.Ad
-import com.android.adsdk.base.Error
 import com.android.adsdk.base.AdSignal
+import com.android.adsdk.base.AdType
+import com.android.adsdk.base.Error
 import com.android.adsdk.base.listeners.GamEventListener
 import com.android.adsdk.base.listeners.OnBidCompletionListener
 import com.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
@@ -18,6 +15,11 @@ import com.android.adsdk.utils.Constants.INTERSTITIAL_MIN_WIDTH_PERCENTAGE
 import com.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.android.adsdk.utils.MapperUtils.mapGamLoadAdErrorToError
 import com.android.adsdk.utils.MapperUtils.toSingnalApi
+import com.app.logger.CustomLogger
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.BannerBaseAdUnit
 import org.prebid.mobile.InterstitialAdUnit
@@ -33,7 +35,7 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
         mInterstitialAdUnit.configuration.minSizePercentage = AdSize(minWidthPerc, minHeightPerc)
     }
 
-    override val adType: com.android.adsdk.base.AdType = com.android.adsdk.base.AdType.INTERSTITIAL
+    override val adType: AdType = AdType.INTERSTITIAL
     private var parameterApis = listOf<AdSignal.Api>()
 
     init {
@@ -49,11 +51,11 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
         adRequest: AdManagerAdRequest,
         listener: OnBidCompletionListener,
     ) {
-        if (com.android.adsdk.AdSDKManager.isConfigEmpty()) {
+        if (AdSDKManager.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_FAILURE)
             return
-        } else if (com.android.adsdk.AdSDKManager.isSdkOnVacation()) {
+        } else if (AdSDKManager.isSdkOnVacation()) {
             CustomLogger.error(CONFIG_ERROR_TAG, SDK_ON_VACATION_LOG_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
             return
@@ -73,11 +75,11 @@ class InterstitialAd(val adUnitId: String) : Ad(InterstitialAdUnit(adUnitId)) {
         adRequest: AdManagerAdRequest,
         listener: GamEventListener,
     ) {
-        if (com.android.adsdk.AdSDKManager.isConfigEmpty()) {
+        if (AdSDKManager.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_FAILURE)
             return
-        } else if (com.android.adsdk.AdSDKManager.isSdkOnVacation()) {
+        } else if (AdSDKManager.isSdkOnVacation()) {
             CustomLogger.error(CONFIG_ERROR_TAG, SDK_ON_VACATION_LOG_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
             return

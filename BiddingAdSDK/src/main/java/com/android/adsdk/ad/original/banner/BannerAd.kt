@@ -1,14 +1,10 @@
 package com.android.adsdk.ad.original.banner
 
-import com.app.logger.CustomLogger
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.admanager.AdManagerAdRequest
-import com.google.android.gms.ads.admanager.AdManagerAdView
+import com.android.adsdk.AdSDKManager
 import com.android.adsdk.base.Ad
-import com.android.adsdk.base.Error
 import com.android.adsdk.base.AdSignal
+import com.android.adsdk.base.AdType
+import com.android.adsdk.base.Error
 import com.android.adsdk.base.listeners.GamEventListener
 import com.android.adsdk.base.listeners.OnBidCompletionListener
 import com.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
@@ -16,6 +12,12 @@ import com.android.adsdk.utils.Constants.CONFIG_FAILURE_MSG
 import com.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.android.adsdk.utils.MapperUtils.mapGamLoadAdErrorToError
 import com.android.adsdk.utils.MapperUtils.toSingnalApi
+import com.app.logger.CustomLogger
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
+import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.BannerAdUnit
 import org.prebid.mobile.BannerBaseAdUnit
 import org.prebid.mobile.addendum.AdViewUtils
@@ -31,7 +33,7 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
     constructor(adUnitId: String, width: Int, height: Int) : this(adUnitId, AdSize(width, height))
 
     private val bannerAdUnit: BannerAdUnit = adUnit as BannerAdUnit
-    override val adType: com.android.adsdk.base.AdType = com.android.adsdk.base.AdType.BANNER
+    override val adType: AdType = AdType.BANNER
     private var parameterApis = listOf<AdSignal.Api>()
 
     /**
@@ -60,11 +62,11 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
         adRequest: AdManagerAdRequest,
         listener: OnBidCompletionListener,
     ) {
-        if (com.android.adsdk.AdSDKManager.isConfigEmpty()) {
+        if (AdSDKManager.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_FAILURE)
             return
-        } else if (com.android.adsdk.AdSDKManager.isSdkOnVacation()) {
+        } else if (AdSDKManager.isSdkOnVacation()) {
             CustomLogger.error(CONFIG_ERROR_TAG, SDK_ON_VACATION_LOG_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
             return
@@ -84,11 +86,11 @@ class BannerAd(adUnitId: String, private val adSize: AdSize = AdSize.BANNER) :
         listener: GamEventListener,
     ) {
         bannerAdUnit.parameters
-        if (com.android.adsdk.AdSDKManager.isConfigEmpty()) {
+        if (AdSDKManager.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_FAILURE)
             return
-        } else if (com.android.adsdk.AdSDKManager.isSdkOnVacation()) {
+        } else if (AdSDKManager.isSdkOnVacation()) {
             CustomLogger.error(CONFIG_ERROR_TAG, SDK_ON_VACATION_LOG_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
             return

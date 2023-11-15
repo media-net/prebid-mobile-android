@@ -1,11 +1,8 @@
 package com.android.adsdk.ad.nativead
 
-import com.app.logger.CustomLogger
-import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.android.adsdk.AdSDKManager
 import com.android.adsdk.ad.nativead.assets.NativeAdAsset
 import com.android.adsdk.base.Ad
-import com.android.adsdk.base.AdType
 import com.android.adsdk.base.Error
 import com.android.adsdk.base.listeners.OnBidCompletionListener
 import com.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
@@ -16,6 +13,8 @@ import com.android.adsdk.utils.MapperUtils.getPrebidContextSubType
 import com.android.adsdk.utils.MapperUtils.getPrebidContextType
 import com.android.adsdk.utils.MapperUtils.getPrebidEventTracker
 import com.android.adsdk.utils.MapperUtils.getPrebidPlacementType
+import com.app.logger.CustomLogger
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import org.prebid.mobile.NativeAdUnit
 
 /**
@@ -135,11 +134,11 @@ class NativeAd(adUnitId: String) : Ad(NativeAdUnit(adUnitId)) {
         adRequest: AdManagerAdRequest,
         listener: OnBidCompletionListener
     ) {
-        if (com.android.adsdk.AdSDKManager.isConfigEmpty()) {
+        if (AdSDKManager.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_FAILURE)
             return
-        } else if (com.android.adsdk.AdSDKManager.isSdkOnVacation()) {
+        } else if (AdSDKManager.isSdkOnVacation()) {
             CustomLogger.error(CONFIG_ERROR_TAG, SDK_ON_VACATION_LOG_MSG)
             listener.onError(Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
             return

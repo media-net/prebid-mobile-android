@@ -2,9 +2,10 @@ package com.android.adsdk.ad.rendering.interstitial
 
 import android.app.Activity
 import android.content.Context
-import com.app.logger.CustomLogger
+import com.android.adsdk.AdSDKManager
 import com.android.adsdk.ad.rendering.AdEventListener
 import com.android.adsdk.base.AdViewSize
+import com.android.adsdk.base.Error
 import com.android.adsdk.events.EventManager
 import com.android.adsdk.utils.Constants.CONFIG_ERROR_TAG
 import com.android.adsdk.utils.Constants.CONFIG_FAILURE_MSG
@@ -14,6 +15,7 @@ import com.android.adsdk.utils.Constants.SDK_ON_VACATION_LOG_MSG
 import com.android.adsdk.utils.MapperUtils.getPrebidAdSizeFromMediaNetAdSize
 import com.android.adsdk.utils.MapperUtils.mapAdExceptionToError
 import com.android.adsdk.utils.MapperUtils.mapInterstitialAdFormat
+import com.app.logger.CustomLogger
 import java.util.EnumSet
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
@@ -132,13 +134,13 @@ class InterstitialAdView(context: Context, val adUnitId: String, adUnitFormats: 
      * initiates the ad loading by doing bid request call
      */
     fun loadAd() {
-        if (com.android.adsdk.AdSDKManager.isConfigEmpty()) {
+        if (AdSDKManager.isConfigEmpty()) {
             CustomLogger.error(CONFIG_ERROR_TAG, CONFIG_FAILURE_MSG)
-            interstitialAdListener?.onAdFailed(com.android.adsdk.base.Error.CONFIG_ERROR_CONFIG_FAILURE)
+            interstitialAdListener?.onAdFailed(Error.CONFIG_ERROR_CONFIG_FAILURE)
             return
-        } else if (com.android.adsdk.AdSDKManager.isSdkOnVacation()) {
+        } else if (AdSDKManager.isSdkOnVacation()) {
             CustomLogger.error(CONFIG_ERROR_TAG, SDK_ON_VACATION_LOG_MSG)
-            interstitialAdListener?.onAdFailed(com.android.adsdk.base.Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
+            interstitialAdListener?.onAdFailed(Error.CONFIG_ERROR_CONFIG_KILL_SWITCH)
             return
         }
 
