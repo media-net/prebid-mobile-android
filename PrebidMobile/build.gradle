@@ -19,12 +19,12 @@ dependencies {
 }
 
 artifactory {
-    contextUrl = 'https://mediaadsdk.jfrog.io/artifactory/'
+    contextUrl = 'https://mobilesdk.jfrog.io/artifactory/'
     publish {
         repository {
             repoKey = "adsdk"
-            username = "nikhil.a@media.net"
-            password = "Password@Jfrog064"
+            username = "sdk-dev@ad.tech"
+            password = "Androiddev1"
         }
     }
 }

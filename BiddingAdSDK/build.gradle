@@ -1,8 +1,8 @@
 buildscript {
     ext {
-        medianet_ad_sdk_version = "1.0.1"
+        adtech_ad_sdk_version = "1.0.0"
         prebid_mobile_version = "1.0.0"
-        prebid_mobile_core_version = "1.1.0"
+        prebid_mobile_core_version = "1.0.0"
         prebid_mobile_gam_eventhandlers_version = "1.0.0"
         analytics_version = "1.0.0"
         network_version = "1.0.0"
@@ -27,7 +27,7 @@ android {
         minSdkVersion rootProject.minSDKVersion
         targetSdkVersion rootProject.targetSDKVersion
         versionCode 0
-        versionName medianet_ad_sdk_version
+        versionName adtech_ad_sdk_version
         buildConfigField "int", "VERSION_CODE", "$versionCode"
         buildConfigField "String", "VERSION_NAME", '"' + versionName + '"'
     }
@@ -74,12 +74,12 @@ android {
 }
 
 artifactory {
-    contextUrl = 'https://mediaadsdk.jfrog.io/artifactory/'
+    contextUrl = 'https://mobilesdk.jfrog.io/artifactory/'
     publish {
         repository {
             repoKey = "adsdk"
-            username = "nikhil.a@media.net"
-            password = "Password@Jfrog064"
+            username = "sdk-dev@ad.tech"
+            password = "Androiddev1"
         }
     }
 }
@@ -90,11 +90,11 @@ project.afterEvaluate {
     publishing {
         publications {
             aar(MavenPublication) {
-                setGroupId 'com.media.net'
+                setGroupId 'com.adtech.net'
                 //You can either define these here or get them from project conf elsewhere
-                setArtifactId 'medianetadsdk'
-                version medianet_ad_sdk_version
-                artifact("$buildDir/outputs/aar/BiddingAdSDK-medianet-release.aar") //aar artifact you want to publish
+                setArtifactId 'adtechadsdk'
+                version adtech_ad_sdk_version
+                artifact("$buildDir/outputs/aar/BiddingAdSDK-adtech-release.aar") //aar artifact you want to publish
 
                 pom.withXml {
                     def dependenciesNode = asNode().appendNode('dependencies')
