@@ -22,13 +22,12 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import com.medianet.android.adsdk.ad.original.banner.BannerAd
-import com.medianet.android.adsdk.base.Error
-import com.medianet.android.adsdk.MediaNetAdSDK
-import com.medianet.android.adsdk.base.FindSizeError
-import com.medianet.android.adsdk.base.listeners.FindSizeListener
-import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
-import com.medianet.android.adsdk.utils.MAdViewUtils
+import com.android.adsdk.ad.original.banner.BannerAd
+import com.android.adsdk.base.Error
+import com.android.adsdk.base.FindSizeError
+import com.android.adsdk.base.listeners.FindSizeListener
+import com.android.adsdk.base.listeners.OnBidCompletionListener
+import com.android.adsdk.utils.AdUtils
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 
@@ -50,7 +49,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
+        AdTechSDK.setStoredAuctionResponse(STORED_RESPONSE)
         createAd()
     }
 
@@ -101,7 +100,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
                 super.onAdLoaded()
 
                 // 6. Update ad view
-                MAdViewUtils.findCreativeSize(adView, object : FindSizeListener {
+                AdUtils.findCreativeSize(adView, object : FindSizeListener {
                     override fun success(width: Int, height: Int) {
                         adView.setAdSizes(AdSize(width, height))
                     }

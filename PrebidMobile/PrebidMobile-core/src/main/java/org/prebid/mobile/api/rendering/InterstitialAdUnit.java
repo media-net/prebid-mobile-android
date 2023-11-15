@@ -24,7 +24,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener;
-import org.prebid.mobile.api.rendering.listeners.MediaEventListener;
+import org.prebid.mobile.api.rendering.listeners.LoggingEventListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler;
@@ -122,10 +122,10 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
             String configId,
             @NonNull EnumSet<AdUnitFormat> adUnitFormats,
             InterstitialEventHandler eventHandler,
-            MediaEventListener mediaEventListener
+            LoggingEventListener loggingEventListener
     ) {
         this(context, configId, adUnitFormats, eventHandler);
-        setMediaEventListener(mediaEventListener);
+        setMediaEventListener(loggingEventListener);
     }
 
 

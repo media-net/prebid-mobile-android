@@ -16,19 +16,20 @@
 
 package org.prebid.mobile.prebidkotlindemo
 
+import AdTechSDK
 import android.app.Application
-import com.medianet.android.adsdk.MediaNetAdSDK
 import org.prebid.mobile.prebidkotlindemo.utils.Settings
 
 class CustomApplication : Application() {
 
     companion object {
         private const val TEMP_ACCOUNT_ID = "8CURM5854"
+        private const val YAHOO_TEMP_ACCOUNT_ID = "8YHBCQD82"
     }
 
     override fun onCreate() {
         super.onCreate()
-        MediaNetAdSDK.init(this, accountId = TEMP_ACCOUNT_ID)
+        AdTechSDK.init(this, TEMP_ACCOUNT_ID)
         Settings.init(this)
     }
 }

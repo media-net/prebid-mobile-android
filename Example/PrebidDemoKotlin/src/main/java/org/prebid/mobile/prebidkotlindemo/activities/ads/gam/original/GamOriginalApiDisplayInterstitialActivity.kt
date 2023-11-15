@@ -15,16 +15,16 @@
  */
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 
+import AdTechSDK
 import android.os.Bundle
 import android.util.Log
+import com.android.adsdk.ad.original.interstitial.InterstitialAd
+import com.android.adsdk.base.Error
+import com.android.adsdk.base.listeners.OnBidCompletionListener
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
-import com.medianet.android.adsdk.ad.original.interstitial.InterstitialAd
-import com.medianet.android.adsdk.MediaNetAdSDK
-import com.medianet.android.adsdk.base.Error
-import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
@@ -43,7 +43,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
+        AdTechSDK.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

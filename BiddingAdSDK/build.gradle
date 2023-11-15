@@ -1,0 +1,104 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id "com.google.protobuf" version "0.8.17"
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSDKVersion
+        targetSdkVersion rootProject.targetSDKVersion
+        versionCode 0
+        versionName "0.0.1"
+        buildConfigField "int", "VERSION_CODE", "$versionCode"
+        buildConfigField "String", "VERSION_NAME", '"' + versionName + '"'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "source"
+    productFlavors {
+        medianet {
+            dimension "source"
+
+            buildConfigField "String", "CONFIG_BASE_URL", "\"https://ems-cdn.media.net/adserving/sdk/v1/\""
+        }
+
+        adtech {
+            dimension "source"
+
+            buildConfigField "String", "CONFIG_BASE_URL", "\"https://e.hb.yahoo.net/adserving/ysdk/v1/\""
+        }
+
+    }
+
+    sourceSets {
+        adtech {
+            java.srcDirs += 'src/adtech/java'
+        }
+        medianet {
+            java.srcDirs += 'src/medianet/java'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation project(':PrebidMobile')
+    implementation project(':PrebidMobile-core')
+    implementation project(':PrebidMobile-gamEventHandlers')
+    api "com.google.android.gms:play-services-ads:$play_services_ads"
+
+    implementation "androidx.core:core-ktx:$core_ktx"
+    implementation "androidx.appcompat:appcompat:$appcompat"
+    implementation "com.google.android.material:material:$material"
+    implementation "com.github.bumptech.glide:glide:$glide"
+    testImplementation "junit:junit:$junit"
+    androidTestImplementation "androidx.test.ext:junit:$ext_junit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core"
+
+    implementation project(':analytics')
+    //moshi parsing
+    implementation "com.squareup.moshi:moshi-kotlin-codegen:$moshi_impl"
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi_kapt")
+
+    //work manager
+    implementation "androidx.work:work-runtime-ktx:$work_runtime_ktx"
+
+    implementation project(path: ':network')
+
+    implementation "androidx.datastore:datastore:1.1.0-alpha01"
+    implementation "com.google.protobuf:protobuf-javalite:3.19.2"
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.21.12"
+    }
+
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option 'lite'
+                }
+            }
+        }
+    }
+}

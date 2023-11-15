@@ -22,7 +22,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.listeners.MediaEventListener;
+import org.prebid.mobile.api.rendering.listeners.LoggingEventListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -53,7 +53,7 @@ public class BidLoader {
     private AtomicBoolean currentlyLoading;
 
     private BidRequesterListener requestListener;
-    private MediaEventListener mediaEventListener;
+    private LoggingEventListener loggingEventListener;
     private BidRefreshListener bidRefreshListener;
 
     private final ResponseHandler responseHandler = new ResponseHandler() {
@@ -94,7 +94,7 @@ public class BidLoader {
 
     private void handleException(Exception exception) {
         if (exception instanceof SocketTimeoutException) {
-            mediaEventListener.onBidRequestTimeout();
+            loggingEventListener.onBidRequestTimeout();
         }
         failedToLoadBid(exception.getMessage());
     }
@@ -127,13 +127,13 @@ public class BidLoader {
         currentlyLoading = new AtomicBoolean();
     }
 
-    public BidLoader(Context context, AdUnitConfiguration adConfiguration, BidRequesterListener requestListener, MediaEventListener mediaEventListener) {
+    public BidLoader(Context context, AdUnitConfiguration adConfiguration, BidRequesterListener requestListener, LoggingEventListener loggingEventListener) {
         this (context, adConfiguration, requestListener);
-        this.mediaEventListener = mediaEventListener;
+        this.loggingEventListener = loggingEventListener;
     }
 
-    public void setMediaEventListener(MediaEventListener mediaEventListener) {
-        this.mediaEventListener = mediaEventListener;
+    public void setMediaEventListener(LoggingEventListener loggingEventListener) {
+        this.loggingEventListener = loggingEventListener;
     }
 
     public void setBidRefreshListener(BidRefreshListener bidRefreshListener) {
@@ -161,7 +161,7 @@ public class BidLoader {
             return;
         }
 
-        mediaEventListener.onBidRequest();
+        loggingEventListener.onBidRequest();
         sendBidRequest(contextReference.get(), adConfiguration);
     }
 
@@ -227,7 +227,7 @@ public class BidLoader {
         setupRefreshTimer();
         AdException exception = new AdException(AdException.INTERNAL_ERROR, "Invalid bid response: " + msg);
         if (exception.isTimeoutException()) {
-            mediaEventListener.onBidRequestTimeout();
+            loggingEventListener.onBidRequestTimeout();
         }
         requestListener.onError(exception);
     }

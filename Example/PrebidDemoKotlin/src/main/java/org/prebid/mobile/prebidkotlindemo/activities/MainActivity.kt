@@ -16,6 +16,7 @@
 
 package org.prebid.mobile.prebidkotlindemo.activities
 
+import AdTechSDK
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -24,14 +25,16 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.MobileAds
-import com.medianet.android.adsdk.MediaNetAdSDK
 import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.databinding.ActivityMainBinding
-import org.prebid.mobile.prebidkotlindemo.testcases.*
+import org.prebid.mobile.prebidkotlindemo.testcases.AdFormat
+import org.prebid.mobile.prebidkotlindemo.testcases.IntegrationKind
+import org.prebid.mobile.prebidkotlindemo.testcases.TestCase
+import org.prebid.mobile.prebidkotlindemo.testcases.TestCaseAdapter
+import org.prebid.mobile.prebidkotlindemo.testcases.TestCaseRepository
 import org.prebid.mobile.prebidkotlindemo.utils.Settings
 
 class MainActivity : AppCompatActivity() {
@@ -51,12 +54,12 @@ class MainActivity : AppCompatActivity() {
         initSearch()
         initList()
 
-        MediaNetAdSDK.isCompatibleWithGoogleMobileAds(MobileAds.getVersion().toString())
+        AdTechSDK.isCompatibleWithGoogleMobileAds(MobileAds.getVersion().toString())
     }
 
     override fun onRestart() {
         super.onRestart()
-        MediaNetAdSDK.setStoredAuctionResponse(null)
+        AdTechSDK.setStoredAuctionResponse(null)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -26,7 +26,7 @@ project(':PrebidDemoKotlin').projectDir = new File('Example/PrebidDemoKotlin')
 //project(':PrebidInternalTestApp').projectDir = new File('Example/PrebidInternalTestApp')
 
 //project(':DrPrebid').projectDir = new File('tools/drprebid')
-include ':MediaNetAdSDK'
+include ':BiddingAdSDK'
 include ':network'
 include ':logger'
 include ':analytics'

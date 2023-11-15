@@ -15,13 +15,13 @@
  */
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
+import AdTechSDK
 import android.os.Bundle
 import android.util.Log
-import com.medianet.android.adsdk.ad.rendering.interstitial.InterstitialAdView
-import com.medianet.android.adsdk.MediaNetAdSDK
+import com.android.adsdk.ad.rendering.AdEventListener
+import com.android.adsdk.ad.rendering.interstitial.InterstitialAdView
+import com.android.adsdk.base.Error
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
-import com.medianet.android.adsdk.base.Error
-import com.medianet.android.adsdk.ad.rendering.AdEventListener
 
 class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
 
@@ -39,7 +39,7 @@ class GamRenderingApiDisplayInterstitialActivity : BaseAdActivity() {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
+        AdTechSDK.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }
