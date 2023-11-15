@@ -52,17 +52,17 @@ object AdSDKManager {
     private var prebidSdkInitializationListener: SdkInitializationListener =
         object : SdkInitializationListener {
             override fun onSdkInit() {
-                CustomLogger.debug(com.android.adsdk.AdSDKManager.TAG, "SDK initialized successfully!")
+                CustomLogger.debug(TAG, "SDK initialized successfully!")
                 // If we need to send event for SDK initialisation we can do here
-                com.android.adsdk.AdSDKManager.publisherSdkInitListener?.onInitSuccess()
+                publisherSdkInitListener?.onInitSuccess()
             }
 
             override fun onSdkFailedToInit(error: InitError?) {
-                CustomLogger.error(com.android.adsdk.AdSDKManager.TAG, "SDK initialization error: " + error?.error)
+                CustomLogger.error(TAG, "SDK initialization error: " + error?.error)
                 val sdkInitError = com.android.adsdk.base.Error.SDK_INIT_ERROR.apply {
                     errorMessage = error?.error.toString()
                 }
-                com.android.adsdk.AdSDKManager.publisherSdkInitListener?.onInitFailed(sdkInitError)
+                publisherSdkInitListener?.onInitFailed(sdkInitError)
             }
 
         }
@@ -93,19 +93,19 @@ object AdSDKManager {
         Log.e("XXX", "flavourL - ${BuildConfig.FLAVOR}")
 
 
-        com.android.adsdk.AdSDKManager.configRepo = ConfigRepoImpl(com.android.adsdk.AdSDKManager.serverApiService, applicationContext.configDataStore)
-        com.android.adsdk.AdSDKManager.coroutineScope.launch {
-            LogUtil.setBaseTag(com.android.adsdk.AdSDKManager.TAG)
-            com.android.adsdk.AdSDKManager.accountId = accountId
-            com.android.adsdk.AdSDKManager.initialiseSdkConfig(applicationContext)
+        configRepo = ConfigRepoImpl(serverApiService, applicationContext.configDataStore)
+        coroutineScope.launch {
+            LogUtil.setBaseTag(TAG)
+            AdSDKManager.accountId = accountId
+            initialiseSdkConfig(applicationContext)
             // Removing this code as was only for tersting , in future we will take is as task which provide test feature
             /*if (accountId == Constants.TEST_CUSTOMER_ID) {
                 PrebidMobile.setUserAgentParam(Constants.FORCE_BID_PARAM)
             }*/
             PrebidMobile.initializeSdk(applicationContext,
-                com.android.adsdk.AdSDKManager.prebidSdkInitializationListener
+                prebidSdkInitializationListener
             )
-            com.android.adsdk.AdSDKManager.publisherSdkInitListener = sdkInitListener
+            publisherSdkInitListener = sdkInitListener
         }
     }
 
@@ -115,31 +115,31 @@ object AdSDKManager {
      * @param applicationContext is the context of application where the sdk has been integrated
      */
     private fun initialiseSdkConfig(applicationContext: Context) {
-        com.android.adsdk.AdSDKManager.coroutineScope.launch {
-            com.android.adsdk.AdSDKManager.configRepo?.getSDKConfigFlow()?.collectLatest { sdkConfig ->
-                com.android.adsdk.AdSDKManager.config = sdkConfig
+        coroutineScope.launch {
+            configRepo?.getSDKConfigFlow()?.collectLatest { sdkConfig ->
+                config = sdkConfig
 
                 // We get null config when no config is stored in data store, so scheduling the fetch config from server
-                if (com.android.adsdk.AdSDKManager.config == null || com.android.adsdk.AdSDKManager.config?.isConfigExpired() == true) {
-                    CustomLogger.debug(com.android.adsdk.AdSDKManager.TAG, "fetching fresh config from server")
-                    com.android.adsdk.AdSDKManager.fetchConfigFromServer(applicationContext)
+                if (config == null || config?.isConfigExpired() == true) {
+                    CustomLogger.debug(TAG, "fetching fresh config from server")
+                    fetchConfigFromServer(applicationContext)
                 }
 
                 //Disable sdk if kill switch is on
-                if (com.android.adsdk.AdSDKManager.config?.shouldKillSDK == true) {
+                if (config?.shouldKillSDK == true) {
                     CustomLogger.debug(
-                        com.android.adsdk.AdSDKManager.TAG,
+                        TAG,
                         "config kill switch is on so disabling SDK functionality"
                     )
-                    com.android.adsdk.AdSDKManager.sdkOnVacation = true
+                    sdkOnVacation = true
                     return@collectLatest
                 }
-                com.android.adsdk.AdSDKManager.config?.let {
-                    com.android.adsdk.AdSDKManager.updateSDKConfigDependencies(
+                config?.let {
+                    updateSDKConfigDependencies(
                         applicationContext,
                         it
                     )
-                    com.android.adsdk.AdSDKManager.initConfigExpiryTimer(
+                    initConfigExpiryTimer(
                         applicationContext,
                         it.configExpiryMillis
                     )
@@ -153,8 +153,8 @@ object AdSDKManager {
      * @param context is the context of application where the sdk has been integrated
      */
     internal fun fetchConfigFromServer(context: Context) {
-        com.android.adsdk.AdSDKManager.coroutineScope.launch {
-            com.android.adsdk.AdSDKManager.configRepo?.refreshSdkConfig(com.android.adsdk.AdSDKManager.accountId, context)
+        coroutineScope.launch {
+            configRepo?.refreshSdkConfig(accountId, context)
         }
     }
 
@@ -165,7 +165,7 @@ object AdSDKManager {
      */
     private fun initConfigExpiryTimer(applicationContext: Context, expiry: Long?) {
         expiry?.let { expiryInSeconds ->
-            CustomLogger.debug(com.android.adsdk.AdSDKManager.TAG, "refreshing config after $expiryInSeconds seconds")
+            CustomLogger.debug(TAG, "refreshing config after $expiryInSeconds seconds")
             SDKConfigSyncWorker.scheduleConfigFetch(applicationContext, expiryInSeconds)
         }
     }
@@ -181,7 +181,7 @@ object AdSDKManager {
         PrebidMobile.setTimeoutMillis(config.auctionTimeOutMillis.toInt())
 
         //Initialising Analytics
-        com.android.adsdk.AdSDKManager.initAnalytics(applicationContext, config)
+        initAnalytics(applicationContext, config)
     }
 
     fun getAccountId() = PrebidMobile.getPrebidServerAccountId()
@@ -246,11 +246,11 @@ object AdSDKManager {
     }
 
     fun setLogLevel(level: LoggingLevel) = apply {
-        com.android.adsdk.AdSDKManager.logLevel = level
+        logLevel = level
         PrebidMobile.setLogLevel(level.mapLogLevelToPrebidLogLevel())
     }
 
-    fun getLogLevel() = com.android.adsdk.AdSDKManager.logLevel
+    fun getLogLevel() = logLevel
 
     /**
      * checks whether the google play service ads library version used in your application
@@ -307,19 +307,19 @@ object AdSDKManager {
      * indicates the working/availability of sdk.
      * if true then sdk will not function from there on.
      */
-    fun isSdkOnVacation() = com.android.adsdk.AdSDKManager.sdkOnVacation
+    fun isSdkOnVacation() = sdkOnVacation
 
     /**
      * indicates the successful fetch of sdk config.
      * if true then sdk will not function from there on.
      */
-    internal fun isConfigEmpty() = com.android.adsdk.AdSDKManager.config == null
+    internal fun isConfigEmpty() = config == null
 
     //TODO - when to call this
     internal fun clear() {
         AnalyticsSDK.clear()
-        com.android.adsdk.AdSDKManager.coroutineScope.coroutineContext.cancelChildren()
-        com.android.adsdk.AdSDKManager.config = null
+        coroutineScope.coroutineContext.cancelChildren()
+        config = null
         SDKConfigSyncWorker.cancelSDKConfigSync(PrebidMobile.getApplicationContext())
         EventManager.clear()
     }
