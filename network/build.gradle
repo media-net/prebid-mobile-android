@@ -47,7 +47,7 @@ project.afterEvaluate {
     publishing {
         publications {
             aar(MavenPublication) {
-                setGroupId 'com.media.net'
+                setGroupId 'com.adtech.net'
                 //You can either define these here or get them from project conf elsewhere
                 setArtifactId 'network'
                 version network_version
