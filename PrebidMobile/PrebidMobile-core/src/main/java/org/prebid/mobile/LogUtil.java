@@ -23,7 +23,7 @@ import com.app.logger.LogLevels;
 
 public class LogUtil {
 
-    private static String BASE_TAG = "MediaNetAdSDK";
+    private static String BASE_TAG = "AdSDK";
 
     public static final int NONE = -1;
     public static final int VERBOSE = android.util.Log.VERBOSE; // 2

@@ -1,5 +1,6 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 
+import AdTechSDK
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -7,6 +8,18 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.android.adsdk.ad.nativead.EventTracker
+import com.android.adsdk.ad.nativead.NativeAd
+import com.android.adsdk.ad.nativead.NativeInAppAd
+import com.android.adsdk.ad.nativead.assets.DataAsset
+import com.android.adsdk.ad.nativead.assets.ImageAsset
+import com.android.adsdk.ad.nativead.assets.TitleAsset
+import com.android.adsdk.ad.nativead.listeners.NativeAdEventListener
+import com.android.adsdk.ad.nativead.listeners.NativeAdListener
+import com.android.adsdk.base.Error
+import com.android.adsdk.base.listeners.OnBidCompletionListener
+import com.android.adsdk.utils.ImageUtil
+import com.android.adsdk.utils.AdUtils
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdSize
@@ -17,21 +30,8 @@ import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd.OnCustomFormatAdLoadedListener
-import com.medianet.android.adsdk.*
-import com.medianet.android.adsdk.ad.nativead.EventTracker
-import com.medianet.android.adsdk.ad.nativead.NativeAd
-import com.medianet.android.adsdk.ad.nativead.NativeInAppAd
-import com.medianet.android.adsdk.ad.nativead.assets.DataAsset
-import com.medianet.android.adsdk.ad.nativead.assets.ImageAsset
-import com.medianet.android.adsdk.ad.nativead.assets.TitleAsset
-import com.medianet.android.adsdk.ad.nativead.listeners.NativeAdEventListener
-import com.medianet.android.adsdk.ad.nativead.listeners.NativeAdListener
-import com.medianet.android.adsdk.utils.ImageUtil
-import com.medianet.android.adsdk.utils.MAdViewUtils
 import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
-import com.medianet.android.adsdk.base.Error
-import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
 
 class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
 
@@ -53,7 +53,7 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
+        AdTechSDK.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }
@@ -130,7 +130,7 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
                 Log.d(TAG, "Custom ad loaded")
 
                 // 5. Find Native Ad
-                MAdViewUtils.findNative(nativeCustomTemplateAd, object : NativeAdListener {
+                AdUtils.findNative(nativeCustomTemplateAd, object : NativeAdListener {
 
                     override fun onNativeLoaded(ad: NativeInAppAd) {
                         // 6. Render native ad

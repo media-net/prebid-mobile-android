@@ -13,6 +13,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        missingDimensionStrategy 'source', 'adtech'
     }
     buildTypes {
         release {
@@ -38,8 +39,8 @@ android {
 dependencies {
     //implementation project(':PrebidMobile')
     implementation project(':PrebidMobile-gamEventHandlers')
-    implementation project(':MediaNetAdSDK')
-//    implementation project(':PrebidMobile-admobAdapters')
+    implementation project(':BiddingAdSDK')
+    //    implementation project(':PrebidMobile-admobAdapters')
 //    implementation project(':PrebidMobile-maxAdapters')
 
     // For testing staging releases

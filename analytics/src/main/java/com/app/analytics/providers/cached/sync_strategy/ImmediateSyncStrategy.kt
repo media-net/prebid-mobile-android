@@ -30,6 +30,7 @@ class ImmediateSyncStrategy(
     private var topEventInDbLiveData: LiveData<EventDBEntity>? = null
     private var eventLifecycleOwner: EventsLifecycleOwner = EventsLifecycleOwner()
     private var isConnectedToInternet: Boolean = false
+    private var isSyncRunning = false
     private val observer = Observer<EventDBEntity> { dbEntry ->
         dbEntry?.let {
             syncEvent(it)
@@ -53,12 +54,13 @@ class ImmediateSyncStrategy(
 
     private fun syncEvent(dbEntry: EventDBEntity) {
         AnalyticsSDK.analyticsScope.launch {
-            if (isConnectedToInternet.not()) {
-                CustomLogger.debug(TAG, "Internet is not connected so skipping the sync for the event")
+            CustomLogger.debug(TAG, "syncing event - ${dbEntry.name}")
+            if (isSyncRunning){
+                CustomLogger.debug(TAG,"already syncing for ${dbEntry}, so returning")
                 return@launch
             }
 
-            CustomLogger.debug(TAG, "syncing event - ${dbEntry.name}")
+            isSyncRunning = true
             val result = pushEventToServer(dbEntry.toPixel())
             if (result.isSuccess) {
                 CustomLogger.debug(TAG, "event synced to server successfully so deleting entry from DB - ${dbEntry.name}")
@@ -75,6 +77,7 @@ class ImmediateSyncStrategy(
                     }
                 }
             }
+            isSyncRunning = false
         }
     }
 

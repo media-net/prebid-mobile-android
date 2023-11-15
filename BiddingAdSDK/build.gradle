@@ -1,0 +1,193 @@
+buildscript {
+    ext {
+        medianet_ad_sdk_version = "1.0.1"
+        prebid_mobile_version = "1.0.0"
+        prebid_mobile_core_version = "1.0.0"
+        prebid_mobile_gam_eventhandlers_version = "1.0.0"
+        analytics_version = "1.0.0"
+        network_version = "1.0.0"
+        logger_version = "1.0.0"
+    }
+}
+
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id "com.google.protobuf" version "0.8.17"
+    id "maven-publish"
+    id "com.jfrog.artifactory"
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSDKVersion
+        targetSdkVersion rootProject.targetSDKVersion
+        versionCode 0
+        versionName medianet_ad_sdk_version
+        buildConfigField "int", "VERSION_CODE", "$versionCode"
+        buildConfigField "String", "VERSION_NAME", '"' + versionName + '"'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "source"
+    productFlavors {
+        medianet {
+            dimension "source"
+
+            buildConfigField "String", "CONFIG_BASE_URL", "\"https://ems-cdn.media.net/adserving/sdk/v1/\""
+        }
+
+        adtech {
+            dimension "source"
+
+            buildConfigField "String", "CONFIG_BASE_URL", "\"https://e.hb.yahoo.net/adserving/ysdk/v1/\""
+        }
+
+    }
+
+    sourceSets {
+        adtech {
+            java.srcDirs += 'src/adtech/java'
+        }
+        medianet {
+            java.srcDirs += 'src/medianet/java'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+}
+
+artifactory {
+    contextUrl = 'https://mediaadsdk.jfrog.io/artifactory/'
+    publish {
+        repository {
+            repoKey = "adsdk"
+            username = "nikhil.a@media.net"
+            password = "Password@Jfrog064"
+        }
+    }
+}
+
+project.afterEvaluate {
+    artifactoryPublish.dependsOn("assemble")
+
+    publishing {
+        publications {
+            aar(MavenPublication) {
+                setGroupId 'com.media.net'
+                //You can either define these here or get them from project conf elsewhere
+                setArtifactId 'medianetadsdk'
+                version medianet_ad_sdk_version
+                artifact bundleReleaseAar //aar artifact you want to publish
+
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+                    configurations.implementation.allDependencies.each {
+                        if (it.name != "PrebidMobile" && it.name != "PrebidMobile-core" && it.name != "PrebidMobile-gamEventHandlers" && it.name != "analytics" && it.name != "network" && it.name != "logger") {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            dependencyNode.appendNode('version', it.version)
+                        }
+                    }
+
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('artifactId', "PrebidMobile")
+                    dependencyNode.appendNode('version', prebid_mobile_version)
+
+                    dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('artifactId', "PrebidMobile-core")
+                    dependencyNode.appendNode('version', prebid_mobile_core_version)
+
+                    dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('artifactId', "PrebidMobile-gamEventHandlers")
+                    dependencyNode.appendNode('version', prebid_mobile_gam_eventhandlers_version)
+
+                    dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('artifactId', "analytics")
+                    dependencyNode.appendNode('version', analytics_version)
+
+                    dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('artifactId', "network")
+                    dependencyNode.appendNode('version', network_version)
+
+                    dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('artifactId', "logger")
+                    dependencyNode.appendNode('version', logger_version)
+                }
+            }
+        }
+    }
+
+    artifactoryPublish {
+        publications(publishing.publications.aar)
+    }
+}
+
+dependencies {
+
+    api project(':PrebidMobile')
+    api project(':PrebidMobile-core')
+    api project(':PrebidMobile-gamEventHandlers')
+    implementation project(':logger')
+    api "com.google.android.gms:play-services-ads:21.4.0"
+
+    implementation "androidx.core:core-ktx:$core_ktx"
+    implementation "androidx.appcompat:appcompat:$appcompat"
+    implementation "com.google.android.material:material:$material"
+    implementation "com.github.bumptech.glide:glide:$glide"
+    testImplementation "junit:junit:$junit"
+    androidTestImplementation "androidx.test.ext:junit:$ext_junit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core"
+
+    api project(':analytics')
+    //moshi parsing
+    implementation "com.squareup.moshi:moshi-kotlin-codegen:$moshi_impl"
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi_kapt")
+
+    //work manager
+    implementation "androidx.work:work-runtime-ktx:$work_runtime_ktx"
+
+    api project(path: ':network')
+
+    implementation "androidx.datastore:datastore:1.1.0-alpha01"
+    implementation "com.google.protobuf:protobuf-javalite:3.19.2"
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.21.12"
+    }
+
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option 'lite'
+                }
+            }
+        }
+    }
+}

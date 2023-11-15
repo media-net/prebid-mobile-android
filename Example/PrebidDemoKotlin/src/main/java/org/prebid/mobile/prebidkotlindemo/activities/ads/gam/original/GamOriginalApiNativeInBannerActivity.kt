@@ -1,18 +1,18 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 
+import AdTechSDK
 import android.os.Bundle
 import android.util.Log
+import com.android.adsdk.ad.nativead.EventTracker
+import com.android.adsdk.ad.nativead.NativeAd
+import com.android.adsdk.ad.nativead.assets.DataAsset
+import com.android.adsdk.ad.nativead.assets.ImageAsset
+import com.android.adsdk.ad.nativead.assets.TitleAsset
+import com.android.adsdk.base.Error
+import com.android.adsdk.base.listeners.OnBidCompletionListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import com.medianet.android.adsdk.base.Error
-import com.medianet.android.adsdk.MediaNetAdSDK
-import com.medianet.android.adsdk.ad.nativead.EventTracker
-import com.medianet.android.adsdk.ad.nativead.NativeAd
-import com.medianet.android.adsdk.ad.nativead.assets.DataAsset
-import com.medianet.android.adsdk.ad.nativead.assets.ImageAsset
-import com.medianet.android.adsdk.ad.nativead.assets.TitleAsset
-import com.medianet.android.adsdk.base.listeners.OnBidCompletionListener
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
@@ -31,7 +31,7 @@ class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
+        AdTechSDK.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }
