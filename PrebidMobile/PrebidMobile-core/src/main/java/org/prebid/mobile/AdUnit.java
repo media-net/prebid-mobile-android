@@ -33,7 +33,7 @@ import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.listeners.MediaEventListener;
+import org.prebid.mobile.api.rendering.listeners.LoggingEventListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -56,7 +56,7 @@ public abstract class AdUnit {
     @Nullable
     protected Object adObject;
 
-    private MediaEventListener mediaEventListener;
+    private LoggingEventListener loggingEventListener;
 
     AdUnit(@NonNull String configId, @NonNull AdFormat adType) {
         configuration.setConfigId(configId);
@@ -94,8 +94,8 @@ public abstract class AdUnit {
         }
     }
 
-    public void setMediaEventListener(MediaEventListener listsner) {
-        mediaEventListener = listsner;
+    public void setMediaEventListener(LoggingEventListener listsner) {
+        loggingEventListener = listsner;
     }
 
     public void fetchDemand(@NonNull final OnCompleteListener2 listener) {
@@ -157,7 +157,7 @@ public abstract class AdUnit {
                     context,
                     configuration,
                     createBidListener(listener),
-                    mediaEventListener
+                    loggingEventListener
             );
 
             if (configuration.getAutoRefreshDelay() > 0) {
@@ -288,14 +288,14 @@ public abstract class AdUnit {
                 HashMap<String, String> keywords = response.getTargeting();
                 Util.apply(keywords, adObject);
                 originalListener.onComplete(ResultCode.SUCCESS);
-                mediaEventListener.onRequestSentToGam(response, null);
+                loggingEventListener.onRequestSentToGam(response, null);
             }
 
             @Override
             public void onError(AdException exception) {
                 Util.apply(null, adObject);
                 originalListener.onComplete(convertToResultCode(exception));
-                mediaEventListener.onRequestSentToGam(null, exception);
+                loggingEventListener.onRequestSentToGam(null, exception);
             }
         };
     }

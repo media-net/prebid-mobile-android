@@ -15,13 +15,13 @@
  */
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
+import AdTechSDK
 import android.os.Bundle
 import android.util.Log
-import com.medianet.android.adsdk.base.Error
-import com.medianet.android.adsdk.base.MAdSize
-import com.medianet.android.adsdk.MediaNetAdSDK
-import com.medianet.android.adsdk.ad.rendering.AdEventListener
-import com.medianet.android.adsdk.ad.rendering.banner.BannerAdView
+import com.android.adsdk.ad.rendering.AdEventListener
+import com.android.adsdk.ad.rendering.banner.BannerAdView
+import com.android.adsdk.base.Error
+import com.android.adsdk.base.AdViewSize
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
@@ -42,13 +42,13 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
+        AdTechSDK.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }
 
     private fun createAd() {
-        val bannerAdView = BannerAdView(this, AD_UNIT_ID, MAdSize(WIDTH, HEIGHT))
+        val bannerAdView = BannerAdView(this, AD_UNIT_ID, AdViewSize(WIDTH, HEIGHT))
             .setAutoRefreshInterval(refreshTimeSeconds)
             .setBannerAdListener(object : AdEventListener {
                 override fun onAdClicked() {
