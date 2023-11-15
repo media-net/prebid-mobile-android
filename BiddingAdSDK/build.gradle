@@ -2,7 +2,7 @@ buildscript {
     ext {
         medianet_ad_sdk_version = "1.0.1"
         prebid_mobile_version = "1.0.0"
-        prebid_mobile_core_version = "1.0.0"
+        prebid_mobile_core_version = "1.1.0"
         prebid_mobile_gam_eventhandlers_version = "1.0.0"
         analytics_version = "1.0.0"
         network_version = "1.0.0"
@@ -94,7 +94,7 @@ project.afterEvaluate {
                 //You can either define these here or get them from project conf elsewhere
                 setArtifactId 'medianetadsdk'
                 version medianet_ad_sdk_version
-                artifact bundleReleaseAar //aar artifact you want to publish
+                artifact("$buildDir/outputs/aar/BiddingAdSDK-medianet-release.aar") //aar artifact you want to publish
 
                 pom.withXml {
                     def dependenciesNode = asNode().appendNode('dependencies')
