@@ -108,32 +108,32 @@ project.afterEvaluate {
                     }
 
                     def dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('groupId', "com.adtech.net")
                     dependencyNode.appendNode('artifactId', "PrebidMobile")
                     dependencyNode.appendNode('version', prebid_mobile_version)
 
                     dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('groupId', "com.adtech.net")
                     dependencyNode.appendNode('artifactId', "PrebidMobile-core")
                     dependencyNode.appendNode('version', prebid_mobile_core_version)
 
                     dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('groupId', "com.adtech.net")
                     dependencyNode.appendNode('artifactId', "PrebidMobile-gamEventHandlers")
                     dependencyNode.appendNode('version', prebid_mobile_gam_eventhandlers_version)
 
                     dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('groupId', "com.adtech.net")
                     dependencyNode.appendNode('artifactId', "analytics")
                     dependencyNode.appendNode('version', analytics_version)
 
                     dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('groupId', "com.adtech.net")
                     dependencyNode.appendNode('artifactId', "network")
                     dependencyNode.appendNode('version', network_version)
 
                     dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', "com.media.net")
+                    dependencyNode.appendNode('groupId', "com.adtech.net")
                     dependencyNode.appendNode('artifactId', "logger")
                     dependencyNode.appendNode('version', logger_version)
                 }
