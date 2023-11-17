@@ -92,7 +92,7 @@ project.afterEvaluate {
             aar(MavenPublication) {
                 setGroupId 'com.adtech.net'
                 //You can either define these here or get them from project conf elsewhere
-                setArtifactId 'adtechadsdk'
+                setArtifactId 'adtechsdk'
                 version adtech_ad_sdk_version
                 artifact("$buildDir/outputs/aar/BiddingAdSDK-adtech-release.aar") //aar artifact you want to publish
 
