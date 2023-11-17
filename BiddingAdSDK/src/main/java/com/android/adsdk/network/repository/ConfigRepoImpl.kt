@@ -1,7 +1,6 @@
 package com.android.adsdk.network.repository
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import com.android.adsdk.model.StoredConfigs
 import com.android.adsdk.model.sdkconfig.ConfigResponse
@@ -81,7 +80,6 @@ internal class ConfigRepoImpl(private val serverApiService: ServerApiService?, p
         )
         val serverConfigResult = safeApiCall(
             apiCall = {
-                Log.e("XXX", "making ems call: cid: $cid, configParams: $configParams")
                 serverApiService?.getSdkConfig(cid, configParams)
             },
             successTransform = {
@@ -98,13 +96,10 @@ internal class ConfigRepoImpl(private val serverApiService: ServerApiService?, p
 
             serverConfigResult.successValue()?.let {
                 updateSdkConfig(it)
-                Log.e("XXX", "config fetch from server is successful")
-                Log.e("XXX", "config : $it")
             }
         } else {
             CustomLogger.error(TAG, "config call fails: ${serverConfigResult.errorValue()?.errorModel?.errorMessage}")
             CustomLogger.debug(TAG, "scheduling config fetch after 2 min")
-            Log.e("XXX", "config call fails: ${serverConfigResult.errorValue()?.errorModel?.errorMessage}")
             SDKConfigSyncWorker.scheduleConfigFetch(context, 120L)
         }
 

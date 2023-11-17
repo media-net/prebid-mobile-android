@@ -1,7 +1,6 @@
 package com.android.adsdk
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.android.adsdk.base.LoggingLevel
@@ -89,9 +88,6 @@ internal object AdSDKManager {
         accountId: String,
         sdkInitListener: MSdkInitListener? = null
     ) {
-        Log.e("XXX", "COnfg URL - ${BuildConfig.CONFIG_BASE_URL}")
-        Log.e("XXX", "flavourL - ${BuildConfig.FLAVOR}")
-
 
         configRepo = ConfigRepoImpl(serverApiService, applicationContext.configDataStore)
         coroutineScope.launch {
@@ -116,14 +112,12 @@ internal object AdSDKManager {
      */
     private fun initialiseSdkConfig(applicationContext: Context) {
         coroutineScope.launch {
-            Log.e("XXX", "initialiseSdkConfig()")
             configRepo?.getSDKConfigFlow()?.collectLatest { sdkConfig ->
                 config = sdkConfig
 
                 // We get null config when no config is stored in data store, so scheduling the fetch config from server
                 if (config == null || config?.isConfigExpired() == true) {
                     CustomLogger.debug(TAG, "fetching fresh config from server")
-                    Log.e("XXX", "fetchConfigFromServer()")
                     fetchConfigFromServer(applicationContext)
                 }
 
