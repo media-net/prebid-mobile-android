@@ -39,7 +39,7 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener
  * point of contact for initializing the sdk
  * and setting various parameters while working with it
  */
-object AdSDKManager {
+internal object AdSDKManager {
 
     private const val TAG = "AdSDKManager"
 
