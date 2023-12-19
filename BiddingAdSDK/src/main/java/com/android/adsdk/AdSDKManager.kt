@@ -1,7 +1,6 @@
 package com.android.adsdk
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.android.adsdk.base.LoggingLevel
@@ -89,10 +88,6 @@ internal object AdSDKManager {
         accountId: String,
         sdkInitListener: MSdkInitListener? = null
     ) {
-        Log.e("XXX", "COnfg URL - ${BuildConfig.CONFIG_BASE_URL}")
-        Log.e("XXX", "flavourL - ${BuildConfig.FLAVOR}")
-
-
         configRepo = ConfigRepoImpl(serverApiService, applicationContext.configDataStore)
         coroutineScope.launch {
             LogUtil.setBaseTag(TAG)
@@ -177,7 +172,9 @@ internal object AdSDKManager {
      */
     private fun updateSDKConfigDependencies(applicationContext: Context, config: SdkConfiguration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl))
+        //PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl))
+        // TODO - only added for testing
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://ysdk.media.net/rtb/pb/ysdk/"))
         PrebidMobile.setTimeoutMillis(config.auctionTimeOutMillis.toInt())
 
         //Initialising Analytics

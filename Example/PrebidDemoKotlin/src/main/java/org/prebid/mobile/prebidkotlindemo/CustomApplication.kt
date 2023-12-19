@@ -23,7 +23,7 @@ import org.prebid.mobile.prebidkotlindemo.utils.Settings
 class CustomApplication : Application() {
 
     companion object {
-        private const val TEMP_ACCOUNT_ID = "8CURM5854"
+        private const val TEMP_ACCOUNT_ID = "8CUV332JD"
         private const val YAHOO_TEMP_ACCOUNT_ID = "8YHBCQD82"
     }
 
