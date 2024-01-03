@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "718597015443",
+    "project_id": "mnetsdk-cdf0a",
+    "storage_bucket": "mnetsdk-cdf0a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718597015443:android:acc988438e4c2bc917ca66",
+        "android_client_info": {
+          "package_name": "org.prebid.mobile.prebidkotlindemo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoGLv7YRGwClvCh5q0YvhHXtHHxzfAG2w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

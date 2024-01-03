@@ -296,7 +296,13 @@ internal object AdSDKManager {
             sdkConfig.projectEventUrl,
             0
         )
-        AnalyticsSDK.init(applicationContext, configuration, providers = listOf(analyticsProvider))
+
+        val firebaseAnalyticsProvider = AnalyticsProviderFactory.getFirebaseProvider(
+            applicationContext,
+            sdkConfig.projectEventUrl
+        )
+
+        AnalyticsSDK.init(applicationContext, configuration, providers = listOf(analyticsProvider, firebaseAnalyticsProvider))
     }
 
     /**
