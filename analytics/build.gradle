@@ -7,7 +7,7 @@ plugins {
 }
 
 ext {
-    analytics_version = "1.0.0"
+    analytics_version = "1.0.1"
 }
 
 android {
