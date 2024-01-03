@@ -172,9 +172,7 @@ internal object AdSDKManager {
      */
     private fun updateSDKConfigDependencies(applicationContext: Context, config: SdkConfiguration) {
         PrebidMobile.setPrebidServerAccountId(config.customerId)
-        //PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl))
-        // TODO - only added for testing
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://ysdk.media.net/rtb/pb/ysdk/"))
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost(config.bidRequestUrl))
         PrebidMobile.setTimeoutMillis(config.auctionTimeOutMillis.toInt())
 
         //Initialising Analytics
