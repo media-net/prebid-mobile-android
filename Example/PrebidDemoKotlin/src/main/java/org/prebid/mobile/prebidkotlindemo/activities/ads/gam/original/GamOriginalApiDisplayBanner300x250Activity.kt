@@ -34,7 +34,8 @@ import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
 
     companion object {
-        const val AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_banner_300x250_order"
+        //const val AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_banner_300x250_order"
+        const val AD_UNIT_ID = "/45361917/Homepagenews_Weathertab_Topspot"
         const val CONFIG_ID = "imp-prebid-banner-300-250"
         const val STORED_RESPONSE = "response-prebid-banner-300-250"
         const val WIDTH = 300

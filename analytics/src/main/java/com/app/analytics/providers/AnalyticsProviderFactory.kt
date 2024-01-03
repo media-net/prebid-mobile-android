@@ -6,6 +6,7 @@ import com.app.analytics.NetworkComponentFactory
 import com.app.analytics.providers.cached.CachedAnalyticsProvider
 import com.app.analytics.providers.debug.DebugAnalyticsProvider
 import com.app.analytics.providers.defaults.DefaultAnalyticsProvider
+import com.app.analytics.providers.firebase.FirebaseAnalyticsProvider
 
 object AnalyticsProviderFactory {
 
@@ -50,6 +51,11 @@ object AnalyticsProviderFactory {
         val pushService = NetworkComponentFactory.getPushToServerService(baseUrl)
         val eventDbRepo = DbComponentFactory.getEventDbRepository(applicationContext)
         val provider = CachedAnalyticsProvider(applicationContext, baseUrl, eventDbRepo, pushService, syncIntervalInMinutes)
+        return provider
+    }
+
+    fun getFirebaseProvider(applicationContext: Context, baseUrl: String): FirebaseAnalyticsProvider {
+        val provider = FirebaseAnalyticsProvider(applicationContext, baseUrl)
         return provider
     }
 
