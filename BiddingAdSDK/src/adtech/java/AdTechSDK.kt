@@ -69,4 +69,16 @@ object AdTechSDK : AdSdk {
     override fun setGDPRConsentString(consentString: String?) {
         com.android.adsdk.AdSDKManager.setGDPRConsentString(consentString)
     }
+
+    override fun setStoreUrl(storeUrl: String) {
+        AdSDKManager.setStoreUrl(storeUrl)
+    }
+
+    override fun setDomain(domain: String) {
+        AdSDKManager.setDomain(domain)
+    }
+
+    override fun setDebug(enable: Boolean) {
+        AdSDKManager.enableDebug(enable)
+    }
 }

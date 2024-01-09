@@ -24,4 +24,7 @@ internal interface AdSdk {
     fun setSubjectToGDPR(enable: Boolean)
     fun isSubjectToGDPR(): Boolean
     fun setGDPRConsentString(consentString: String?)
+    fun setStoreUrl(storeUrl: String)
+    fun setDomain(domain: String)
+    fun setDebug(enable: Boolean)
 }

@@ -191,15 +191,11 @@ internal object AdSDKManager {
 
     fun getTimeOutMillis() = PrebidMobile.getTimeoutMillis()
 
-    private fun enableTestMode() = apply {
-        PrebidMobile.setPbsDebug(true)
+    fun enableDebug(enable: Boolean) = apply {
+        PrebidMobile.setPbsDebug(enable)
     }
 
-    private fun disableTestMode() = apply {
-        PrebidMobile.setPbsDebug(false)
-    }
-
-    private fun isDebugMode(): Boolean {
+    private fun isDebugEnabled(): Boolean {
         return PrebidMobile.getPbsDebug()
     }
 
@@ -344,5 +340,13 @@ internal object AdSDKManager {
      */
     fun setGDPRConsentString(consentString: String?) = apply {
         TargetingParams.setGDPRConsentString(consentString)
+    }
+
+    fun setStoreUrl(storeUrl: String) {
+        TargetingParams.setStoreUrl(storeUrl)
+    }
+
+    fun setDomain(domain: String) {
+        TargetingParams.setDomain(domain)
     }
 }
