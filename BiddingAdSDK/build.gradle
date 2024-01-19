@@ -29,7 +29,8 @@ android {
     productFlavors {
         medianet {
             dimension "source"
-            buildConfigField "String", "CONFIG_BASE_URL", "\"https://ems-cdn.media.net/adserving/sdk/v1/\""
+            //buildConfigField "String", "CONFIG_BASE_URL", "\"https://ems-cdn.media.net/adserving/sdk/v1/\""
+            buildConfigField "String", "CONFIG_BASE_URL", "\"https://ems-cdn.media.net/adserving/ysdk/v1/\""
         }
 
         adtech {

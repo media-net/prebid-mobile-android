@@ -15,7 +15,7 @@
  */
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 
-import AdTechSDK
+import MediaNetAdSDK
 import android.os.Bundle
 import android.util.Log
 import com.android.adsdk.ad.original.interstitial.InterstitialAd
@@ -43,7 +43,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        AdTechSDK.setStoredAuctionResponse(STORED_RESPONSE)
+        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

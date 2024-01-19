@@ -16,7 +16,7 @@
 
 package org.prebid.mobile.prebidkotlindemo
 
-import AdTechSDK
+import MediaNetAdSDK
 import android.app.Application
 import org.prebid.mobile.prebidkotlindemo.utils.Settings
 
@@ -29,7 +29,7 @@ class CustomApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        AdTechSDK.init(this, TEMP_ACCOUNT_ID)
+        MediaNetAdSDK.init(this, TEMP_ACCOUNT_ID)
         Settings.init(this)
     }
 }

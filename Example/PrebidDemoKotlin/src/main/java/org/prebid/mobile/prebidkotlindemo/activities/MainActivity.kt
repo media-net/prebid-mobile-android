@@ -16,7 +16,7 @@
 
 package org.prebid.mobile.prebidkotlindemo.activities
 
-import AdTechSDK
+import MediaNetAdSDK
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -54,12 +54,12 @@ class MainActivity : AppCompatActivity() {
         initSearch()
         initList()
 
-        AdTechSDK.isCompatibleWithGoogleMobileAds(MobileAds.getVersion().toString())
+        MediaNetAdSDK.isCompatibleWithGoogleMobileAds(MobileAds.getVersion().toString())
     }
 
     override fun onRestart() {
         super.onRestart()
-        AdTechSDK.setStoredAuctionResponse(null)
+        MediaNetAdSDK.setStoredAuctionResponse(null)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

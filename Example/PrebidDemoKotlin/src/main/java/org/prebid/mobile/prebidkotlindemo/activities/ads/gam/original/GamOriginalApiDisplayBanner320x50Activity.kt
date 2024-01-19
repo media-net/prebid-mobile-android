@@ -48,7 +48,7 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        AdTechSDK.setStoredAuctionResponse(STORED_RESPONSE)
+        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
         createAd()
     }
 
