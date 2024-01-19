@@ -1,6 +1,6 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 
-import AdTechSDK
+import MediaNetAdSDK
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -18,8 +18,8 @@ import com.android.adsdk.ad.nativead.listeners.NativeAdEventListener
 import com.android.adsdk.ad.nativead.listeners.NativeAdListener
 import com.android.adsdk.base.Error
 import com.android.adsdk.base.listeners.OnBidCompletionListener
-import com.android.adsdk.utils.ImageUtil
 import com.android.adsdk.utils.AdUtils
+import com.android.adsdk.utils.ImageUtil
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdSize
@@ -53,7 +53,7 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        AdTechSDK.setStoredAuctionResponse(STORED_RESPONSE)
+        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

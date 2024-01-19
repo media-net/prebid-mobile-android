@@ -15,7 +15,7 @@
  */
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
-import AdTechSDK
+import MediaNetAdSDK
 import android.os.Bundle
 import android.util.Log
 import com.android.adsdk.ad.rendering.AdEventListener
@@ -42,7 +42,7 @@ class GamRenderingApiDisplayBanner320x50Activity : BaseAdActivity() {
         super.onCreate(savedInstanceState)
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
-        AdTechSDK.setStoredAuctionResponse(STORED_RESPONSE)
+        MediaNetAdSDK.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

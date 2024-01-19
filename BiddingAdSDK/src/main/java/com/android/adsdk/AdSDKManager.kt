@@ -1,7 +1,6 @@
 package com.android.adsdk
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.android.adsdk.base.LoggingLevel
@@ -89,10 +88,6 @@ internal object AdSDKManager {
         accountId: String,
         sdkInitListener: MSdkInitListener? = null
     ) {
-        Log.e("XXX", "COnfg URL - ${BuildConfig.CONFIG_BASE_URL}")
-        Log.e("XXX", "flavourL - ${BuildConfig.FLAVOR}")
-
-
         configRepo = ConfigRepoImpl(serverApiService, applicationContext.configDataStore)
         coroutineScope.launch {
             LogUtil.setBaseTag(TAG)
@@ -195,15 +190,11 @@ internal object AdSDKManager {
 
     fun getTimeOutMillis() = PrebidMobile.getTimeoutMillis()
 
-    private fun enableTestMode() = apply {
-        PrebidMobile.setPbsDebug(true)
+    fun enableDebug(enable: Boolean) = apply {
+        PrebidMobile.setPbsDebug(enable)
     }
 
-    private fun disableTestMode() = apply {
-        PrebidMobile.setPbsDebug(false)
-    }
-
-    private fun isDebugMode(): Boolean {
+    private fun isDebugEnabled(): Boolean {
         return PrebidMobile.getPbsDebug()
     }
 
@@ -300,7 +291,13 @@ internal object AdSDKManager {
             sdkConfig.projectEventUrl,
             0
         )
-        AnalyticsSDK.init(applicationContext, configuration, providers = listOf(analyticsProvider))
+
+        val firebaseAnalyticsProvider = AnalyticsProviderFactory.getFirebaseProvider(
+            applicationContext,
+            sdkConfig.projectEventUrl
+        )
+
+        AnalyticsSDK.init(applicationContext, configuration, providers = listOf(analyticsProvider, firebaseAnalyticsProvider))
     }
 
     /**
@@ -342,5 +339,13 @@ internal object AdSDKManager {
      */
     fun setGDPRConsentString(consentString: String?) = apply {
         TargetingParams.setGDPRConsentString(consentString)
+    }
+
+    fun setStoreUrl(storeUrl: String) {
+        TargetingParams.setStoreUrl(storeUrl)
+    }
+
+    fun setDomain(domain: String) {
+        TargetingParams.setDomain(domain)
     }
 }
