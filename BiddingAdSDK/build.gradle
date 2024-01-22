@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        medianet_ad_sdk_version = "1.1.0"
+        medianet_ad_sdk_version = "1.2.0"
         prebid_mobile_version = "1.0.0"
         prebid_mobile_core_version = "1.0.0"
         prebid_mobile_gam_eventhandlers_version = "1.0.0"
